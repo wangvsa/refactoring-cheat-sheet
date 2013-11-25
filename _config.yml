@@ -1,7 +1,7 @@
 url: http://wangchen.info/refactoring-cheat-sheet
 markdown: redcarpet 
 pygments: true 
-base_url: /
+baseurl: /
 relative_permalinks: false
 title: Refactoring-Cheat-Sheet
 description: Refactoring-Cheat-Sheet
