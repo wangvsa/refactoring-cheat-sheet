@@ -1,8 +1,7 @@
-url: http://wangchen.info/refactoring-cheat-sheet
-markdown: redcarpet 
-pygments: true 
+markdown: redcarpet
+pygments: true
 baseurl: /refactoring-cheat-sheet
 relative_permalinks: false
-title: Refactoring-Cheat-Sheet
-description: Refactoring-Cheat-Sheet
+title: Refactoring Cheat Sheet
+description: Refactoring Cheat Sheet
 exclude: ["README.md", "CNAME"]
