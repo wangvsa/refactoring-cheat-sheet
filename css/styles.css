@@ -118,17 +118,11 @@ header h3 {
 .nav-collapse li:last-child a { border-bottom: 0 }
 
 @media screen and (max-width: 40em) {
-  .js .nav-collapse {
-    clip: rect(0 0 0 0);
-    max-height: 0;
+  .nav-collapse {
+    width: 100%;
+    max-height: 10em;
     position: absolute;
     display: block;
-    overflow: hidden;
-  }
-  .nav-collapse {
-    top: 0;
-    width: 100%;
-    position: relative;
   }
   .nav-collapse.opened { max-height: 9999px }
   .nav-collapse a:hover { background: transparent }
@@ -137,10 +131,10 @@ header h3 {
     -webkit-overflow-scrolling: auto;
     box-shadow: none;
     padding: 0 2em 2em;
+    top: 20em;
     border-radius: 0;
     position: relative;
     width: 100%;
-    overflow: hidden;
   }
   .main::-webkit-scrollbar { background-color: transparent }
 }
@@ -155,6 +149,7 @@ header h3 {
   }
 }
 
+/* 屏幕太宽时，限定左侧列表宽度近增加内容宽度 */
 @media screen and (min-width: 76em) {
   .nav-collapse { width: 18em }
   .main { width: auto; left: 18em }
