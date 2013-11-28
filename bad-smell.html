@@ -34,7 +34,7 @@
         <li><a href="#primitive-obsession">Primitive Obsession<br>基本型别偏执</a></li>
         <li><a href="#switch-statements">Switch Statements<br>switch惊悚现身</a></li>
         <li><a href="#parallel-inheritance-hierarchies">Parallel Inheritance Hierarchies<br>平行继承体系</a></li>
-        <li class="pure-menu-selected"><a href="#lazy-class">Lazy Class<br>冗赘类</a></li>
+        <li><a href="#lazy-class">Lazy Class<br>冗赘类</a></li>
         <li><a href="#speculative-generality">Speculative Generality<br>夸夸其谈未来性</a></li>
         <li><a href="#temporary-field">Temporary Field<br>令人迷惑的暂时值域</a></li>
         <li><a href="#message-chains">Message Chains<br>过度耦合的消息链</a></li>
@@ -207,6 +207,23 @@
 </div>
 
 <script src="js/ui.js"></script>
+<script type="text/javascript">
+window.onload = function() {
+  var lis = document.getElementById("menu").getElementsByTagName("li");
+  for( var i=0;i<lis.length;i++) {
+    lis[i].addEventListener(
+      'click',
+      function() {
+        var l = document.getElementById("menu").getElementsByTagName("li");
+        for( var i=0;i<lis.length;i++) {
+          l[i].className = "";
+        }
+        this.className = "pure-menu-selected";
+      },
+      false);
+  }
+};
+</script>
 
 </body>
 

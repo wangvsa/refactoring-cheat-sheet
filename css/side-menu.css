@@ -69,14 +69,12 @@ the menu have 100% height and be fixed on the page as the rest of it scrolls.
         Change color of the anchor links on hover/focus.
         */
         #menu .pure-menu li a:hover,
-        #menu .pure-menu li a:focus {
-            background: #333;
+        #menu .pure-menu li a:focus,
+        #menu .pure-menu-selected {
+          background: transparent;
+          border-left: 4px solid #1f8dd6;
         }
 
-    /*
-    This styles the selected menu item `<li>`.
-    */
-    #menu .pure-menu-selected,
     #menu .pure-menu-heading {
         background: #1f8dd6;
     }
