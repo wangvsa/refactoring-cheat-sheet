@@ -199,9 +199,32 @@
         <p>
         幸好我们有两个专门应付这种情况的工具。如果你只想修改library classes内的一两 个函数，可以运用 Introduce Foreign Method；如果想要添加一大堆额外行为，就得运用Introduce Local Extension。 
       <h2 class="content-subhead"><a name="data-class"/>Data Class（纯稚的数据类）</h2>
+        <p>
+        所谓Data Class是指：它们拥有一些值域（fields），以及用于访问（读写〕这些值域的函数，除此之外一无长物。这样的classes只是一种「不会说话的数据容器」，它们几乎一定被其他classes过份细琐地操控着。这些classes早期可能拥有public值域，果真如此你应该在别人注意到它们之前，立刻运用Encapsulate Field 将它们封装起来。如果这些classes内含容器类的值域（collection fields），你应该 检査它们是不是得到了恰当的封装；如果没有，就运用 Encapsulate Collection 把它们封装起来。对于那些不该被其他classes修改的值域，请运用 Remove Setting Method。
+        <p>
+        然后，找出这些「取值/设值」函数（getting and setting methods）被其他classes运用的地点。尝试以Move Method 把那些调用行为搬移到Data Class来。如果无法搬移整个函数，就运用 Extract Method 产生一个可被搬移的函数。不久之后你就可以运用Hide Method 把这些「取值/设值」函数隐藏起来了。
+        <p>
+        Data Class就像小孩子。作为一个起点很好，但若要让它们像「成年（成熟）」的对象那样参与整个系统的工作，它们就必须承担一定责任。
       <h2 class="content-subhead"><a name="refused-bequest"/>Refused Bequest（被拒绝的遗赠）</h2>
+        <p>
+        Subclasses 应该继承superclasses的函数和数据。但如果它们不想或不需要继承，又该怎么办呢？它们得到所有礼物，却只从中挑选几样来玩！
+        <p>
+        按传统说法，这就意味继承体系设计错误。你需要为这个subclass 新建一个兄弟（sibling class），再运用Push Down Method 和 Push Down Field 把所有用不到的函数下推给那兄弟。这样一来superclass就只持有所有subclasses共享的东西。常常你会听到这样的建议：所有superclasses都应该是抽象的（abstract）。
+        <p>
+        既然使用「传统说法」这个略带贬义的词，你就可以猜到，我们不建议你这么做，起码不建议你每次都这么做。我们经常利用subclassing手法来复用一些行为，并发现这可以很好地应用于日常工作。这也是一种坏味道，我们不否认，但气味通常并不强烈。所以我们说：如果Refused Bequest引起困惑和问题，请遵循传统忠告。但不必认为你每次都得那么做。十有八九这种坏味道很淡，不值得理睬。
+        <p>
+        如果subclass复用了superclass的行为（实现），却又不愿意支持superclass的接口，Refused Bequest的坏味道就会变得浓烈。拒绝继承superclass的实现，这一点我们不介意；但如果拒绝继承superclass的接口，我们不以为然。不过即使你不愿意继承接口，也不要胡乱修改继承体系，你应该运用Replace Inheritance with Delegation 来达到目的。
       <h2 class="content-subhead"><a name="comments"/>Comments（过多的注释）</h2>
-
+        <p>
+        别担心，我们并不是说你不该写注释。从嗅觉上说，Comments不是一种坏味道；事实上它们还是一种香味呢。我们之所以要在这里提到Comments，因为人们常把它当作除臭剂来使用。常常会有这样的情况：你看到一段代码有着长长的注释，然后发现，这些注释之所以存在乃是因为代码很糟糕。这种情况的发生次数之多，实 在令人吃惊。
+        <p>
+        Comments可以带我们找到本章先前提到的各种坏味道。找到坏味道后，我们首先应该以各种重构手法把坏味道去除。完成之后我们常常会发现：注释已经变得多余了，因为代码已经清楚说明了一切。
+        <p>
+        如果你需要注释来解释一块代码做了什么，试试 Extract Method；如果method已经提炼出来，但还是需要注释来解释其行为，试试Rename Method；如果你需要注释说明某些系统的需求规格，试试 Introduce Assertion。
+        <p>
+        TIP：当你感觉需要撰写注释，请先尝试重构，试着让所有注释都变得多余。        
+        <p>
+        如果你不知道该做什么，这才是注释的良好运用时机。除了用来记述将来的打算之外，注释还可以用来标记你并无十足把握的区域。你可以在注释里写下自己「为什 么做某某事」。这类信息可以帮助将来的修改者，尤其是那些健忘的家伙。
     </div>
   </div>
 </div>
