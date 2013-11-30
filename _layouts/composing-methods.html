@@ -1,4 +1,7 @@
 ---
+layout: default
+title: Composing Methods
+dir: /refactoring-cheat-sheet/composing-methods
 menu_items: [
   'Extract Method<br>提炼函数',
   'Inline Method<br>将函数内联化',
@@ -11,57 +14,3 @@ menu_items: [
   'Substitute Algorithm<br>替换你的算法'
 ]
 ---
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="A layout example with a side menu that hides on mobile, just like the Pure website.">
-  <title>Composing Methods &ndash; Refactoring Cheat Sheet &ndash; WangChen</title>
-
-  <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.3.0/pure-min.css">
-  <link rel="stylesheet" href="/refactoring-cheat-sheet/css/side-menu.css">
-  <link rel="stylesheet" href="/refactoring-cheat-sheet/css/content.css">
-</head>
-
-<body>
-<div id="layout">
-  <!-- Menu toggle -->
-  <a href="#menu" id="menuLink" class="pure-menu-link">
-    <!-- Hamburger icon -->
-    <span></span>
-  </a>
-
-  <div id="menu">
-    <div class="pure-menu pure-menu-open">
-      <a class="pure-menu-heading" href="#">Refactoring Cheat Sheet</a>
-      <ul>
-        {% for node in page.menu_items %}
-          {% assign tmp = node | split: '<br>' %}
-          {% if tmp[0] == page.head_en %}
-            <li class="pure-menu-selected"><a href="/refactoring-cheat-sheet/composing-methods/{{tmp[0]|replace:' ','-'}}.html">{{node}}</a></li>
-          {% else %}
-            <li><a href="/refactoring-cheat-sheet/composing-methods/{{tmp[0]|replace:' ','-'}}.html">{{node}}</a></li>
-          {% endif %}
-        {% endfor %}
-      </ul>
-    </div>
-  </div>
-
-  <div id="main">
-    <div class="header">
-      <h1>{{page.head_en}}</h1>
-      <h2>{{page.head_zh}}</h2>
-    </div>
-
-    <div class="content">
-      {{ content }}
-    </div>
-  </div>
-</div>
-
-<script src="/refactoring-cheat-sheet/js/ui.js"></script>
-
-</body>
-
-</html>
