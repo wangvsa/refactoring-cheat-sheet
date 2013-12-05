@@ -1,6 +1,5 @@
 markdown: redcarpet
 pygments: true
-baseurl: /refactoring-cheat-sheet
 relative_permalinks: false
 title: Refactoring Cheat Sheet
 description: Refactoring Cheat Sheet
