@@ -1,0 +1,21 @@
+---
+layout: organizing-data
+head_en: Organizing Data
+---
+
+<P>
+本章之中，我将讨论数个「能让你更轻松运用数据」的重构手法。很多人或许会认为Self Encapsulate Field 有点多余，但是关于「对象应该直接访问其中的数据，抑或应该通过访问函数（accessor）来访问」这一问题，争论的声音从来不曾停止。有时候你确实需要访问函数，此时你就可以通过Self Encapsulate Field 得到它们。通常我会选择「直接访问」方式，因为我发现，只要我想做，任何时候进行这项重构都是很简单的。
+<P>
+面向对象语言有一个很有用的特征：除了允许使用传统语言提供的简单数据型别，它们还允许你定义新型别。不过人们往往需要一段时间才能习惯这种编程方式。一开始你常会使用一个简单数值来表示某个概念；随着对系统的深入了解，你可能会明白，以对象表示这个概念，可能更合适。 Replace Data Value with Object 让你可以将「哑」数据（dumb data）变成会说话的对象（articulate objects）。如果你发现程序中有太多地方需要这一类对象，你也可以使用Change Value to Reference 将它们变成reference object。
+<P>
+如果你看到一个array的行为方式很像一个数据结构，你可以使用 Replace Array with Object 把array变成对象，从而使这个数据结构更清晰地显露出来。但这只是第一步，当你使用Move Method 为这个新对象加入相应行为时，真正的好处才得以体现。
+<P>
+魔法数（magic numbers），也就是带有特殊含义的数字，从来都是个问题。我还清楚记得，一开始学习编程的时候，老师就告诉我不要使用魔法数。但它们还是不时出现。因此，只要弄清楚魔法数的用途，我就运用 Replace Magic Number with Symbolic Constant 将它们除掉，以绝后患。
+<P>
+对象之间的关联（links）可以单向，也可以双向。单向关联比较简单，但有时为了支持一项新功能，你需要以Change Unidirectional Association to Bidirectional 将它变成双向关联。Change Bidirectional Association to Unidirectional 则恰恰相反：如果你发现不再需要双向关联，可以使用这项重构将它变成单向关联。
+<P>
+我常常遇到这样的情况：GUI classes竟然去处理不该它们处理的业务逻辑（business logic）。为了把这些处理业务逻辑的行为移到合适的domain class去，你需要在domain class中保存这些逻辑的相关数据，并运用 Duplicate Observed Data 提供对GUI的支持。一般来说，我不喜欢重复的数据，但这是一个例外，因为这里的重复数据通常是不可避免的。
+<P>
+面向对象编程（OOP）的关键原则之一就是封装。如果一个class暴露了任何public数据，你就应该使用Encapsulate Field 将它高雅而正派地包装起来。如果被暴露的数据是个群集（collection），你就应该使用Encapsulate Collection 因为群集有其特殊协议。如果一整笔记录（record）都被裸露在外，你就应该使用 Replace Record with Data Class。
+<P>
+需要特别对待的一种数据是type code〔型别码）：这是一种特殊数值，用来指出 「与实体所属之型别相关的某些东西」。Type code通常以枚举（enumeration）形式出现，并且通常以static final整数实现之。如果这些type code用来表现某种信息，并且不会改变所属class的行为，你可以运用 Replace Type Code with Class 将它们替换掉，这项重构会为你提供更好的型别检查，以及一个更好的平台，使你可以在未来更方便地将相关行为添加进去。另一方面，如果class的行为受到type code的影响，你就应该尽可能使用Replace Type Code with Subclasses。如果做不到，就只好使用更复杂（同时也更灵活）的 Replace Type Code with State/Strategy。
