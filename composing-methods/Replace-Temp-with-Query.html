@@ -20,7 +20,7 @@ head_en: Replace Temp with Query
         return basePrice() * 0.95;
     else
         return basePrice() * 0.98;
-{％ endhighlight ％}
+{% endhighlight %}
 
 <p>...</p>
 
@@ -28,7 +28,7 @@ head_en: Replace Temp with Query
   double basePrice() {
       return _quantity * _itemPrice;
   }
-{％ endhighlight ％}
+{% endhighlight %}
 
 <h3>动机（Motivation）</h3>
  
@@ -83,7 +83,7 @@ Replace Temp with Query往往是你运用Extract Method 之前必不可少的一
        else discountFactor = 0.98;
        return basePrice * discountFactor;
    } 
-{％ endhighlight ％}
+{% endhighlight %}
 
 <p>
 我希望将两个临时变量都替换掉。当然，每次一个。
@@ -99,7 +99,7 @@ Replace Temp with Query往往是你运用Extract Method 之前必不可少的一
        else discountFactor = 0.98;
        return basePrice * discountFactor;
    } 
-{％ endhighlight ％}
+{% endhighlight %}
 
 <p>
 这样一来，如果有任何问题，编译器就会警告我。之所以先做这件事，因为如果临时变量不只被赋值一次，我就不该进行该项重构。接下来我开始替换临时变量，每次一个。首先我把赋值（assignment）动作的右侧表达式提炼出来：
@@ -116,7 +116,7 @@ Replace Temp with Query往往是你运用Extract Method 之前必不可少的一
    private int basePrice() {
    return _quantity * _itemPrice;
    } 
-{％ endhighlight ％}
+{% endhighlight %}
 
 <p>
 编译并测试，然后开始使用Replace Temp with Query。首先把临时变量basePrice的第一个引用点替换掉：
@@ -129,7 +129,7 @@ Replace Temp with Query往往是你运用Extract Method 之前必不可少的一
        else discountFactor = 0.98;
        return basePrice * discountFactor;
    }
-{％ endhighlight ％}
+{% endhighlight %}
  
 <p>
 编译、测试、下一个（听起来像在指挥人们跳乡村舞蹈一样）。由于「下一个」已经是basePrice的最后一个引用点，所以我把basePrice临时变量的声明式一并摘除：
@@ -141,7 +141,7 @@ Replace Temp with Query往往是你运用Extract Method 之前必不可少的一
        else discountFactor = 0.98;
        return basePrice() * discountFactor;
    }
-{％ endhighlight ％}
+{% endhighlight %}
  
 <p>
 搞定basePrice之后，我再以类似办法提炼出一个discountFactor()：
@@ -156,7 +156,7 @@ Replace Temp with Query往往是你运用Extract Method 之前必不可少的一
        if (basePrice() > 1000) return 0.95;
        else return 0.98;
    }
-{％ endhighlight ％}
+{% endhighlight %}
  
 <p>
 你看，如果我没有把临时变量basePrice替换为一个查询式，将多么难以提炼discountFactor()！
@@ -168,4 +168,4 @@ Replace Temp with Query往往是你运用Extract Method 之前必不可少的一
   double getPrice() {
        return basePrice() * discountFactor();
    }
-{％ endhighlight ％}
+{% endhighlight %}
