@@ -16,10 +16,10 @@ boolean moreThanFiveLateDeliveries() {
 }
 {% endhighlight %}
 
-<p> ==> </p>
+<p> ===> </p>
 {% highlight java linos %}
 int getRating() {
-     return (_numberOfLateDeliveries > 5) ? 2 : 1;
+  return (_numberOfLateDeliveries > 5) ? 2 : 1;
 }
 {% endhighlight %}
 
@@ -42,3 +42,4 @@ int getRating() {
 
 <p>
 被我这样一写，Inline Method 似乎很简单。但情况往往并非如此。对于递归调用、多返回点、inlining至另一个对象中而该对象并无提供访问函数（accessors）……，每一种情况我都可以写上好几页。我之所以不写这些特殊情况， 原因很简单：如果你遇到了这样的复杂情况，那么就不应该使用这个重构手法。
+
