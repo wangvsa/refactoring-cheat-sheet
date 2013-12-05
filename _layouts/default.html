@@ -38,7 +38,7 @@
   <div id="main">
     <div class="header">
       <h1>{{page.head_en}}</h1>
-      {% if page.title contains 'index.html' %}
+      {% if page.url contains 'index.html' %}
         <h2>{{page.head_zh}}</h2>
       {% else %}
         <h2>{{tmp[1]}}</h2>
