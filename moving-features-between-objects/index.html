@@ -1,0 +1,13 @@
+---
+layout: moving-features-between-objects
+head_en: Moving Features Between Objects
+head_zh: 在对象之间搬移特性
+---
+<p>
+在对象的设计过程中，「决定把责任放在哪儿」即使不是最重要的事，也是最重要的事之一。我使用对象技术已经十多年了，但还是不能一开始就保证做对。这曾经让我很烦恼，但现在我知道，在这种情况下，我可以运用重构（refactoring），改变自己原先的设计。
+<p>
+常常我可以只运用 Move Method 和Move Field 简单地移动对象行为，就可以解决这些问题。如果这两个重构手法都需要用到，我会首先使用Move Field，再使用Move Method。
+<p>
+class往往会因为承担过多责任而变得臃肿不堪。这种情况下，我会使用Extract Class 将一部分责任分离出去。如果一个class变得太「不负责任」，我就会使用Inline Class 将它融入另一个class。如果一个class使用了另一个class，运用Hide Delegate 将这种关系隐藏起来通常是有帮助的。有时候隐藏delegate class会导致拥有者的接口经常变化，此时需要使用Remove Middle Man。
+<p>
+本章的最后两项重构——Introduce Foreign Method 和Introduce Local Extension ——比较特殊。只有当我不能访问某个class的源码，却又想把其他责任移进这个不可修改的class时，我才会使用这两个重构手法。如果我想加入的只是一或两个函数，我会使用Introduce Foreign Method；如果不止一两个函数，我就使用Introduce Local Extension。
