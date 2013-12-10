@@ -2,3 +2,108 @@
 layout: organizing-data
 head_en: Replace Data Value with Object
 ---
+<p>
+你有一笔数据项（data item），需要额外的数据和行为。
+<p>
+将这笔数据项变成一个对象。
+<p>
+<img alt="" src="/refactoring-cheat-sheet/images/08fig01.gif"/>
+
+<h3>动机（Motivation）</h3>
+<p>
+开发初期，你往往决定以简单的数据项（data item）表示简单的行为。但是，随着开发的进行，你可能会发现，这些简单数据项不再那么简单了。比如说，一开始你可能会用一个字符串来表示「电话号码」概念，但是随后你就会发现，电话号码需要「格式化」、「抽取区号」之类的特殊行为。如果这样的数据项只有一二个，你还可以把相关函数放进数据项所属的对象里头；但是Duplication Code臭味和Feature Envy臭味很快就会从代码中散发出来。当这些臭味开始出现，你就应该将数据值（data value）变成对象（object）。
+<p>
+作法（Mechanics）
+<ul>
+  <li>为「待替换数值」新建一个class，在其中声明一个final值域，其型别和source class中的「待替换数值」型别一样。然后在新class中加入这个值域的取值函数（getter），再加上一个「接受此值域为参数」的构造函数。</li>
+  <li>编译。</li>
+  <li>将source class中的「待替换数值值域」的型别改为上述的新建class。</li>
+  <li>修改source class中此一值域的取值函数（getter），令它调用新建class的取值函数。</li>
+  <li>如果source class构造函数中提及这个「待替换值域」（多半是赋值动作），我们就修改构造函数，令它改用新的构造函数来对值域进行赋值动作。</li>
+  <li>修改source class中「待替换值域」的设值函数（setter），令它为新class创建一个实体。</li>
+  <li>编译，测试。</li>
+  <li>现在，你有可能需要对新class使用 Change Value to Reference。</li>
+</ul>
+
+<h3>范例（Example）</h3>
+<p>
+下面有一个代表「定单」的Order class，其中以一个字符串记录定单客户。现在，我希望改以一个对象来表示客户信息，这样我就有充裕的弹性保存客户地址、信用 等级等等信息，也得以安置这些信息的操作行为。Order class最初如下：
+{% highlight java linos %}
+ class Order...
+   public Order (String customer) {
+       _customer = customer;
+   }
+   public String getCustomer() {
+       return _customer;
+   }
+   public void setCustomer(String arg) {
+       _customer = arg;
+   }
+   private String _customer;
+{% endhighlight %}
+<p>
+Order class的客户代码可能像下面这样：
+{% highlight java linos %}
+   private static int numberOfOrdersFor(Collection orders, String customer) {
+       int result = 0;
+       Iterator iter = orders.iterator();
+       while (iter.hasNext()) {
+           Order each = (Order) iter.next();
+           if (each.getCustomerName().equals(customer)) result++;
+       }
+       return result;
+   }
+{% endhighlight %}
+<P>
+首先，我要新建一个Customer class来表示「客户」概念。然后在这个class中建立一个final值域，用以保存一个字符串，这是Order class目前所使用的。我将这个新值域命名为_name，因为这个字符串的用途就是记录客户名称。此外我还要为这个字符串加上取值函数（getter）和构造函数（constructor）。
+{% highlight java linos %}
+ class Customer {
+   public Customer (String name) {
+       _name = name;
+   }
+   public String getName() {
+       return _name;
+   }
+   private final String _name;
+  }
+{% endhighlight %}
+<p>
+现在，我要将Order中的_customer值域的型别修改为Customer；并修改所有引用此一值域的函数，让它们恰当地改而使用Customer实体。其中取值函数和构造函数的修改都很简单；至于设值函数（setter），我让它创建一份Customer实体。
+{% highlight java linos %}
+ class Order...
+   public Order (String customer) {
+       _customer = new Customer(customer);
+   }
+   public String getCustomer() {
+       return _customer.getName();
+   }
+   private Customer _customer;
+
+   public void setCustomer(String arg) {
+       _customer = new Customer(customer);
+   }
+{% endhighlight %}
+
+<p>
+设值函数需要创建一份Customer实体，这是因为以前的字符串是个实值对象（value object），所以现在的Customer对象也应该是个实值对象。这也就意味每个Order对象都包含自己的一个Customer对象。注意这样一条规则：实值对象应该是不可修改内容的——这便可以避免一些讨厌「别名」（aliasing）错误。日后或许我会想让Customer对象成为引用对象（reference object），但那是另一项重构手法的责任。现在我可以编译并测试了。
+<p>
+我需要观察Order class中的_customer值域的操作函数，并作出一些修改，使它更好的反映出修改后的新形势。对于取值函数，我会使用 Rename Method 改变其名称，让它更清晰地表示，它所返回的是消费者名称，而不是个Customer对象。
+{% highlight java linos %}
+   public String getCustomerName() {
+       return _customer.getName();
+   }
+{% endhighlight %}
+<p>
+至于构造函数和设值函数，我就不必修改其签名（signature）了，但参数名称得改：
+{% highlight java linos %}
+   public Order (String customerName) {
+       _customer = new Customer(customerName);
+   }
+   public void setCustomer(String customerName) {
+       _customer = new Customer(customerName);
+   }
+{% endhighlight %}
+<p>
+后续的其他重构也许会让我添加新的、「接受既有Customer对象作为参数」的构造函数和设值函数。
+<p>
+本次重构到此为止。但是这个案例和其他很多案例一样，还需要一个后续步骤。如果想在Customer对象中加入信用等级、地址之类的其他信息，现在还做不到，因为目前的Customer还是被作为实值对象（value object）来对待，每个Order对象都拥有自己的Customer对象。为了给Customer class加上信用等级、地址之类的属性，我必须运用 Change Value to Reference，这样一来属于同一客户的所有Order对象就可以共享同一个Customer对象。马上你就可以看到这个例子了。

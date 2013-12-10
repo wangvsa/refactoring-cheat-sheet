@@ -2,3 +2,90 @@
 layout: organizing-data
 head_en: Change Reference to Value
 ---
+<p>
+你有一个reference object（引用对象），很小且不可变（immutable），而且不易管理。
+
+<p>
+将它变成一个value object（实值对象）。
+<p><img alt="" src="/refactoring-cheat-sheet/images/08fig03.gif" /></p>
+
+<h3>动机（Motivation）</h3>
+<p>
+正如我在Change Reference to Value 中所说，要在reference object和value object之间做选择，有时并不容易。作出选择后，你常会需要一条回头路。
+<p>
+如果reference object开始变得难以使用，也许你就应该将它改为value object。 reference object必须被某种方式控制，你总是必须向其控制者请求适当的reference object。它们可能造成内存区域之间错综复杂的关联。在分布系统和并发系统中，不可变的value object特别有用，因为你无须考虑它们的同步问题。
+<p>
+value object有一个非常重要的特性：它们应该是不可变的（immutable）。无论何时只要你调用同一对象的同一个查询函数，你都应该得到同样结果。如果保证了这一 点，就可以放心地以多个对象表示相同事物（same thing）。如果value object是可变的（mutable），你就必须确保你对某一对象的修改会自动更新其他「代表相同事物」的其他对象。这太痛苦了，与其如此还不如把它变成reference object。
+<p>
+这里有必要澄清一下「不可变（immutable）」的意思。如果你以Money class表示「钱」的概念，其中有「币种」和「金额」两条信息，那么Money对象通常是一个不可变的value object。这并非意味你的薪资不能改变，而是意味：如果要改变你的薪资，你需要使用另一个崭新的Money对象来取代现有的Money对象，而不是在现有的Money对象上修改。你和Money对象之间的关系可以改变，但Money对象自身不能 改变。
+<p>
+译注：《Practical Java》 by Peter Haggar第6章对于mutable/immutable有深入讨论。
+<h3>作法（Mechanics）</h3>
+<ul>
+  <li>检查重构对象是否为immutable（不可变）对象，或是否可修改为不可变对象。</li>
+  <ul>
+    <li>如果该对象目前还不是immutable，就使用 Remove Setting Method，直到它成为immutable为止。</li>
+    <li>如果无法将该对象修改为immutable，就放弃使用本项重构。</li>
+  </ul>
+  <li>建立equal()和hashCode()。</li>
+  <li>编译，测试。</li>
+  <li>考虑是否可以删除factory method，并将构造函数声明public 。</li>
+</ul>
+
+<h3>范例（Example）</h3>
+<p>
+让我们从一个表示「货币种类」的Currency class开始：
+{% highlight java linos %}
+ class Currency...
+   private String _code;
+
+   public String getCode() {
+       return _code;
+   }
+   private Currency (String code) {
+       _code = code;
+   }
+{% endhighlight %}
+
+<p>
+这个也所做的就是保存并返回一个货币种类代码。它是一个reference object，所以如果要得到它的一份实体，必须这么做：
+{% highlight java linos %}
+Currency usd = Currency.get("USD");
+{% endhighlight %}
+
+<p>
+Currency class维护一个实体链表（list of instances）；我不能直接使用构造函数创建实体，因为Currency构造函数是private。
+
+{% highlight java linos %}
+new Currency("USD").equals(new Currency("USD")) // returns false
+{% endhighlight %}
+
+<p>
+要把一个reference object变成value object，关键动作是：检查它是否为immutable（不可变）。如果不是，我就不能使用本项重构，因为mutable（可变的）value object会造成令人苦恼的别名现象（aliasing）。
+
+<p>
+在这里，Currency对象是不可变的，所以下一步就是为它定义equals()：
+{% highlight java linos %}
+   public boolean equals(Object arg) {
+       if (! (arg instanceof Currency)) return false;
+       Currency other = (Currency) arg;
+       return (_code.equals(other._code));
+   }
+{% endhighlight %}
+
+<p>
+如果我定义equals()，我必须同时定义hashCode()。实现hashCode()有个简单办法：读取equals()使用的所有值域的hash codes；然后对它们进行bitwise xor（^）操作。本例中这很容易实现，因为equals()只使用了一个值域：
+{% highlight java linos %}
+   public int hashCode() {
+       return _code.hashCode();
+   }
+{% endhighlight %}
+
+<p>
+完成这两个函数后，我可以编译并测试。这两个函数的修改必须同时进行，否则倚赖hashing的任何群集对象（collections，例如HashTable、HashSet和HashMap）可能会产生意外行为。
+
+<p>
+现在，我想创建多少个等值的Currency对象就创建多少个。我还可以把构造函数声明为public，直接以构造函数获取Currency实体，从而去掉Currency class中的factory method和「控制实体创建」的行为。
+{% highlight java linos %}
+new Currency("USD").equals(new Currency("USD")) // now returns true
+{% endhighlight %}
