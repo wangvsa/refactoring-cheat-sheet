@@ -7,7 +7,7 @@ head_en: Replace Temp with Query
 你的程序以一个临时变量（temp）保存某一表达式的运算结果。
  
 <p>
-将这个表达式提炼到一个独立函数（译注：所谓查询式，query）中。将这个临时变量的所有「被引用点」替换为「对新函数的调用」。新函数可被其他函数使用。
+<b>将这个表达式提炼到一个独立函数（译注：所谓查询式，query）中。将这个临时变量的所有「被引用点」替换为「对新函数的调用」。新函数可被其他函数使用。</b>
 
 {% highlight java linos %}
     double basePrice = _quantity * _itemPrice;
@@ -15,7 +15,11 @@ head_en: Replace Temp with Query
         return basePrice * 0.95;
     else
         return basePrice * 0.98;
+{% endhighlight %}
 
+<p><img alt="" src="/refactoring-cheat-sheet/images/arrow.gif"/></p>
+
+{% highlight java linos %}
     if (basePrice() > 1000)
         return basePrice() * 0.95;
     else
@@ -30,6 +34,7 @@ head_en: Replace Temp with Query
   }
 {% endhighlight %}
 
+<br>
 <h3>动机（Motivation）</h3>
  
 <p>
@@ -39,8 +44,9 @@ head_en: Replace Temp with Query
 Replace Temp with Query往往是你运用Extract Method 之前必不可少的一个步骤。局部变量会使代码难以被提炼，所以你应该尽可能把它们替换为查询式。
  
 <p>
-这个重构手法较为直率的情况就是：临时变量只被赋值一次，或者赋值给临时变量的表达式不受其他条件影响。其他情况比较棘手，但也有可能发生。你可能需要先运用 Split Temporary Variable 或Separate Query from Modifier 使情况变得简单一些，然后再替换临时变量。如果你想替换的临时变量是用来收集结果的（例如循环中的累加值），你就需要将某些程序逻辑（例如循环）拷贝到查询式（query method）去。
- 
+这个重构手法较为直率的情况就是：临时变量只被赋值一次，或者赋值给临时变量的表达式不受其他条件影响。其他情况比较棘手，但也有可能发生。你可能需要先运用 Split Temporary Variable 或Separate Query from Modifier 使情况变得简单一些，然后再替换临时变量。如果你想替换的临时变量是用来收集结果的（例如循环中的累加值），你就需要将某些程序逻辑（例如循环）拷贝到查询式（query method）去。</p>
+
+<br> 
 <h3>作法（Mechanics）</h3>
  
 <p>
@@ -64,8 +70,9 @@ Replace Temp with Query往往是你运用Extract Method 之前必不可少的一
 我们常常使用临时变量保存循环中的累加信息。在这种情况下，整个循环都可以被提为一个独立函数，这也使原本的函数可以少掉几行扰人的循环码。有时候，你可能会用单一循环累加好几个值，就像本书p.26的例子那样。这种情况下你应该针对每个累加值重复一遍循环，这样就可以将所有临时变量都替换为查询式（query）。当然，循环应该很简单，复制这些代码时才不会带来危险。
  
 <p>
-运用此手法，你可能会担心性能问题。和其他性能问题一样，我们现在不管它，因 为它十有八九根本不会造成任何影响。如果性能真的出了问题，你也可以在优化时期解决它。如果代码组织良好，那么你往往能够发现更有效的优化方案；如果你没有进行重构，好的优化方案就可能与你失之交臂。如果性能实在太糟糕，要把临时变量放回去也是很容易的。
- 
+运用此手法，你可能会担心性能问题。和其他性能问题一样，我们现在不管它，因 为它十有八九根本不会造成任何影响。如果性能真的出了问题，你也可以在优化时期解决它。如果代码组织良好，那么你往往能够发现更有效的优化方案；如果你没有进行重构，好的优化方案就可能与你失之交臂。如果性能实在太糟糕，要把临时变量放回去也是很容易的。</p>
+
+<br> 
 <h3>范例（Example）</h3>
 
 
