@@ -1,3 +1,10 @@
+/*
+ * 图片居中
+ */
+p.p-img {
+  text-align: center;
+}
+
 /**
  * 正文内容
  */
@@ -7,7 +14,7 @@
     max-width: 800px;
     margin-bottom: 50px;
     line-height: 1.6em;
- }
+}
     .content p {
       text-indent : 2em;
     }
@@ -27,7 +34,7 @@
     text-align: center;
     padding: 2.5em 2em 0;
     border-bottom: 1px solid #eee;
- }
+}
     .header h1 {
         margin: 0.2em 0;
         font-size: 3em;
