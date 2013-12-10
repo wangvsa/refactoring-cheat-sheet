@@ -2,4 +2,115 @@
 layout: composing-methods
 head_en: Split Temporary Variable
 ---
+<p>
+你的程序有某个临时变量被赋值超过一次，它既不是循环变量，也不是一个集用临时变量（collecting temporary variable）。
+<p> 
+<b>针对每次赋值，创造一个独立的、对应的临时变量。</b>
+{% highlight java linos %} 
+    double temp = 2 * (_height + _width);
+    System.out.println (temp);
+    temp = _height * _width;
+    System.out.println (temp);
+{% endhighlight %}
 
+<p><img alt="" src="/refactoring-cheat-sheet/images/arrow.gif"/></p>
+
+{% highlight java linos %}
+    final double perimeter = 2 * (_height + _width);
+    System.out.println (perimeter);
+    final double area = _height * _width;
+    System.out.println (area);
+{% endhighlight %}
+
+<br> 
+<h3>动机（Motivation）</h3>
+<p> 
+临时变量有各种不同用途，其中某些用途会很自然地导致临时变量被多次赋值。「循环变量」和「集用临时变量」就是两个典型例子：循环变量（loop variables ）[Beck]会随循环的每次运行而改变〔例如for (int i=0; i<10; i++)语句中的i〕；集用临时变量（collecting temporary variable）[Beck]负责将「通过整个函数的运算」而构成的某个值收集起来。
+<p> 
+除了这两种情况，还有很多临时变量用于保存一段冗长代码的运算结果，以便稍后使用。这种临时变量应该只被赋值一次。如果它们被赋值超过一次，就意味它们在函数中承担了一个以上的责任。如果临时变量承担多个责任，它就应该被替换（剖 解）为多个临时变量，每个变量只承担一个责任。同一个临时变量承担两件不同的 事情，会令代码阅读者糊涂。</p>
+
+<br> 
+<h3>作法（Mechanics）</h3>
+<ul> 
+	<li>在「待剖解」之临时变量的声明式及其第一次被赋值处，修改其名称。</li>
+	<ul>
+	<li>如果稍后之赋值语句是「i = i +某表达式」形式，就意味这是个集用临时变量，那么就不要剖解它。集用临时变量的作用通常是累加、字符串接合、写入stream或者向群集（collection）添加元素。</li>
+	</ul>
+	<li>将新的临时变量声明为final。</li>
+ 
+	<li>以该临时变量之第二次赋值动作为界，修改此前对该临时变量的所有引用点，让它们引用新的临时变量。</li>
+ 
+	<li>在第二次赋值处，重新声明原先那个临时变量。</li>
+ 
+	<li>编译，测试。</li>
+ 
+	<li>逐次重复上述过程。每次都在声明处对临时变量易名，并修改下次赋值之前的引用点。</li>
+</ul> 
+
+<br>
+<h3>范例（Example）</h3>
+<p> 
+下面范例中我要计算一个苏格兰布丁（haggis）运动的距离。在起点处，静止的苏格兰布丁会受到一个初始力的作用而开始运动。一段时间后，第二个力作用于布丁，让它再次加速。根据牛顿第二定律，我可以这样计算布丁运动的距离：
+{% highlight java linos %} 
+ double getDistanceTravelled (int time) {
+     double result;
+    double acc = _primaryForce / _mass;        //译注：第一次赋值处
+     int primaryTime = Math.min(time, _delay);
+     result = 0.5 * acc * primaryTime * primaryTime;
+     int secondaryTime = time - _delay;
+     if (secondaryTime > 0) {
+         double primaryVel = acc * _delay;        //以下是第二次赋值处
+       acc = (_primaryForce + _secondaryForce) / _mass;        
+         result +=  primaryVel * secondaryTime + 0.5 * acc * secondaryTime * secondaryTime;
+     }
+     return result;
+ }
+{% endhighlight %}
+
+<p>
+真是个绝佳的丑陋小东西。注意观察此例中的acc变量如何被赋值两次。acc变量有两个责任：第一是保存第一个力造成的初始加速度；第二是保存两个力共同造成的加速度。这就是我想要剖解的东西。
+<p> 
+首先，我在函数开始处修改这个临时变量的名称，并将新的临时变量声明为final。 接下来我把第二次赋值之前对acc变量的所有引用点，全部改用新的临时变量。最后，我在第二次赋值处重新声明acc变量：
+{% highlight java linos %} 
+   double getDistanceTravelled (int time) {
+       double result;
+      final   double primaryAcc  = _primaryForce / _mass;
+       int primaryTime = Math.min(time, _delay);
+       result = 0.5 * primaryAcc * primaryTime * primaryTime;
+       int secondaryTime = time - _delay;
+       if (secondaryTime > 0) {
+           double primaryVel = primaryAcc * _delay;
+          double acc = (_primaryForce + _secondaryForce) / _mass;
+           result +=  primaryVel * secondaryTime + 0.5 * acc * secondaryTime * secondaryTime;
+       }
+       return result;
+   }
+{% endhighlight %}
+
+<p> 
+新的临时变量的名称指出，它只承担原先acc变量的第一个责任。我将它声明为final，确保它只被赋值一次。然后，我在原先变量第二次被赋值处重新声明acc。现在，重新编译并测试，一切都应该没有问题。
+<p> 
+然后，我继续处理临时变量的第二次赋值。这次我把原先的临时变量完全删掉，代之以一个新的临时变量。新变量的名称指出，它只承担原先变量的第二个责任：
+{% highlight java linos %}  
+  double getDistanceTravelled (int time) {
+      double result;
+      final double primaryAcc = _primaryForce / _mass;
+      int primaryTime = Math.min(time, _delay);
+      result = 0.5 * primaryAcc * primaryTime * primaryTime;
+      int secondaryTime = time - _delay;
+      if (secondaryTime > 0) {
+          double primaryVel = primaryAcc * _delay;
+          final double secondaryAcc = (_primaryForce + _secondaryForce) / _mass;
+          result +=  primaryVel * secondaryTime + 0.5 *
+                    secondaryAcc * secondaryTime * secondaryTime;
+      }
+      return result;
+  }
+{% endhighlight %}
+<p> 
+现在，这段代码肯定可以让你想起更多其他重构手法。尽情享受吧。（我敢保证， 这比吃苏格兰布丁强多了 ——你知道他们都在里面放了些什么东西吗？<sup>4</sup>）
+<p> 
+<i>
+<sup>4</sup>译注：苏格兰布丁（haggis）是一种苏格兰菜，把羊心等内脏装在羊胃里煮成。由于它被羊胃包成一个球体，因此可以像球一样踢来踢去，这就是本例的由来。「把羊心装在羊胃里煮成…」，呃，有些人难免对这道菜恶心，Martin Fowler想必是其中之一。
+</i>
+ 

@@ -6,16 +6,17 @@ head_en: Extract Method
 <br>
 你有一段代码可以被组织在一起并独立出来。
 <br>
-将这段代码放进一个独立函数中，并让函数名称解释该函数的用途。
+<b>将这段代码放进一个独立函数中，并让函数名称解释该函数的用途。</b>
   {% highlight java linenos %}
   void printOwing(double amount) {
     printBanner();
     //print details
     System.out.println ("name:" + _name);
     System.out.println ("amount" + amount);
-  }
-  {% endhighlight %}
-<p> ==> </p>
+  }{% endhighlight %}
+  
+<p><img alt="" src="/refactoring-cheat-sheet/images/arrow.gif"/></p>
+
   {% highlight java linenos %}
   void printOwing(double amount) {
     printBanner();
@@ -24,9 +25,9 @@ head_en: Extract Method
   void printDetails (double amount) {
     System.out.println ("name:" + _name);
     System.out.println ("amount" + amount);
-  }
-  {% endhighlight %}
+  }{% endhighlight %}
 
+<br>
 <h3>动机（Motivation）</h3>
 
 <p>
@@ -34,32 +35,37 @@ Extract Method是我最常用的重构手法之一。当我看见一个过长的
 <p>
 有数个原因造成我喜欢简短而有良好命名的函数。首先，如果每个函数的粒度都很小（finely grained），那么函数之间彼此复用的机会就更大；其次，这会使高层函数码读起来就像一系列注释；再者，如果函数都是细粒度，那么函数的覆写（overridden）也会更容易些。 
 <p>
-的确，如果你习惯看大型函数，恐怕需要一段时间才能适应这种新风格。而且只有当你能给小型函数很好地命名时，它们才能真正起作用，所以你需要在函数名称下点功夫。人们有时会问我，一个函数多长才算合适？在我看来，长度不是问题，关键在于函数名称和函数本体之间的语义距离（semantic distance ）。如果提炼动作 （extracting ）可以强化代码的清晰度，那就去做，就算函数名称比提炼出来的代码 还长也无所谓。 
+的确，如果你习惯看大型函数，恐怕需要一段时间才能适应这种新风格。而且只有当你能给小型函数很好地命名时，它们才能真正起作用，所以你需要在函数名称下点功夫。人们有时会问我，一个函数多长才算合适？在我看来，长度不是问题，关键在于函数名称和函数本体之间的语义距离（semantic distance ）。如果提炼动作 （extracting ）可以强化代码的清晰度，那就去做，就算函数名称比提炼出来的代码 还长也无所谓。</p> 
 
+<br>
 <h3>作法（Mechanics）</h3>
-·
-创造一个新函数，根据这个函数的意图来给它命名（以它「做什么」来命名， 而不是以它「怎样做」命名）。
-Ø
-即使你想要提炼（extract ）的代码非常简单，例如只是一条消息或一个函数调用，只要新函数的名称能够以更好方式昭示代码意图，你也应该提炼它。但如果你想不出一个更有意义的名称，就别动。
-·
-将提炼出的代^码从源函数（source）拷贝到新建的目标函数（target）中。
-·
-仔细检查提炼出的代码，看看其中是否引用了「作用域（scope）限于源函数」的变量（包括局部变量和源函数参数）。
-·
-检查是否有「仅用于被提炼码」的临时变量（temporary variables ）。如果有，在目标函数中将它们声明为临时变量。 
-·
-检查被提炼码，看看是否有任何局部变量（local-scope variables ）的值被它改变。如果一个临时变量值被修改了，看看是否可以将被提炼码处理为一个查询（query），并将结果赋值给相关变量。如果很难这样做，或如果被修改的 变量不止一个，你就不能仅仅将这段代码原封不动地离炼出来。你可能需要先使用 Split Temporary Variable，然后再尝试提炼。也可以使用Replace Temp with Query 将临时变量消灭掉（请看「范例」中的讨论）。 
-·
-将被提炼码中需要读取的局部变量，当作参数传给目标函数。
-·
-处理完所有局部变量之后，进行编译。
-·
-在源函数中，将被提炼码替换为「对目标函数的调用」。
-Ø
-如果你将任何临时变量移到目标函数中，请检查它们原本的声明式是否在被提炼码的外围。如果是，现在你可以删除这些声明式了。
-·
-编译，测试。
+<ul>
+	<li>创造一个新函数，根据这个函数的意图来给它命名（以它「做什么」来命名， 而不是以它「怎样做」命名）。</li>
+	<ul>
+		<li>即使你想要提炼（extract）的代码非常简单，例如只是一条消息或一个函数调用，只要新函数的名称能够以更好方式昭示代码意图，你也应该提炼它。但如果你想不出一个更有意义的名称，就别动。</li>
+	</ul>
 
+	<li>将提炼出的代^码从源函数（source）拷贝到新建的目标函数（target）中。</li>
+
+	<li>仔细检查提炼出的代码，看看其中是否引用了「作用域（scope）限于源函数」的变量（包括局部变量和源函数参数）。</li>
+
+	<li>检查是否有「仅用于被提炼码」的临时变量（temporary variables ）。如果有，在目标函数中将它们声明为临时变量。 </li>
+
+	<li>检查被提炼码，看看是否有任何局部变量（local-scope variables ）的值被它改变。如果一个临时变量值被修改了，看看是否可以将被提炼码处理为一个查询（query），并将结果赋值给相关变量。如果很难这样做，或如果被修改的 变量不止一个，你就不能仅仅将这段代码原封不动地离炼出来。你可能需要先使用 Split Temporary Variable，然后再尝试提炼。也可以使用Replace Temp with Query 将临时变量消灭掉（请看「范例」中的讨论）。</li> 
+
+	<li>将被提炼码中需要读取的局部变量，当作参数传给目标函数。</li>
+
+	<li>处理完所有局部变量之后，进行编译。</li>
+
+	<li>在源函数中，将被提炼码替换为「对目标函数的调用」。</li>
+	<ul>
+		<li>如果你将任何临时变量移到目标函数中，请检查它们原本的声明式是否在被提炼码的外围。如果是，现在你可以删除这些声明式了。</li>
+	</ul>
+
+	<li>编译，测试。</li>
+</ul>
+
+<br>
 <h3>范例（examples）：无局部变量（No Local Variables）</h3>
 <p>
 在最简单的情况下，Extract Method 易如反掌。请看下列函数：
@@ -81,10 +87,9 @@ Extract Method是我最常用的重构手法之一。当我看见一个过长的
       //print details
       System.out.println ("name:" + _name);
       System.out.println ("amount" + outstanding);
-  }
-  {% endhighlight %}
-<p>
-  我们可以轻松提炼出「打印banner」的代码。我只需要剪切、粘贴、再插入一个函数调用动作就行了： 
+  }{% endhighlight %}
+
+<p>  我们可以轻松提炼出「打印banner」的代码。我只需要剪切、粘贴、再插入一个函数调用动作就行了： 
   {% highlight java linenos %}
   void printOwing() {
 
@@ -109,10 +114,11 @@ Extract Method是我最常用的重构手法之一。当我看见一个过长的
       System.out.println ("**************************");
       System.out.println ("***** Customer Owes ******");
       System.out.println ("**************************");
-  }
-  {% endhighlight %}
+  }{% endhighlight %}
 
+<br>
 <h3>范例（Examples）：有局部变量（Using Local Variables）</h3>
+
 <p>
 果真这么简单，这个重构手法的困难点在哪里？是的，就在局部变量，包括传进源函数的参数和源函数所声明的临时变量。局部变量的作用域仅限于源函数，所以当我使用Extract Method 时，必须花费额外功夫去处理这些变量。某些时候它们甚至可能妨碍我，使我根本无法进行这项重构。 
 <p>
@@ -133,8 +139,7 @@ Extract Method是我最常用的重构手法之一。当我看见一个过长的
       //print details
       System.out.println ("name:" + _name);
       System.out.println ("amount" + outstanding);
-  }
-  {% endhighlight %}
+  }{% endhighlight %}
 
 <p>
 我就可以将「打印详细信息」这一部分提炼为「带一个参数的函数」：
@@ -157,14 +162,15 @@ Extract Method是我最常用的重构手法之一。当我看见一个过长的
   void printDetails (double outstanding) {
       System.out.println ("name:" + _name);
       System.out.println ("amount" + outstanding);
-  }
-  {% endhighlight %}
+  }{% endhighlight %}
+  
 <p>
 必要的话，你可以用这种手法处理多个局部变量。
 <p>
-如果局部变量是个对象，而被提炼码调用了会对该对象造成修改的函数，也可以如法炮制。你同样只需将这个对象作为参数传递给目标函数即可。只有在被提炼码真的对一个局部变量赋值的情况下，你才必须采取其他措施。
-<p>
-范例（Examples）：对局部变量再赋值（Reassigning a Local Variable）
+如果局部变量是个对象，而被提炼码调用了会对该对象造成修改的函数，也可以如法炮制。你同样只需将这个对象作为参数传递给目标函数即可。只有在被提炼码真的对一个局部变量赋值的情况下，你才必须采取其他措施。</p>
+
+<br>
+<h3>范例（Examples）：对局部变量再赋值（Reassigning a Local Variable）</h3>
 <p>
 如果被提炼码对局部变量赋值，问题就变得复杂了。这里我们只讨论临时变量的问题。如果你发现源函数的参数被赋值，应该马上使用Remove Assignments to Parameters。 
 <p>
@@ -184,8 +190,7 @@ Extract Method是我最常用的重构手法之一。当我看见一个过长的
        }
 
        printDetails(outstanding);
-   }
-   {% endhighlight %}
+   }{% endhighlight %}
 
 <p>
 现在我把「计算」代码提炼出来：
@@ -204,8 +209,7 @@ Extract Method是我最常用的重构手法之一。当我看见一个过长的
            outstanding += each.getAmount();
        }
        return outstanding;
-   }
-   {% endhighlight %}
+   }{% endhighlight %}
 
 <p>
 Enumeration变量 e只在被提炼码中用到，所以我可以将它整个搬到新函数中。double变量outstanding在被提炼码内外都被使用到，所以我必须让提炼出来的新函数返回它。编译测试完成后，我就把回传值改名，遵循我的一贯命名原则： 
@@ -218,8 +222,7 @@ Enumeration变量 e只在被提炼码中用到，所以我可以将它整个搬�
           result = each.getAmount();
        }
        return result;
-   }
-   {% endhighlight %}
+   }{% endhighlight %}
 
 <p>
 本例中的outstanding变量只是很单纯地被初始化为一个明确初值，所以我可以只在新函数中对它初始化。如果代码还对这个变量做了其他处理，我就必须将它的值作为参数传给目标函数。对于这种变化，最初代码可能是这样： 
@@ -237,8 +240,7 @@ Enumeration变量 e只在被提炼码中用到，所以我可以将它整个搬�
            outstanding += each.getAmount();
        }
        printDetails(outstanding);
-   }
-  {% endhighlight %}
+   }{% endhighlight %}
 
 <p>
 提炼后的代码可能是这样：
@@ -258,8 +260,7 @@ Enumeration变量 e只在被提炼码中用到，所以我可以将它整个搬�
            result += each.getAmount();
        }
        return result;
-   }
-  {% endhighlight %}
+   }{% endhighlight %}
 
 <p>
 编译并测试后，我再将变量outstanding初始化过程整理一下：
@@ -268,11 +269,11 @@ Enumeration变量 e只在被提炼码中用到，所以我可以将它整个搬�
        printBanner();
        double outstanding = getOutstanding(previousAmount * 1.2);
        printDetails(outstanding);
-   }
-  {% endhighlight %}
+   }{% endhighlight %}
 
 <p>
 这时候，你可能会问：『如果需要返回的变量不止一个，又该怎么办呢？』
+
 <p>
 你有数种选择。最好的选择通常是：挑选另一块代码来提炼。我比较喜欢让每个函 数都只返回一个值，所以我会安排多个函数，用以返回多个值。如果你使用的语言支持「输出式参数」（output parameters），你可以使用它们带回多个回传值。但我还是尽可能选择单一返回值。 
 <p>

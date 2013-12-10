@@ -2,4 +2,156 @@
 layout: composing-methods
 head_en: Introduce Explaining Variable
 ---
+<p>
+你有一个复杂的表达式。
+<p> 
+<b>将该表达式（或其中一部分）的结果放进一个临时变量，以此变量名称来解释表达式用途。
+</b>
+{% highlight java linos %}
+ if ( (platform.toUpperCase().indexOf("MAC") > -1) &&
+     (browser.toUpperCase().indexOf("IE") > -1) &&
+      wasInitialized() && resize > 0 )
+{
+     // do something
+}
+{% endhighlight %}
+<p><img alt="" src="/refactoring-cheat-sheet/images/arrow.gif"/></p>
+{% highlight java linos %}
+   final boolean isMacOs     = platform.toUpperCase().indexOf("MAC") > -1;
+   final boolean isIEBrowser = browser.toUpperCase().indexOf("IE")  > -1;
+   final boolean wasResized  = resize > 0;
+ 
+   if (isMacOs && isIEBrowser && wasInitialized() && wasResized) {
+       // do something
+   }
+{% endhighlight %}
 
+<br> 
+<h3>动机（Motivation）</h3>
+<p> 
+表达式有可能非常复杂而难以阅读。这种情况下，临时变量可以帮助你将表达式分解为比较容易管理的形式。
+<p>  
+在条件逻辑（conditional logic ）中，Introduce Explaining Variable特别有价值：你可以用这项重构将每个条件子句提炼出来，以一个良好命名的临时变量来解释对应条件子句的意义。使用这项重构的另一种情况是，在较长算法中，可以运用临时变量来解释每一步运算的意义。
+<p>  
+Introduce Explaining Variable是一个很常见的重构手法，但我得承认，我并不常用它。我几乎总是尽量使用 Extract Method 来解释一段代码的意义。毕竟临时变量只在它所处的那个函数中才有意义，局限性较大，函数则可以在对象的整个生命中都有用，并且可被其他对象使用。但有时候，当局部变量使 Extract Method 难以进行时，我就使用Introduce Explaining Variable。</p>
+
+<br>
+<h3>作法（Mechanics）</h3>
+
+<ul>
+	<li>声明一个final临时变量，将待分解之复杂表达式中的一部分动作的运算结果赋值给它。</li>
+ 
+	<li>将表达式中的「运算结果」这一部分，替换为上述临时变量。</li>
+	<ul>
+		<li>如果被替换的这一部分在代码中重复出现，你可以每次一个，逐一替换。</li>
+	</ul>
+	<li>编译，测试。</li>
+ 
+	<li>重复上述过程，处理表达式的其他部分。</li>
+</ul>
+
+<br>
+<h3>范例（Example）</h3>
+<p>   
+我们从一个简单计算开始：
+{% highlight java linos %} 
+   double price() {
+   // price is base price - quantity discount + shipping
+   return _quantity * _itemPrice -
+       Math.max(0, _quantity - 500) * _itemPrice * 0.05 +
+       Math.min(_quantity * _itemPrice * 0.1, 100.0);
+   }
+{% endhighlight %}
+<p>
+这段代码还算简单，不过我可以让它变得更容易理解。首先我发现，底价（base price）等于数量（quantity）乘以单价（item price）。于是我把这一部分计算的结果放进 一个临时变量中：
+{% highlight java linos %}  
+   double price() {
+       // price is base price - quantity discount + shipping
+      final double basePrice = _quantity * _itemPrice;
+       return basePrice -
+           Math.max(0, _quantity - 500) * _itemPrice * 0.05 +
+           Math.min(_quantity * _itemPrice * 0.1, 100.0);
+   }
+{% endhighlight %}
+<p> 
+稍后也用上了「数量乘以单价」运算结果，所以我同样将它替换为basePrice临时变量：
+{% highlight java linos %}  
+   double price() {
+       // price is base price - quantity discount + shipping
+       final double basePrice = _quantity * _itemPrice;
+       return basePrice -
+           Math.max(0, _quantity - 500) * _itemPrice * 0.05 +
+           Math.min(basePrice * 0.1, 100.0);
+   }
+{% endhighlight %}
+<p> 
+然后，我将批发折扣（quantity discount）的计算提炼出来，将结果赋予临时变量 quantityDiscount：
+{% highlight java linos %}  
+  double price() {
+     // price is base price - quantity discount + shipping
+     final double basePrice = _quantity * _itemPrice;
+    final double quantityDiscount = Math.max(0, _quantity - 500) * _itemPrice * 0.05;
+     return basePrice - quantityDiscount +
+        Math.min(basePrice * 0.1, 100.0);
+  }
+{% endhighlight %}
+<p> 
+最后，我再把运费（shipping）计算提炼出来，将运算结果赋予临时变量shipping。 同时我还可以删掉代码中的注释，因为现在代码已经可以完美表达自己的意义了：
+{% highlight java linos %} 
+  double price() {
+     final double basePrice = _quantity * _itemPrice;
+     final double quantityDiscount = Math.max(0, _quantity - 500) * _itemPrice * 0.05;
+    final double shipping = Math.min(basePrice * 0.1, 100.0);
+     return basePrice - quantityDiscount + shipping;
+  }
+{% endhighlight %}
+
+<br>
+<h3>运用 Extract Method处理上述范例</h3>
+<p> 
+面对上述代码，我通常不会以临时变量来解释其动作意图，我更喜欢使用 Extract Method。让我们回到起点：
+{% highlight java linos %} 
+  double price() {
+     // price is base price - quantity discount + shipping
+     return _quantity * _itemPrice -
+        Math.max(0, _quantity - 500) * _itemPrice * 0.05 +
+        Math.min(_quantity * _itemPrice * 0.1, 100.0);
+  }
+{% endhighlight %}
+<p>
+这一次我把底价计算提炼到一个独立函数中：
+{% highlight java linos %}
+  double price() {
+      // price is base price - quantity discount + shipping
+      return basePrice() -
+          Math.max(0, _quantity - 500) * _itemPrice * 0.05 +
+          Math.min(basePrice() * 0.1, 100.0);
+  }
+ 
+  private double basePrice() {
+     return _quantity * _itemPrice;
+  }
+{% endhighlight %}
+<p> 
+我继续我的提炼，每次提炼出一个新函数。最后得到下列代码：
+{% highlight java linos %} 
+   double price() {
+       return basePrice() - quantityDiscount() + shipping();
+   }
+ 
+   private double quantityDiscount() {
+       return Math.max(0, _quantity - 500) * _itemPrice * 0.05;
+   }
+ 
+   private double shipping() {
+       return Math.min(basePrice() * 0.1, 100.0);
+   }
+ 
+   private double basePrice() {
+       return _quantity * _itemPrice;
+   }
+{% endhighlight %}
+<p>
+我比较喜欢使用 Extract Method，因为同一对象中的任何部分，都可以根据自己的需要去取用这些提炼出来的函数。一开始我会把这些新函数声明为private； 如果其他对象也需要它们，我可以轻易释放这些函数的访问限制。我还发现， Extract Method的工作量通常并不比Introduce Explaining Variable 来得大。
+<p>
+那么，应该在什么时候使用Introduce Explaining Variable 呢？答案是：在 Extract Method 需要花费更大工作量时。如果我要处理的是一个拥有大量局部变量的算法，那么使用 Extract Method 绝非易事。这种情况下我会使用Introduce Explaining Variable 帮助我理清代码，然后再考虑下一步该怎么办。搞清楚代码逻辑之后，我总是可以运用 Replace Temp with Query 把被我引入的那些解释性临时变量去掉。况且，如果我最终使用Replace Method with Method Object，那么被我引入的那些解释性临时变量也有其价值。

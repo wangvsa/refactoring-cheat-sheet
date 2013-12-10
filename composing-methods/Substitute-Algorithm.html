@@ -2,3 +2,55 @@
 layout: composing-methods
 head_en: Substitute Algorithm
 ---
+<p>
+把某个算法替换为另一个更清晰的算法。
+<p> 
+<b>将函数本体（method body）替换为另一个算法。</b>
+{% highlight java linos %} 
+   String foundPerson(String[] people){
+       for (int i = 0; i < people.length; i++) {
+           if (people[i].equals ("Don")){
+               return "Don";
+           }
+           if (people[i].equals ("John")){
+               return "John";
+           }
+           if (people[i].equals ("Kent")){
+               return "Kent";
+           }
+       }
+       return "";
+   }
+{% endhighlight %}
+
+<p><img alt="" src="/refactoring-cheat-sheet/images/arrow.gif"/></p>
+   
+{% highlight java linos %} 
+   String foundPerson(String[] people){
+       List candidates = Arrays.asList(new String[] {"Don", "John", "Kent"});
+       for (int i=0; i<people.length; i++)
+           if (candidates.contains(people[i]))
+               return people[i];
+       return "";
+   }
+{% endhighlight %}
+
+<br> 
+<h3>动机（Motivation）</h3>
+<p> 
+我没试过给猫剥皮，不过我听说这有好几种方法，我敢打赌其中某些方法会比另一 些简单。算法也是如此。如果你发现做一件事可以有更清晰的方式，就应该以较清晰的方式取代复杂方式。「重构」可以把一些复杂东西分解为较简单的小块，但有 时你就是必须壮士断腕，删掉整个算法，代之以较简单的算法。随着对问题有了更 多理解，你往往会发现，在你的原先作法之外，有更简单的解决方案，此时你就需 要改变原先的算法。如果你开始使用程序库，而其中提供的某些功能/特性与你自 己的代码重复，那么你也需要改变原先的算法。
+<p> 
+有时候你会想要修改原先的算法，让它去做一件与原先动作略有差异的事。这时候你也可以先把原先的算法替换为一个较易修改的算法，这样后续的修改会轻松许多。
+<p> 
+使用这项重构手法之前，请先确定自己已经尽可能分解了原先函数。替换一个巨大而复杂的算法是非常困难的，只有先将它分解为较简单的小型函数，然后你才能很有把握地进行算法替换工作。</p>
+
+<br> 
+<h3>作法（Mechanics）</h3>
+<ul> 
+	<li>准备好你的另一个（替换用）算法，让它通过编译。</li>
+ 
+	<li>针对现有测试，执行上述的新算法。如果结果与原本结果相同，重构结束。</li>
+ 
+	<li>如果测试结果不同于原先，在测试和调试过程中，以旧算法为比较参照标准。</li>
+	<ul><li>对于每个test case（测试用例），分别以新旧两种算法执行，并观察两者结果是否相同。这可以帮助你看到哪一个test case出现麻烦，以及出现了怎样的麻烦。</li></ul>
+</ul>
