@@ -2,3 +2,276 @@
 layout: organizing-data
 head_en: Duplicate Observed Data
 ---
+<p>
+(译注：本节大量保留domain，presentation，event，getter/setter，observed等字眼。所谓presentation class，用以处理「数据表现形式」；所谓domain class，用以处理业务逻辑。）
+<p> 
+你有一些domain class置身于GUI控件中，而domain method需要访问之。
+<p> 
+将该笔数据拷贝到一个domain object中。建立一个Observer模式，用以对domain object和GUI object内的重复数据进行同步控制（sync.）。
+<p class="p-img"><img alt="" src="{{site.baseurl}}/images/08fig04.gif" /></p>
+
+<h3>动机（Motivation）</he>
+<p>
+一个分层良好的系统，应该将处理用户界面（UI）和处理业务逻辑（business logic）的代码分开。之所以这样做，原因有以下几点：(1) 你可能需要使用数个不同的用 户界面来表现相同的业务逻辑；如果同时承担两种责任，用户界面会变得过分复杂； (2) 与GUI隔离之后，domain class的维护和演化都会更容易；你甚至可以让不同的开发者负责不同部分的开发。
+<p>
+尽管你可以轻松地将「行为」划分到不同部位，「数据」却往往不能如此。同一笔 数据有可能既需要内嵌于GUI控件，也需要保存于domain model里头。自从MVC（Model-View-Controller）模式出现后，用户界面框架都使用多层系统（multitiered system）来提供某种机制，使你不但可以提供这类数据，并保持它们同步（sync.）。
+<p>
+如果你遇到的代码是以双层（two-tiered）方式开发，业务逻辑（business logic）被内嵌于用户界面（UI）之中，你就有必要将行为分离出来。其中的主要工作就是函数的分解和搬移。但数据就不同了：你不能仅仅只是移动数据，你必须将它复制到新建部位中，并提供相应的同步机制。
+
+<h3>作法（Mechanics）（译注：建议搭配范例阅读）</h3>
+<ul>
+  <li>修改presentation class，使其成为 domain class 的 Observer[GoF]。</li>
+    <ul>
+      <li>如果尚未有domain class，就建立一个。</li>
+      <li>如果没有「从presentation class到domain class的关联性（link）， 就将domain class保存于咖presentation class的一个值域中。</li>
+    </ul>
+    <li>针对GUI class内的domain data，使用Self Encapsulate Field 。</li>
+    <li>编译，测试。</li>
+    <li>在事件处理函数（event handler）中加上对设值函数（setter）的调用，以「直接访问方式」（译注：亦即直接调用组件提供的相关函数）更新GUI组件。</li>
+      <ul>
+        <li>在事件处理函数中放一个设值函数（setter），利用它将GUI组件更新为domain data的当前值。当然这其实没有必要，你只不过是拿它的值设定它自己。但是这样使用setter，便是允许其中的任何动作得以于日后被执行起来，这是这一步骤的意义所在。</li>
+        <li>进行这个改变时，对于组件，不要使用取值函数（getter），应该采取「直接取用」方式（译注：亦即直接调用GUI组件所提供的函数），因为稍后我们将修改取值函数（getter），使其从domain object（而非GUI组件）取值。设值函数（setter）也将遭受类似修改。</li>
+        <li>确保测试代码能够触发新添加的事件处理（event handler）机制。</li>
+      </ul>
+    <li>编译，测试。</li>
+    <li>在domain class中定义数据及其相关访问函数（accessors）。</li>
+      <ul>
+        <li>确保domain class中的设值函数（setter）能够触发Observer模式的通报机制（notify mechanism）。</li>
+        <li>对于被观察（被监视）的数据，在domain class中使用「与presentation class所用的相同型别」（通常是字符串）来保存。后续重构中你可以自由改变这个数据型别。</li>
+      </ul>
+    <li>修改presentation class中的访问函数（accessors），将它们的操作对象改为 domain object （而非GUI组件）。</li>
+    <li>修改observer（译注：亦即presentation class）的update()，使其从相应的domain object中将所需数据拷贝给GUI组件。</li>
+  <li>编译，测试。
+</ul>
+
+<h3>范例（Example）</h3>
+<p>
+我们的范例从图8.1所示窗口开始。其行为非常简单：当用户修改文本框中的数值，另两个文本框就会自动更新。如果你修改Start或End，length就会自动成为两者计算所得的长度；如果你修改length，End就会随之改变。
+<p class="p-img">
+  <img alt="" src="{{site.baseurl}}/images/08fig05.gif" />
+  <br>图8.1  一个简单的GUI窗口
+</p>
+
+<p>
+一开始，所有函数都放在IntervalWindow class中。所有文本都能够响应「失去键盘焦点」（loss of focus）这一事件。
+{% highlight java linos %}
+ public class IntervalWindow extends Frame...
+   java.awt.TextField _startField;
+   java.awt.TextField _endField;
+   java.awt.TextField _lengthField;
+
+   class SymFocus extends java.awt.event.FocusAdapter
+   {
+       public void focusLost(java.awt.event.FocusEvent event)
+       {
+           Object object = event.getSource();
+       //译注：侦测到哪一个文本框失去键盘焦点，就调用其event-handler.
+           if (object == _startField)
+               StartField_FocusLost(event);
+           else if (object == _endField)
+               EndField_FocusLost(event);
+           else if (object == _lengthField)
+               LengthField_FocusLost(event);
+       }
+   }
+{% endhighlight %}
+
+<p>
+当Start文本框失去焦点，事件监听器调用StartField_FocusLost ()。另两个文本框的处理也类似。事件处理函数大致如下：
+{% highlight java linos %}
+   void StartField_FocusLost(java.awt.event.FocusEvent event) {
+       if (isNotInteger(_startField.getText()))
+           _startField.setText("0");
+       calculateLength();
+   }
+
+   void EndField_FocusLost(java.awt.event.FocusEvent event) {
+       if (isNotInteger(_endField.getText()))
+           _endField.setText("0");
+       calculateLength();
+   }
+
+   void LengthField_FocusLost(java.awt.event.FocusEvent event) {
+       if (isNotInteger(_lengthField.getText()))
+           _lengthField.setText("0");
+       calculateEnd();
+   }
+{% endhighlight %}
+
+<p>
+你也许会奇怪，为什么我这样实现一个窗口呢？因为在我的IDE集成开发环境（Cafe）中，这是最简单的方式。
+<p>
+如果文本框内的字符串无法转换为一个整数，那么该文本框的内容将变成0。而后，调用相关计算函数：
+{% highlight java linos %}
+ void calculateLength(){
+     try {
+       int start = Integer.parseInt(_startField.getText());
+       int end = Integer.parseInt(_endField.getText());
+       int length = end - start;
+       _lengthField.setText(String.valueOf(length));
+     } catch (NumberFormatException e) {
+       throw new RuntimeException ("Unexpected Number Format Error");
+     }
+}
+void calculateEnd() {
+   try {
+     int start = Integer.parseInt(_startField.getText());
+     int length = Integer.parseInt(_lengthField.getText());
+     int end = start + length;
+     _endField.setText(String.valueOf(end));
+   } catch (NumberFormatException e) {
+     throw new RuntimeException ("Unexpected Number Format Error");
+   }
+}
+{% endhighlight %}
+
+<p>
+我的任务就是将非视觉性的计算逻辑从GUI中分离出来。基本上这就意味将calculateLength ()和calculateEnd ()移到一个独立的domain class去。为了这一目的，我需要能够在不引用（指涉，referring）窗口类的前提下取用Start、End和 length 三个文本框的值。惟一办法就是将这些数据复制到domain class中，并保持与GUI class数据同步。这就是Duplicate Observed Data 的任务。
+<p>
+截至目前我还没有一个domain class，所以我着手建立一个：
+{% highlight java linos %}
+ class Interval extends Observable {}
+{% endhighlight %}
+
+IntervalWindow class需要与此崭新的domain class建立一个关联：
+{% highlight java linos %}
+   private Interval _subject;
+{% endhighlight %}
+
+<p>
+然后，我需要合理地初始化_subject值域，并把IntervalWindow class变成Interval class的一个Observer。这很简单,只需把下列代码放进IntervalWindow构造函数中就可以了 ：
+{% highlight java linos %}
+   _subject = new Interval();
+   _subject.addObserver(this);
+   update(_subject, null);
+{% endhighlight %}
+
+我喜欢把这段代码放在整个建构过程的最后。其中对update()的调用可以确保： 当我把数据复制到domain class后，GUI将根据domain class进行初始化。update()是在java.util.observer接口中声明的，因此我必须让IntervalWindow class实现这一接口：
+{% highlight java linos %}
+ public class IntervalWindow extends Frame implements Observer
+{% endhighlight %}
+
+然后我还需要为IntervalWindow class建立一个update()。此刻我先令它为空：
+{% highlight java linos %}
+   public void update(Observable observed, Object arg) { }
+{% endhighlight %}
+
+现在我可以编译并测试了。到目前为止我还没有做出任何真正的修改。呵呵，小心驶得万年船。
+
+接下来我把注意力转移到文本框。一如往常我每次只改动一点点。为了卖弄一下我的英语能力，我从End文本框开始。第一件要做的事就是实施 Self Encapsulate Field。文本框的更新是通过getText()和setText()两函数实现的，因此我所建立的访问函数（accessors）需要调用这两个函数：
+{% highlight java linos %}
+   //译注：class IntervalWindow...
+   String getEnd() {
+       return _endField.getText();
+   }
+
+   void setEnd (String arg) {
+       _endField.setText(arg);
+   }
+{% endhighlight %}
+
+然后，找出_endField 的所有引用点，将它们替换为适当的访问函数：
+{% highlight java linos %}
+void calculateLength(){
+     try {
+       int start = Integer.parseInt(_startField.getText());
+       int end = Integer.parseInt(getEnd());
+       int length = end - start;
+       _lengthField.setText(String.valueOf(length));
+     } catch (NumberFormatException e) {
+       throw new RuntimeException ("Unexpected Number Format Error");
+     }
+   }
+
+   void calculateEnd() {
+     try {
+       int start = Integer.parseInt(_startField.getText());
+       int length = Integer.parseInt(_lengthField.getText());
+       int end = start + length;
+      setEnd(String.valueOf(end));
+     } catch (NumberFormatException e) {
+       throw new RuntimeException ("Unexpected Number Format Error");
+     }
+ }
+
+   void EndField_FocusLost(java.awt.event.FocusEvent event) {
+       if (isNotInteger(getEnd()))
+          setEnd("0");
+       calculateLength();
+    }
+{% endhighlight %}
+
+这是Self Encapsulate Field 的标准过程。然而当你处理GUI class 时，情况还更复杂些：用户可以直接（通过GUI ）修改文本框内容，不必调用setEnd() 。 因此我需要在GUI class 的事件处理函数中加上对setEnd() 的调用。这个动作把文本框设定为其当前值。当然，这没带来什么影响，但是通过这样的方式，我 们可以确保用户的输入的确是通过设值函数（setter）进行的：
+{% highlight java linos %}
+   void EndField_FocusLost(java.awt.event.FocusEvent event) {
+       setEnd(_endField.getText());        //译注：注意对以下对此行的讨论
+       if (isNotInteger(getEnd()))
+           setEnd("0");
+       calculateLength();
+   }
+{% endhighlight %}
+
+<p>
+上述调用动作中，我并没有使用上一页的getEnd() 取得End 文本框当前内容，而是直接取用该文本框。之所以这样做是因为，随后的重构将使上一页的getEnd() 从domain object（而非文本框）身上取值。那时如果这里用的是getEnd() 函数， 每当用户修改文本框内容，这里就会将文本框又改回原值。所以我必须使用「直接访问文本框」的方式获取当前值。现在我可以编译并测试值域封装后的行为了。
+
+<p>
+现在，在domain class 中加入 _end 值域：
+{% highlight java linos %}
+ class Interval...
+   private String _end = "0";
+{% endhighlight %}
+
+<p>
+在这里，我给它的初值和GUI class 给它的初值是一样的。然后我再加入取值/设值（getter/setter）：
+{% highlight java linos %}
+ class Interval...
+
+   String getEnd() {
+       return _end;
+   }
+   void setEnd (String arg) {
+       _end = arg;
+       setChanged();
+       notifyObservers();        //译注：notificaiton code
+   }
+{% endhighlight %}
+
+<p>
+由于使用了Observer 模式，我必须在设值函数（setter）中加上「发出通告」动作 （即所谓notify code ）。我把_end 声明为一个字符串，而不是一个看似更合理的整数，这是因为我希望将修改量减至最少。将来成功复制数据完毕后，我可以自由自在地于domain class 内部把_end 声明为整数。
+<p>
+现在，我可以再编译并测试一次。我希望通过所有这些预备工作，将下面这个较为棘手的重构步骤的风险降至最低。
+<p>
+首先，修改IntervalWindow  class 的访问函数，令它们改用Interval 对象：
+{% highlight java linos %}
+ class IntervalWindow...
+   String getEnd() {
+       return _subject.getEnd();
+   }
+   void setEnd (String arg) {
+      _subject.setEnd(arg);                //(A) 译注：本页最下对此行有些说明
+   }
+{% endhighlight %}
+
+<p>
+同时也修改update() 函数，确保GUI 对Interval 对象发来的通告做出响应：
+{% highlight java linos %}
+ class IntervalWindow...
+   public void update(Observable observed, Object arg) {
+     _endField.setText(_subject.getEnd());
+   }
+{% endhighlight %}
+
+<p>
+这是另一个需要「直接取用文本框」的地点。如果我调用的是设值函数（setter），程序将陷入无限递归调用（译注：这是因为IntervalWindow 的设值函数setEnd() 调用了Interval.setEnd() ，一如稍早（A）行所示；而Interval.setEnd()  又调用notifyObservers() ，导致IntervalWindow.update() 又被调用）。
+<p>
+现在，我可以编译并测试。数据都恰如其分地被复制了。
+<p>
+另两个文本框也如法炮制。完成之后，我可以使用Move Method 将calculateEnd ()和calculateLength ()搬到Interval class去。这么一来，我就
+<p>
+拥有一个「包容所有domain behavior 和 domain data」并与 GUI code分离的domain class了。
+<p>
+如果上述工作都完成了，我就会考虑彻底摆脱这个GUI class。如果GUI class是个较为老旧的AWT class，我会考虑将它换成一个比较好看的Swing class，而且后者的坐标定位能力也比较强。我可以在domain class之上建立一个Swing GUI。这样，只要我高兴，随时可以去掉老旧的GUI class。
+<p>
+使用事件监昕器（Event Listeners）
+<p>
+如果你使用事件监听器（event Listener）而不是Observer/Observable模式，仍然可以实施Duplicate Observed Data。这种情况下，你需要在domain model中建立一个listener class和一个event class (如果你不在意依存关系的话，也可以使用AWT class）。然后，你需要对domain object注册listeners，就像前例对observable对象注册observes一样。每当domain object发生变化（类似上例的update()函数被调用），就向listeners发送一个事件（event）。IntervalWindow class可以利用一个inner class （内嵌类）来实现监听器接口（listener interface），并在适 当时候调用适当的update()函数。

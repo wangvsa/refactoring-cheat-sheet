@@ -2,3 +2,396 @@
 layout: organizing-data
 head_en: Encapsulate Collection
 ---
+<p>
+有个函数（method）返回一个群集（collection）。
+<p>
+让这个函数返回该群集的一个只读映件（read-only view），并在这个class中提供「添加/移除」（add/remove）群集元素的函数。
+<p class="p-img"><img alt="" src="{{site.baseurl}}/images/08fig08.gif"/></p>
+
+<h3>动机（Motivation）</h3>
+<p>
+class常常会使用群集（collection，可能是array、list、set或vector）来保存一组实体。这样的class通常也会提供针对该群集的「取值/设值函数」（getter/setter）。
+<p>
+但是，群集的处理方式应该和其他种类的数据略有不同。取值函数（getter）不该返回群集自身，因为这将让用户得以修改群集内容而群集拥有者却一无所悉。这也会对用户暴露过多「对象内部数据结构」的信息。如果一个取值函数（getter）确实需要返回多个值，它应该避免用户直接操作对象内所保存的群集，并隐藏对象内「与用户无关」的数据结构。至于如何做到这一点，视你使用的版本不同而有所不同。
+<p>
+另外，不应该为这整个群集提供一个设值函数（setter），但应该提供用以为群集添加/移除（add/remove）元素的函数。这样，群集拥有者（对象）就可以控制群集元素的添加和移除。
+<p>
+如果你做到以上数点，群集（collection）就被很好地封装起来了，这便可以降低群集拥有者（class）和用户之间的耦合度。
+
+<h3>作法（Mechanics）</h3>
+<ul>
+  <li>加入「为群集添加（add）、移除（remove）元素」的函数。</li>
+  <li>将「用以保存群集」的值域初始化为一个空群集。</li>
+  <li>编译。</li>
+  <li>找出「群集设值函数」的所有调用者。你可以修改那个设值函数，让它使用 上述新建立的「添加/移除元素」函数；也可以直接修改调用端，改让它们调用上述新建立的「添加/移除元素」函数。
+    <ul>
+      <li>两种情况下需要用到「群集设值函数」：(1) 群集为空时；(2) 准备将原有群集替换为另一个群集时。</li>
+      <li>你或许会想运用Rename Method 为「群集设值函数」改名，从setXxx()改为initialzeXxx()或replaceXxx()。</li>
+    </ul>
+  </li>
+  <li>编译，测试。</li>
+  <li>找出所有「通过取值函数（getter）获得群集并修改其内容」的函数。逐一修改这些函数，让它们改用「添加/移除」（add/remove）函数。每次修改后，编译并测试。</li>
+  <li>修改完上述所有「通过取值函数（getter）获得群集并修改群集内容」的函数后，修改取值函数自身，使它返回该群集的一个只读映件（read-only view）。
+    <ul>
+      <li>在Java 2中，你可以使用Collection.unmodifiableXxx()得到该群集的只读映件。</li>
+      <li>在Java 1.1中，你应该返回群集的一份拷贝。</li>
+    </ul>
+  </li>
+  <li>编译，测试。</li>
+  <li>找出取值函数（getter）的所有用户，从中找出应该存在于「群集之宿主对象（host object）内的代码。运用 Extract Method 和 Move Method 将这些代码移到宿主对象去。</li>
+</ul>
+
+<p>
+如果你使用Java 2，那么本项重构到此为止。如果你使用Java 1.1，那么用户也许会喜欢使用枚举（enumeration）。为了提供这个枚举，你应该这样做：
+<ul>
+  <li>修改现有取值函数（getter）的名字，然后添加一个新取值函数，使其返回一个枚举。找出旧取值函数的所有被使用点，将它们都改为使用新取值函数。
+    <ul>
+      <li>如果这一步跨度太大，你可以先使用Rename Method 修改原取值函数的名称；再建立一个新取值函数用以返回枚举；最后再修改 所有调用者，使其调用新取值函数。</li>
+    </ul>
+  </li>
+  <li>编译，测试。</li>
+</ul>
+
+<h3>范例（Example）</h3>
+<p>
+Java 2拥有一组全新群集（collections）——并非仅仅加入一些新classes，而是完全改变了群集的风格。所以在Java 1.1和Java 2中，封装群集的方式也完全不同。我首先讨论Java 2的方式，因为我认为功能更强大的Java 2 collections会取代Java 1.1 collections 的地位。
+
+<h3>范例（Example）：Java 2</h3>
+<p>
+假设有个人要去上课。我们用一个简单的Course来表示「课程」：
+{% highlight java linos %}
+ class Course...
+   public Course (String name, boolean isAdvanced) {...};
+   public boolean isAdvanced() {...};
+{% endhighlight %}
+
+<p>
+我不关心课程其他细节。我感兴趣的是表示「人」的Person：
+{% highlight java linos %}
+ class Person...
+   public Set getCourses() {
+       return _courses;
+   }
+   public void setCourses(Set arg) {
+       _courses = arg;
+   }
+   private Set _courses;
+{% endhighlight %}
+
+<p>
+有了这个接口，我们就可以这样为某人添加课程：
+{% highlight java linos %}
+           Person kent = new Person();
+           Set s = new HashSet();
+           s.add(new Course ("Smalltalk Programming", false));
+           s.add(new Course ("Appreciating Single Malts", true));
+           kent.setCourses(s);
+           Assert.equals (2, kent.getCourses().size());
+           Course refact = new Course ("Refactoring", true);
+           kent.getCourses().add(refact);
+           kent.getCourses().add(new Course ("Brutal Sarcasm", false));
+           Assert.equals (4, kent.getCourses().size());
+           kent.getCourses().remove(refact);
+           Assert.equals (3, kent.getCourses().size());
+{% endhighlight %}
+
+<p>
+如果想了解高级课程，可以这么做：
+{% highlight java linos %}
+           Iterator iter = person.getCourses().iterator();
+           int count = 0;
+           while (iter.hasNext()) {
+              Course each = (Course) iter.next();
+              if (each.isAdvanced()) count ++;
+           }
+{% endhighlight %}
+
+<p>
+我要做的第一件事就是为Person中的群集（collection）建立合适的修改函数（modifiers，亦即add/remove函数：)，如下所示，然后编译：
+{% highlight java linos %}
+ class Person
+   public void addCourse (Course arg) {
+       _courses.add(arg);
+   }
+   public void removeCourse (Course arg) {
+       _courses.remove(arg);
+   }
+{% endhighlight %}
+
+<p>
+如果我像下面这样初始化_courses值域，我的人生会轻松得多：
+{% highlight java linos %}
+   private Set _courses = new HashSet();
+{% endhighlight %}
+
+<p>
+接下来我需要观察设值函数（setter）的调用者。如果有许多地点大量运用了设值函数，我就需要修改设值函数，令它调用添加/移除（add/remove）函数。这个过程的复杂度取决于设值函数的被使用方式。设值函数的用法有两种，最简单的情况就是： 它被用来「对群集进行初始化动作」。换句话说，设值函数被调用之前，_courses 是个空群集。这种情况下我只需修改设值函数，令它调用添加函数（add）就行了 ：
+{% highlight java linos %}
+ class Person...
+   public void setCourses(Set arg) {
+       Assert.isTrue(_courses.isEmpty());
+       Iterator iter = arg.iterator();
+       while (iter.hasNext()) {
+           addCourse((Course) iter.next());
+       }
+    }
+{% endhighlight %}
+
+<p>
+修改完毕后，最好以Rename Method 更明确地展示这个函数的意图。
+{% highlight java linos %}
+   public void initializeCourses(Set arg) {
+       Assert.isTrue(_courses.isEmpty());
+       Iterator iter = arg.iterator();
+       while (iter.hasNext()) {
+           addCourse((Course) iter.next());
+       }
+   }
+{% endhighlight %}
+
+<p>
+更普通（译注：而非上述所言对「空群集」设初值）的情况下，我必须首先以移除函数（remove）将群集中的所有元素全部移除，然后再调用添加函数（add）将 元素一一添加进去。不过我发现这种情况很少出现（晤，愈是普通的情况，愈少出现）。
+<p>
+如果我知道初始化时，除了添加元素，不会再有其他行为，那么我可以不使用循环， 直接调用addAll() 函数：
+{% highlight java linos %}
+   public void initializeCourses(Set arg) {
+       Assert.isTrue(_courses.isEmpty());
+      _courses.addAll(arg);
+   }
+{% endhighlight %}
+
+<p>
+我不能仅仅对这个set 赋值，就算原本这个set 是空的也不行。因为万一用户在「把set 传递给Person 对象」之后又去修改它，会破坏封装。我必须像上面那样创建set 的一个拷贝。
+<p>
+如果用户仅仅只是创建一个set，然后使用设值函数（setter。译注：目前已改名为initializeCourses()），我可以让它们直接使用添加/移除（add/remove）函数， 并将设值函数完全移除。于是，以下代码：
+{% highlight java linos %}
+           Person kent = new Person();
+           Set s = new HashSet();
+           s.add(new Course ("Smalltalk Programming", false));
+           s.add(new Course ("Appreciating Single Malts", true));
+           kent.initializeCourses(s);
+{% endhighlight %}
+
+<p>
+就变成了：
+{% highlight java linos %}
+           Person kent = new Person();
+          kent.addCourse(new Course ("Smalltalk Programming", false));
+          kent.addCourse(new Course ("Appreciating Single Malts", true));
+{% endhighlight %}
+
+<p>
+接下来我幵始观察取值函数（getter）的使用情况。首先处理「有人以取值函数修改底部群集（underlying collection）」的情况，例如：
+{% highlight java linos %}
+   kent.getCourses().add(new Course ("Brutal Sarcasm", false));
+{% endhighlight %}
+
+<p>
+这种情况下我必须加以改变，使它调用新的修改函数（modifier）：
+{% highlight java linos %}
+   kent.addCourse(new Course ("Brutal Sarcasm", false));
+{% endhighlight %}
+
+<p>
+修改完所有此类情况之后，我可以让取值函数（getter）返回一个只读映件（read-only view），用以确保没有任何一个用户能够通过取值函数（getter）修改群集：
+{% highlight java linos %}
+   public Set getCourses() {
+       return Collections.unmodifiableSet(_courses);
+   }
+{% endhighlight %}
+
+<p>
+这样我就完成了对群集的封装。此后，不通过Person 提供的add/remove 函数，谁也不能修改群集内的元素。
+
+<h3>将行为移到这个class中</h3>
+<p>
+我拥有了合理的接口。现在开始观察取值函数（getter）的用户，从中找出应该属于Person 的代码。下面这样的代码就应该搬移到Person 去：
+{% highlight java linos %}
+           Iterator iter = person.getCourses().iterator();
+           int count = 0;
+           while (iter.hasNext()) {
+              Course each = (Course) iter.next();
+              if (each.isAdvanced()) count ++;
+           }
+{% endhighlight %}
+
+<p>
+因为以上只使用了属于Person的数据。首先我使用 Extract Method 将这段代码提炼为一个独立函数：
+{% highlight java linos %}
+  int numberOfAdvancedCourses(Person person) {
+       Iterator iter = person.getCourses().iterator();
+       int count = 0;
+       while (iter.hasNext()) {
+           Course each = (Course) iter.next();
+           if (each.isAdvanced()) count ++;
+       }
+       return count;
+   }
+{% endhighlight %}
+
+<p>
+然后使用Move Method 将这个函数搬移到Person中：
+{% highlight java linos %}
+ class Person...
+   int numberOfAdvancedCourses() {
+       Iterator iter = getCourses().iterator();
+       int count = 0;
+       while (iter.hasNext()) {
+           Course each = (Course) iter.next();
+           if (each.isAdvanced()) count ++;
+       }
+       return count;
+   }
+{% endhighlight %}
+
+<p>
+举个常见例子，下列代码：
+{% highlight java linos %}
+ kent.getCourses().size()
+{% endhighlight %}
+
+<p>
+可以修改成更具可读性的样子，像这样：
+{% highlight java linos %}
+ kent.numberOfCourses()
+
+ class Person...
+   public int numberOfCourses() {
+       return _courses.size();
+   }
+{% endhighlight %}
+
+<p>
+数年以前，我曾经担心将这样的行为搬移到Person 中会导致Person 变得臃肿。但是在实际工作经验中，我发现这通常并不成为问题。
+
+<h3>范例： Java 1.1</h3>
+在很多地方，Java 1.1的情况和Java 2非常相似。这里我使用同一个范例，不过群集改为vector （译注：因为vector 属于Java 1.1，不属于Java 2）：
+{% highlight java linos %}
+ class Person...
+   public Vector getCourses() {
+       return _courses;
+   }
+   public void setCourses(Vector arg) {
+       _courses = arg;
+   }
+   private Vector _courses;
+{% endhighlight %}
+
+<p>
+同样地，我首先建立修改函数（modifiers：add/remove 函数），并初始化_courses值域，如下所示：
+{% highlight java linos %}
+ class Person
+   public void addCourse(Course arg) {
+       _courses.addElement(arg);
+   }
+   public void removeCourse(Course arg) {
+       _courses.removeElement(arg);
+   }
+   private Vector _courses = new Vector();
+{% endhighlight %}
+
+<p>
+我可以修改setCourses()来初始化这个vector：
+{% highlight java linos %}
+   public void initializeCourses(Vector arg) {
+       Assert.isTrue(_courses.isEmpty());
+       Enumeration e = arg.elements();
+       while (e.hasMoreElements()) {
+           addCourse((Course) e.nextElement());
+       }
+   }
+{% endhighlight %}
+
+<p>
+然后，我修改取值函数（getter）调用点，让它们改用新建的修改函数（modifiers）。 于是下列代码：
+{% highlight java linos %}
+       kent.getCourses().addElement(new Course ("Brutal Sarcasm", false));
+{% endhighlight %}
+
+<p>
+就变成了：
+{% highlight java linos %}
+       kent.addCourse(new Course ("Brutal Sarcasm", false));
+{% endhighlight %}
+
+<p>
+最后一步需要有点改变，因为Java 1.1的Vector class并没有提供「不可修改版」（unmodifiable version）：
+{% highlight java linos %}
+ class Person...
+   Vector getCourses() {
+       return (Vector) _courses.clone();
+   }
+{% endhighlight %}
+
+<p>
+这样便完成了群集的封装。此后，如果不通过Person 提供的函数，谁也不能改变群集的元素。
+
+<h3>范例：封装数组（Encapsulating Arrays）</h3>
+<p>
+数组（array）很常被使用，特别是对于那些不熟悉群集（collections）的程序员而言。我很少使用数组，因为我更喜欢功能更加丰富的群集类。进行封装时，我常把数组换成其他群集。
+<p>
+这次我们的范例从一个字符串数组（string array）开始：
+{% highlight java linos %}
+   String[] getSkills() {
+       return _skills;
+   }
+   void setSkills (String[] arg) {
+       _skills = arg;
+   }
+   String[] _skills;
+{% endhighlight %}
+
+<p>
+同样地，首先我要提供一个修改函数（modifier）。由于用户有可能修改数组中某一特定位置上的值，所以我提供的setSkill()必须能对任何特定位置上的元素赋值：
+{% highlight java linos %}
+   void setSkill(int index, String newSkill) {
+       _skills[index] = newSkill;
+   }
+{% endhighlight %}
+
+<p>
+如果我需要对整个数组赋值，可以使用下列函数：
+{% highlight java linos %}
+   void setSkills (String[] arg) {
+       _skills = new String[arg.length];
+       for (int i=0; i < arg.length; i++)
+           setSkill(i,arg[i]);
+   }
+{% endhighlight %}
+
+<p>
+如果需要处理「被移除元素」（removed elements），就会有些困难。如果作为引数（argument）的数组和原数组长度不同，情况也会比较复杂。这也是我优先选择群集的原因之一。
+<p>
+现在，我需要观察取值函数（getter）的调用者。我可以把下列代码：
+{% highlight java linos %}
+   kent.getSkills()[1] = "Refactoring";
+{% endhighlight %}
+
+<p>
+改成：
+{% highlight java linos %}
+   kent.setSkill(1,"Refactoring");
+{% endhighlight %}
+
+<p>
+完成这一系列修改之后，我可以修改取值函数（getter），令它返回一份数组拷贝：
+{% highlight java linos %}
+   String[] getSkills() {
+       String[] result = new String[_skills.length];
+       System.arraycopy(_skills, 0, result, 0, _skills.length);
+       return result;
+   }
+{% endhighlight %}
+
+<p>
+现在，是把数组换成list 的时候了：
+{% highlight java linos %}
+ class Person...
+   String[] getSkills() {
+       return (String[]) _skills.toArray(new String[0]);
+   }
+   void setSkill(int index, String newSkill) {
+       _skills.set(index,newSkill);
+   }
+   List _skills = new ArrayList();
+{% endhighlight %}

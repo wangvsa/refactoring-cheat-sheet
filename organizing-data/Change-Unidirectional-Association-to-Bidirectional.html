@@ -2,3 +2,110 @@
 layout: organizing-data
 head_en: Change Unidirectional Association to Bidirectional
 ---
+<p>
+两个classes都需要使用对方特性，但其间只有一条单向连接（one-way link）。
+<p>
+添加一个反向指针，并使修改函数（modifiers）能够同时更新两条连接。（译注：这里的指针等同于句柄（handle），修改函数（modifier）指的是改变双方关系者）
+<p class="p-img"><img alt="" src="{{site.baseurl}}/images/08fig06.gif" /></p>
+ 
+<h3>动机（Motivation）</h3>
+<p>
+开发初期，你可能会在两个classes之间建立一条单向连接，使其中一个可以引用另一个class。随着时间推移，你可能发现referred class 需要得到其引用者（某个object）以便进行某些处理。也就是说它需要一个反向指针。但指针乃是一种单向连接，你不可能反向操作它。通常你可以绕道而行，虽然会耗费一些计算时间， 成本还算合理，然后你可以在referred class中建立一个专职函数，负责此一行为。 但是，有时候，想绕过这个问题并不容易，此时你就需要建立双向引用关系（two-way reference），或称为反向指针（back pointer）。如果你不习惯使用反向指针，它们很容易造成混乱；但只要你习惯了这种手法，它们其实并不是太复杂。
+<p>
+「反向指针」手法有点棘手，所以在你能够自在运用它之前，应该有相应的测试。通常我不花心思去测试访问函数（accessors），因为普通访问函数的风险没有高到需要测试的地步，但本重构要求测试访问函数，所以它是极少数需要添加测试的重构 手法之一。
+<p>
+本重构运用反向指针（back pointer）实现双向关联（bidirectionality）。其他技术（例如连接对象，link object）需要其他重构手法。
+ 
+<h3>作法（Mechanics）</h3>
+<ul>
+  <li>在class中增加一个值域，用以保存「反向指针」。</li>
+  <li>决定由哪个class (引用端或被引用端）控制关联性（association）。</li>
+  <li>在「被控端」建立一个辅助函数，其命名应该清楚指出它的有限用途。</li>
+  <li>如果既有的修改函数（modifier）在「控制端」，让它负责更新反向指针。</li>
+  <li>如果既有的修改函数（modifier）在「被控端」，就在「控制端」建立一个控制函数，并让既有的修改函数调用这个新建的控制函数。</li>
+</ul>
+
+<h3>范例（Example）</h3>
+<p>
+下面是一段简单程序，其中有两个classes：表示「定单」的Order 和表示「客户」的Customer。Order引用了Customer，Customer则并没有引用Order：
+{% highlight java linos %}
+ class Order...
+   Customer getCustomer() {
+       return _customer;
+   }
+   void setCustomer (Customer arg) {
+       _customer = arg;
+   }
+   Customer _customer;
+{% endhighlight %}
+
+<p>
+首先，我要为Customer添加一个值域。由于一个客户可以拥有多份定单，所以这个新增值域应该是个群集（collection）。我不希望同一份定单在同一个群集中出现一次以上，所以这里适合使用set：
+{% highlight java linos %}
+ class Customer  {
+   private Set _orders = new HashSet();
+{% endhighlight %}
+
+<p>
+现在，我需要决定由哪一个class负责控制关联性（association）。我比较喜欢让单一class来操控，因为这样我就可以将所有「关联处理逻辑」集中安置于一地。我将按照下列步骤做出这一决定：
+<ol>
+  <li>如果两者都是reference objects，而其间的关联是「一对多」关系，那么就由「拥有单一 reference 」的那一方承担「控制者」角色。以本例而言，如果一个客户可拥有多份定单，那么就由Order class （定单）来控制关联性。</li>
+  <li>如果某个对象是另一对象的组成（component），那么由后者负责控制关联性。</li>
+  <li>如果两者都是reference objects，而其间的关联是「多对多」关系，那么随便其中哪个对象来控制关联性，都无所谓。</li>
+</ol>
+
+<p>
+本例之中由于Order负责控制关联性，所以我必须为Customer添加一个辅助函数，让Order可以直接访问 _orders（订单〕群集。Order的修改函数（modifier）将使用这个辅助函数对指针两端对象进行同步控制。我将这个辅助函数命名为friendOrders() ，表示这个函数只能在这种特殊情况下使用。此外，如果Order和Customer位在同一个package内，我还会将friendOrders ()声明为「package可见度」（译注：亦即不加任何修饰符的缺省访问级别），使其可见程度降到最低。
+<p>
+但如果这两个classes不在同一个package内，我就只好把friendOrders() 声明为public 了。
+{% highlight java linos %}
+ class Customer...
+   Set friendOrders() {
+   /** should only be used by Order when modifying the association */
+       return _orders;
+   }
+{% endhighlight %}
+
+<p>
+现在，我要改变修改函数（modifier），令它同时更新反向指针：
+{% highlight java linos %}
+ class Order...
+   void setCustomer (Customer arg) ...
+       if (_customer != null) _customer.friendOrders().remove(this);
+       _customer = arg;
+       if (_customer != null) _customer.friendOrders().add(this);
+   }
+{% endhighlight %}
+
+<p>
+classes 之间的关联性是各式各样的，因此修改函数（modifier ）的代码也会随之有所差异。如果_customer 的值不可能是null ，我可以拿掉上述的第一个null 检查， 但仍然需要检查引数（argument）是否为null 。不过，基本形式总是相同的：先让对方删除「指向你」的指针，再将你的指针指向一个新对象，最后让那个新对象把 它的指针指向你。
+<p>
+如果你希望在Customer 中也能修改连接（link），就让它调用控制函数：
+{% highlight java linos %}
+ class Customer...
+   void addOrder(Order arg) {
+       arg.setCustomer(this);
+   }
+{% endhighlight %}
+
+<p>
+如果一份定单也可以对应多个客户，那么你所面临的就是一个「多对多」情况，重构后的函数可能是下面这样：
+{% highlight java linos %}
+ class Order... //controlling methods
+   void addCustomer (Customer arg) {
+       arg.friendOrders().add(this);
+       _customers.add(arg);
+   }
+   void removeCustomer (Customer arg) {
+       arg.friendOrders().remove(this);
+       _customers.remove(arg);
+   }
+
+class Customer...
+   void addOrder(Order arg) {
+       arg.addCustomer(this);
+   }
+   void removeOrder(Order arg) {
+       arg.removeCustomer(this);
+   }
+{% endhighlight %}
