@@ -2,3 +2,146 @@
 layout: organizing-data
 head_en: Replace Subclass with Fields
 ---
+<p>
+你的各个subclasses 的惟一差别只在「返回常量数据」的函数身上。
+<p>
+<b>修改这些函数，使它们返回superclass 中的某个（新增）值域，然后销毁subclasses 。</b>
+<p class="p-img"><img alt="" src="{{site.baseurl}}/images/08fig12.gif" /></p>
+
+<h3>动机（Motivation）</h3>
+<p> 
+建立subclass 的目的，是为了增如新特性，或变化其行为。有一种变化行为（variant behavior ）称为「常量函数」（constant method）[Beck]，它们会返回一个硬编码 （hard-coded）值。这东西有其用途：你可以让不同的subclasses 中的同一个访问函数（accessors）返回不同的值。你可以在superclass 中将访问函数声明为抽象函数， 并在不同的subclass 中让它返回不同的值。
+<p> 
+尽管常量函数有其用途，但若subclass 中只有常量函数，实在没有足够的存在价值。 你可以在中设计一个与「常量函数返回值」相应的值域，从而完全去除这样的subclass 。如此一来就可以避免因subclassing 而带来的额外复杂性。
+
+<h3>作法（Mechanics）</h3>
+<ul>
+  <li>对所有subclasses 使用Replace Constructor with Factory Method 。</li>
+  <li>如果有任何代码直接引用subclass，令它改而引用superclass 。</li>
+  <li>针对每个常量函数，在superclass 中声明一个final 值域。</li>
+  <li>为superclass 声明一个protected 构造函数，用以初始化这些新增值域。</li>
+  <li>新建或修改subclass 构造函数，使它调用superclass 的新增构造函数。</li>
+  <li>编译，测试。</li>
+  <li>在superclass 中实现所有常量函数，令它们返回相应值域值，然后将该函数从subclass 中删掉。</li>
+  <li>每删除一个常量函数，编译并测试。</li>
+  <li>subclass 中所有的常量函数都被删除后，使用Inline Method 将subclass 构造函数内联（inlining）到superclass 的factory method 中。</li>
+  <li>编译，测试。</li>
+  <li>将subclass 删掉。</li>
+  <li>编译，测试。</li>
+  <li>重复「inlining 构造函数、删除subclass」过程，直到所有subclass 都被删除。</li>
+</ul>
+
+<h3>范例（Example）</h3>
+<p> 
+本例之中，我以Person 表示「人」，并针对每种性别建立一个subclass ：以Male subclass「男人」，以Female subclass 表示「女人」：
+{% highlight java linos %}
+  abstract class Person {
+ 
+   abstract boolean isMale();
+   abstract char getCode();
+ ...
+ 
+ class Male extends Person {
+   boolean isMale() {
+       return true;
+   }
+   char getCode() {
+       return 'M';
+   }
+ }
+ 
+ class Female extends Person {
+   boolean isMale() {
+       return false;
+   }
+   char getCode() {
+       return 'F';
+   }
+ }
+{% endhighlight %}
+ 
+<p> 
+在这里，两个subclasses 之间惟一的区别就是：它们以不同的方式实现了 Person 所声明的抽象函数getCode() ，返回不同的硬编码常量（所以getCode() 是个常量函数[Beck]）。我应该将这两个怠惰subclasses 的去掉。
+<p> 
+首先我需要使用Replace Constructor with Factory Method 。在这里，我需要为每个subclasse 建立一个factory method ：
+{% highlight java linos %}
+ class Person...
+   static Person createMale(){
+       return new Male();
+   }
+   static Person createFemale() {
+       return new Female();
+   }
+{% endhighlight %}
+ 
+<p> 
+然后我把对象创建过程从以下这样：
+{% highlight java linos %}
+ Person kent = new Male();
+{% endhighlight %}
+ 
+<p> 
+改成这样：
+{% highlight java linos %}
+ Person kent = Person.createMale();
+{% endhighlight %}
+ 
+<p> 
+将所有「构造函数调用动作」都替换为「factory method 调用动作」后，我就不应该再有任何对subclass 的直接引用了。一次全文搜索就可以帮助我证实这一点。然后，我可以把这两个subclasses 都声明为private ，这样编译器就可以帮助我，保证至少package 之外不会有任何代码取用它们。
+<p> 
+现在，针对每个常量函数，在superclass 中声明一个对应的值域：
+{% highlight java linos %}
+ class Person...
+   private final boolean _isMale;
+   private final char _code;
+{% endhighlight %}
+ 
+<p> 
+然后为superclass 加上一个protected 构造函数：
+{% highlight java linos %}
+ class Person...
+   protected Person (boolean isMale, char code) {
+       _isMale = isMale;
+       _code = code;
+   }
+{% endhighlight %}
+
+<p> 
+再为subclass 加上新构造函数，令它调用superclass 新增的构造函数：
+{% highlight java linos %}
+ class Male...
+   Male() {
+       super (true, 'M');
+   }
+ class Female...
+   Female() {
+       super (false, 'F');
+   }
+{% endhighlight %}
+ 
+<p> 
+完成这一步后，编译并测试。所有值域都被创建出来并被赋予初值，但到目前为止，我们还没有使用它们。现在我可以在superclass 中加入访问这些值域的函数，并删掉subclasse 中的常量函数，从而让这些值域粉墨登场：
+{% highlight java linos %}
+ class Person...
+   boolean isMale() {
+       return _isMale;
+   }
+ class Male...
+   boolean isMale() {
+       return true;
+   }
+{% endhighlight %}
+ 
+<p> 
+我可以逐一对每个值域、每个subclass 进行这一步骤的修改；如果我相信自己的运气，也可以采取一次性全部修改的手段。
+<p> 
+所有值域都处理完毕后，所有subclasses 也都空空如也了，于是我可以删除Person 中那个抽象函数的abstract 修饰符（使它不再成为抽象函数），并以Inline Method 将subclass 构造函数内联（inlining）到superclass 的factory method 中：
+{% highlight java linos %}
+ class Person
+   static Person createMale(){
+       return new Person(true, 'M');
+   }
+{% endhighlight %}
+
+<p>
+编译、测试后，我就可以删掉Male class，并对Female class 重复上述过程。
