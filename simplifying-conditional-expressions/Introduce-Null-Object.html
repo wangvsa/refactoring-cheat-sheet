@@ -2,3 +2,284 @@
 layout: simplifying-conditional-expressions
 head_en: Introduce Null Object
 ---
+<p>
+你需要再三检查「某物是否为null value」。
+<p><b>将null value （无效值）替换为null object（无效物）。</b></p>
+
+{% highlight java linos %}
+         if (customer == null) plan = BillingPlan.basic();
+         else plan = customer.getPlan();
+{% endhighlight %}
+
+<p class="p-img"><img alt="" src="{{site.baseurl}}/images/arrow.gif" /></p>
+<p class="p-img"><img alt="" src="{{site.baseurl}}/images/09fig01b.gif" /></p>
+
+<h3>动机（Motivation）</h3>
+<p>
+多态（polymorphism ）的最根本好处在于：你不必再向对象询问「你是什么型别」 而后根据得到的答案调用对象的某个行为——你只管调用该行为就是了，其他的一切多态机制会为你安排妥当。当你的某个值域内容是null value 时，多态可扮演另一个较不直观（亦较不为人所知）的用途。让我们先听听Ron Jeffries 的故事。
+
+<blockquote>
+<p>
+Ron Jeffries
+<p>
+我们第一次使用Null Object 模式，是因为Rih Garzaniti 发现，系统在对对象发送一个消息之前，总要检査对象是否存在，这样的检査出现很多次。我们可能会向一个对象索求它所相关的Person 对象，然后再问那个对象是否为null 。如果对象的确存在，我们才能调用它的rate() 函数以查询这个人的薪资级别。我们在好些地方都是这样做的， 造成的重复代码让我们很烦心。
+<p>
+所以.我们编写了一个MissingPerson class，让它返回 '0' 薪资等级（我们把null objects 称为missing object（虚构对象）。很快地MissingPerson 就有了很多函数，rate() 自然是其中之一。如今我们的系统有超过80个null object classes。
+<p>
+我们常常在显示信息的时候使用null object。例如我们想要显示一个Person 对象信息，它大约有20个instance 变量。如果这些变量可被设为null，那么打印一个Person 对象的工作将非常复杂。所以我们不让instance 变量被设为null ，而是插入各式各样的null objects ——它们都知道如何正常（正确地）显示自己。这样，我们就可以摆脱大量代码。
+<p>
+我们对null object 的最聪明运用，就是拿它来表示不存在的Gemstone session。我们使用Gemstone 数据库来保存成品（程序代码），但我们更愿息在没有数据库的情况下进行开发，毎过一周左右再把新码放进Gemstone 数据库。然而在代码的某些地方，我们必须登录（log in）一个Gemstone session。当我们没有Gemstone 数据库时，我们就仅仅安插一个miss Gemstone session，其接口和真正的Gemstone session 一模一样，使我们无需判断数据库是否存在，就可以进行开发和测试。
+<p>
+null object 的另一个用途是表现出「虚构的箱仓」（missing bin）。所谓「箱仓]，这里是指群集（collection），用来保存某些薪资值，并常常谣要对各个薪资值进行加和或遍历。如果某个箱仓不存在，我们就给出一个虚构的箱仓对象，其行为和一个空箱仓（empty bin）一样；这个虚构箱仓知道自己其实不带任何数据，总值为0。通过这种作法，我们就不必为上千位员工每人产生数十来个空箱（empty bins）对象了。
+<p>
+使用null objects 有个非常有趣的性质：好事绝对不会因为null objects 而「被破坏」。由于null objects 对所有外界请求的响应，都像real objects 的响应一样，所以系统行为总是正常的。但这并非总是好事，有吋会造成问题的侦测和查找上的困难，因为从来没有任何东西被破坏。当然，只要认真检查一下，你就会发现null objects 有时出现在不该出现的地方。
+<p>
+请记住：null objects 一定是常量，它们的任何成分都不会发生变化。因此我们可以使用Singleton 模式[Gang of Four]来实现它们。例如不管任何时候，只要你索求一个MissingPerson 对象，你得到的一定是MissingPerson 的惟一实体。
+</blockquote>
+
+<p>
+关于Null Object 模式，你可以在Woolf [Woolf] 中找到更详细的介绍。
+
+<h3>作法（Mechanics）</h3>
+<ul>
+  <li>为source class 建立一个subclass ，使其行为像source class 的null 版本。在source class 和null class 中都加上isNull() 函数，前者的isNull() 应该返回false，后者的isNull() 应该返回true。
+    <ul>
+      <li>下面这个办法也可能对你有所帮助：建立一个nullable 接口，将isNull() 函数放在其中，让source class 实现这个接口。</li>
+      <li>另外，你也可以创建一个testing 接口，专门用来检查对象是否为null。</li>
+    </ul>
+  </li>
+  <li>编译。</li>
+  <li>找出所有「索求source object 却获得一个null 」的地方。修改这些地方，使它们改而获得一个null object。</li>
+  <li>找出所有「将source object 与null 做比较」的地方。修改这些地方，使它们调用isNull() 函数。
+    <ul>
+      <li>你可以每次只处理一个source object 及其客户程序，编译并测试后， 再处理另一个source object 。</li>
+      <li>你可以在「不该再出现null value」的地方放上一些assertions（断言）， 确保null 的确不再出现。这可能对你有所帮助。</li>
+    </ul>
+  </li>
+  <li>编译，测试。</li>
+  <li>找出这样的程序点：如果对象不是null ，做A动作，否则做B 动作。</li>
+  <li>对于每一个上述地点，在null class 中覆写A动作，使其行为和B 动作相同。</li>
+  <li>使用上述的被覆写动作（A），然后删除「对象是否等于null」的条件测试。编译并测试。</li>
+</ul>
+
+<h3>范例：（Example）</h3>
+<p>
+—家公用事业公司的系统以Site 表示地点（场所）。庭院宅等和集合公寓（apartment）都使用该公司的服务。任何时候每个地点都拥有（或说都对应于）一个顾客，顾客信息以Customer 表示：
+{% highlight java linos %}
+ class Site...
+   Customer getCustomer() {
+       return _customer;
+   }
+   Customer _customer;
+{% endhighlight %}
+
+<p>
+Customer 有很多特性，我们只看其中三项：
+{% highlight java linos %}
+ class Customer...
+   public String getName() {...}
+   public BillingPlan getPlan() {...}
+   public PaymentHistory getHistory() {...}
+{% endhighlight %}
+
+<p>
+本系统又以PaymentHistory 表示顾客的付款记录，它也有它自己的特性：
+{% highlight java linos %}
+ public class PaymentHistory...
+   int getWeeksDelinquentInLastYear()
+{% endhighlight %}
+
+<p>
+上面的各种取值函数（getter）允许客户取得各种数据。但有时候一个地点的顾客搬走了，新顾客还没搬进来，此时这个地点就没有顾客。由于这种情况有可能发生，所以我们必须保证Customer 的所有用户都能够处理「Customer 对象等于null」的情况。下面是一些示例片段：
+{% highlight java linos %}
+         Customer customer = site.getCustomer();
+         BillingPlan plan;
+         if (customer == null) plan = BillingPlan.basic();
+         else plan = customer.getPlan();
+...
+         String customerName;
+         if (customer == null) customerName = "occupant";
+         else customerName = customer.getName();
+...
+         int weeksDelinquent;
+         if (customer == null) weeksDelinquent = 0;
+         else weeksDelinquent = customer.getHistory().getWeeksDelinquentInLastYear();
+{% endhighlight %}
+
+<p>
+这个系统中可能使用许多Site 和Customer ，它们都必须检查Customer 对象是否等于null ，而这样的检查完全是重复的。看来是使用null object 的时候了。
+<p>
+首先新建一个NullCustomer ，并修改Customer ，使其支持「对象是否为null」的检查：
+{% highlight java linos %}
+ class NullCustomer extends Customer {
+   public boolean isNull() {
+       return true;
+   }
+ }
+
+ class Customer...
+   public boolean isNull() {
+       return false;
+   }
+
+   protected Customer() {} //needed by the NullCustomer
+{% endhighlight %}
+
+<p>
+如果你无法修改Customer ，你可以建立一个新的testing 接口。
+
+<p>
+如果你喜欢，也可以新建一个接口，昭告大家「这里使用了null object 」：
+{% highlight java linos %}
+
+ interface Nullable {
+   boolean isNull();
+ }
+
+ class Customer implements Nullable
+{% endhighlight %}
+
+<p>
+我还喜欢加入一个factory method，专门用来创建NullCustomer 对象。这样一来，用户就不必知道null class 的存在了：
+{% highlight java linos %}
+ class Customer...
+   static Customer newNull() {
+       return new NullCustomer();
+   }
+{% endhighlight %}
+
+<p>
+接下来的部分稍微有点麻烦。对于所有「返回null」的地方，我都要将它改为「返回null object」，此外我还要把foo==null这样的检查替换成foo.isNull()。我发现下列办法很有用：查找所有『索求Customer 对象」的地方，将它们都加以修改, 使它们不能返回null ，改而返回一个NullCustomer 对象。
+{% highlight java linos %}
+
+ class Site...
+   Customer getCustomer() {
+       return (_customer == null) ?
+           Customer.newNull():
+           _customer;
+   }
+{% endhighlight %}
+
+<p>
+另外，我还要修改所有「使用Customer 对象」的地方，让它们以isNull() 函数进行检查，不再使用"== null"”检查方式。
+{% highlight java linos %}
+
+       Customer customer = site.getCustomer();
+       BillingPlan plan;
+       if (customer.isNull()) plan = BillingPlan.basic();
+       else plan = customer.getPlan();
+ ...
+       String customerName;
+       if (customer.isNull()) customerName = "occupant";
+       else customerName = customer.getName();
+ ...
+       int weeksDelinquent;
+       if (customer.isNull()) weeksDelinquent = 0;
+       else weeksDelinquent = customer.getHistory().getWeeksDelinquentInLastYear();
+{% endhighlight %}
+
+<p>
+毫无疑问，这是本项重构中最需要技巧的部分。对于每一个需要替换的「可能等于null」的对象，我都必须找到「它是否等于null」的所有检查动作，并逐一替换。 如果这个对象被传播到很多地方，追踪起来就很困难。上述范例中，我必须找出每一个型别为Customer 的变量，以及它们被使用的地点。很难将这个过程分成更小的步骤。有时候我发现「可能等于null」的对象只在某几处被用到，那么替换工作比较简单。但是大多数时候我必须做大量替换工作。还好，撤销这些替换并不困难，因为我可以不太困难地找出对isNull() 的调用动作，但这毕竟也是很零乱很恼人 的。
+
+<p>
+这个步骤完成之后，如果编译和测试都顺利通过，我就可以宽心地露出笑容了。接下来的动作比较有趣。到目前为止，使用isNull() 函数尚未带来任何好处。只有当我把相关行为移到NullCustomer class 中并去除条件式之后，我才能得到切实的利益。我可以逐一将各种行为（函数）移过去。首先从「取得顾客名称」这个函数开始。此时的客户端代码大约如下：
+{% highlight java linos %}
+       String customerName;
+       if (customer.isNull()) customerName = "occupant";
+       else customerName = customer.getName();
+{% endhighlight %}
+
+<p>
+首先为NullCustomer 加入一个合适的函数，通过这个函数来取得顾客名称：
+{% highlight java linos %}
+ class NullCustomer...
+   public String getName(){
+       return "occupant";
+   }
+{% endhighlight %}
+
+<p>
+现在，我可以去掉条件代码了：
+{% highlight java linos %}
+       String customerName = customer.getName();
+{% endhighlight %}
+
+<p>
+接下来我以相同手法处理其他函数，使它们对相应查询做出合适的响应。此外我还可以对「修改函数」（modifiers）做适当的处理。于是下面这样的客户端程序：
+{% highlight java linos %}
+       if (! customer.isNull())
+           customer.setPlan(BillingPlan.special());
+{% endhighlight %}
+
+<p>
+就变成了这样：
+{% highlight java linos %}
+ customer.setPlan(BillingPlan.special());
+
+ class NullCustomer...
+   public void setPlan (BillingPlan arg) {}
+{% endhighlight %}
+
+<p>
+请记住：只有当大多数客户代码都要求null object 做出相同响应时，这样的行为搬移才有意义。注意我说的是「大多数」而不是「所有」。任何用户如果需要null object 作出不同响应，他仍然可以使用isNull() 函数来测试。只要大多数客户端都要求null object 做出相同响应，他们就可以调用缺省的null 行为，而你也就受益匪浅了。
+<p>
+上述范例略带差异的某种情况是，某些客户端使用Customer 函数的运算结果：
+{% highlight java linos %}
+       if (customer.isNull()) weeksDelinquent = 0;
+       else weeksDelinquent = customer.getHistory().getWeeksDelinquentInLastYear();
+{% endhighlight %}
+
+<p>
+我可以新建一个NullPaymentHistory class，用以处理这种情况：
+{% highlight java linos %}
+ class NullPaymentHistory extends PaymentHistory...
+   int getWeeksDelinquentInLastYear() {
+       return 0;
+   }
+{% endhighlight %}
+
+<p>
+并修改NullCustomer，让它返回一个NullPaymentHistory 对象：
+{% highlight java linos %}
+ class NullCustomer...
+   public PaymentHistory getHistory() {
+       return PaymentHistory.newNull();
+   }
+{% endhighlight %}
+
+<p>
+然后，我同样可以删除这一行条件代码：
+{% highlight java linos %}
+       int weeksDelinquent = customer.getHistory().getWeeksDelinquentInLastYear();
+{% endhighlight %}
+
+<p>
+你常常可以看到这样的情况：null objects 会返回其他null objects 。
+
+<h3>范例：另一种做法，Testing Interface</h3>
+<p>
+除了定义isNull() 之外，你也可以建立一个用以检查「对象是否为null」的接口。 使用这种办法，必须新建一个Null 接口，其中不定义任何函数：
+{% highlight java linos %}
+ interface Null {}
+{% endhighlight %}
+
+<p>
+然后，让null object 实现Null 接口：
+{% highlight java linos %}
+ class NullCustomer extends Customer implements Null...
+{% endhighlight %}
+
+<p>
+然后，我就可以用instanceof 操作符检查对象是否为null ：
+{% highlight java linos %}
+ aCustomer instanceof Null
+{% endhighlight %}
+
+<p>
+通常我尽量避免使用instanceof 操作符，但在这种情况下，使用它是没问题的。而且这种作法还有另一个好处：不需要修改Customer 。这么一来即使无法修改Customer 源码，我也可以使用null object 。
+
+<h3>其他特殊情况</h3>
+<p>
+使用本项重构时，你可以有数种不同的null objects ，例如你可以说「没有顾客」（新建的房子和暂时没人住的房子）和「不知名顾客」（有人住，但我们不知道是谁） 这两种情况是不同的。果真如此，你可以针对不同的情况建立不同的null class。有时候null objects 也可以携带数据，例如不知名顾客的使用记录等等，于是我们可以在查出顾客姓名之后将帐单寄给他。
+<p>
+本质上来说，这是一个比Null Object 模式更大的模式：Special Case 模式。所谓special case class（特例类）是某个class 的特殊情况，有着特殊的行为。因此表示「不知名顾客」的UnknowCustomer 和表示「没有顾客」的NoCustomer 都是Customer 的特例。你经常可以在表示数量的classes 中看到这样的「特例类」，例如Java 浮点数有「正无穷大」、「负无穷大」和「非数量」（NaN）等特例。special case class（特例类）的价值是：它们可以降低你的「错误处理」开销。例如浮点运算决不会抛出异常。如果你对NaN做浮点运算，结果也会是个NaN。这和「null object 的访问函数通常返回另一个null object 」是一样的道理。

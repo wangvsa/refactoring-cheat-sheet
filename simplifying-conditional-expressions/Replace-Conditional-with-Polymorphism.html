@@ -2,3 +2,176 @@
 layout: simplifying-conditional-expressions
 head_en: Replace Conditional with Polymorphism
 ---
+<p>
+你手上有个条件式，它根据对象型别的不同而选择不同的行为。
+<p>
+  <b>将这个条件式的每个分支放进一个subclass 内的覆写函数中，然后将原始函数声明为抽象函数（abstract method）。<b>
+</p>
+
+{% highlight java linos %}
+  double getSpeed() {
+      switch (_type) {
+          case EUROPEAN:
+             return getBaseSpeed();
+          case AFRICAN:
+             return getBaseSpeed() - getLoadFactor() * _numberOfCoconuts;
+          case NORWEGIAN_BLUE:
+             return (_isNailed) ? 0 : getBaseSpeed(_voltage);
+      }
+      throw new RuntimeException ("Should be unreachable");
+  }
+{% endhighlight %}
+
+<p class="p-img"><img alt="" src="{{site.baseurl}}/images/arrow.gif" /></p>
+<p class="p-img"><img alt="" src="{{site.baseurl}}/images/09fig01a.gif" /></p>
+
+<h3>动机（Motivation）</h3>
+<p>
+在面向对象术语中，听上去最高贵的词非「多态」莫属。多态（polymorphism）最根本的好处就是：如果你需要根据对象的不同型别而采取不同的行为，多态使你不必编写明显的条件式（explicit conditional ）。
+<p>
+正因为有了多态，所以你会发现：「针对type code（型别码）而写的switch 语句」 以及「针对type string （型别名称字符串）而写的if-then-else 语句」在面向对象程序中很少出现。
+<p>
+多态（polymorphism）能够给你带来很多好处。如果同一组条件式在程序许多地点出现，那么使用多态的收益是最大的。使用条件式时，如果你想添加一种新型别，就必须查找并更新所有条件式。但如果改用多态，只需建立一个新的subclass ，并在其中提供适当的函数就行了。class 用户不需要了解这个subclass ，这就大大降低了系统各部分之间的相依程度，使系统升级更加容易。
+
+<h3>作法（Mechanics）</h3>
+<p>
+使用Replace Conditional with Polymorphism之前，你首先必须有一个继承结构。你可能已经通过先前的重构得到了这一结构。如果还没有，现在就需要建立它。
+<p>
+要建立继承结构，你有两种选择： Replace Type Code with Subclasses 和 Replace Type Code with State/Strategy。前一种作法比较简单，因此你应该尽可能使用它。但如果你需要在对象创建好之后修改type code；就不能使用subclassing 作法，只能使用State/Strategy 模式。此，如果由于其他原因你要重构的class 已经有了subclass ，那么也得使用State/Strategy 。记住，如果若干switch 语句针对的是同一个type code；你只需针对这个type code 建立一个继承结构就行 了。
+<p>
+现在，可以向条件式开战了。你的目标可能是switch（case）语句，也可能是if 语句。
+<ul>
+  <li>如果要处理的条件式是一个更大函数中的一部分，首先对条件式进行分析，然后使用Extract Method 将它提炼到一个独立函数去。</li>
+  <li>如果有必要，使用Move Method 将条件式放置到继承结构的顶端。</li>
+  <li>任选一个subclass ，在其中建立一个函数，使之覆写superclass 中容纳条件式的那个函数。将「与subclass 相关的条件式分支」拷贝到新建函数中，并对它进行适当调整。
+    <ul>
+      <li>为了顺利进行这一步骤，你可能需要将superclass 中的某些private 值域声明为protected 。</li>
+    </ul>
+  </li>
+  <li>编译，测试。</li>
+  <li>在superclass 中删掉条件式内被拷贝出去的分支。</li>
+  <li>编译，测试。</li>
+  <li>针对条件式的每个分支，重复上述过程，直到所有分支都被移到subclass 内的函数为止。</li>
+  <li>将superclass 之中容纳条件式的函数声明为抽象函数（abstract method）。</li>
+</ul>
+
+<h3>范例：（Example）</h3>
+<p>
+请允许我继续使用「员工与薪资」这个简单而又乏味的例子。我的classes是从Replace Type Code with State/Strategy 那个例子中拿来的，因此示意图就如图9.1所示（如果想知道这个图是怎么得到的，请看第8章范例）。
+
+<p class="p-img">
+  <img alt="" src="{{site.baseurl}}/images/09fig01.gif"/>
+  <br>图9.1  继承机构</br>
+</p>
+
+{% highlight java linos %}
+ class Employee...
+   int payAmount() {
+       switch (getType()) {
+           case EmployeeType.ENGINEER:
+              return _monthlySalary;
+           case EmployeeType.SALESMAN:
+              return _monthlySalary + _commission;
+           case EmployeeType.MANAGER:
+              return _monthlySalary + _bonus;
+           default:
+              throw new RuntimeException("Incorrect Employee");
+       }
+   }
+   int getType() {
+       return _type.getTypeCode();
+   }
+   private EmployeeType _type;
+
+ abstract class EmployeeType...
+   abstract int getTypeCode();
+
+ class Engineer extends EmployeeType...
+   int getTypeCode() {
+       return Employee.ENGINEER;
+   }
+
+ ... and other subclasses
+{% endhighlight %}
+
+<p>
+switch 语句已经被很好地提炼出来，因此我不必费劲再做一遍。不过我需要将它移至EmployeeType class，因为EmployeeType 才是被subclassing 的class 。
+{% highlight java linos %}
+ class EmployeeType...
+   int payAmount(Employee emp) {
+       switch (getTypeCode()) {
+           case ENGINEER:
+              return emp.getMonthlySalary();
+           case SALESMAN:
+              return emp.getMonthlySalary() + emp.getCommission();
+           case MANAGER:
+              return emp.getMonthlySalary() + emp.getBonus();
+           default:
+              throw new RuntimeException("Incorrect Employee");
+       }
+   }
+{% endhighlight %}
+
+<p>
+由于我需要EmployeeType class 的数据，所以我需要将Employee 对象作为参数传递给payAmount()。这些数据中的一部分也许可以移到EmployeeType class 来，但那是另一项重构需要关心的问题了。
+
+<p>
+调整代码，使之通过编译，然后我修改Employee 中的payAmount() 函数，令它委托（delegate，转调用）EmployeeType ：
+{% highlight java linos %}
+ class Employee...
+   int payAmount() {
+       return _type.payAmount(this);
+   }
+{% endhighlight %}
+
+<p>
+现在，我可以处理switch 语句了。这个过程有点像淘气小男孩折磨一只昆虫——每次掰掉它一条腿 6。首先我把switch 语句中的"Engineer"这一分支拷贝到Engineer class：
+{% highlight java linos %}
+ class Engineer...
+   int payAmount(Employee emp) {
+       return emp.getMonthlySalary();
+   }
+{% endhighlight %}
+
+<p>
+6译注：「腿」和条件式「分支」的英文都是"leg"。作者幽默地说「掰掉一条腿」， 意思就是「去掉一个分支」。
+
+<p>
+这个新函数覆写了superclass 中的switch 语句之内那个专门处理"Engineer"的分支。我是个徧执狂，有时我会故意在case 子句中放一个陷阱，检查Engineer class 是否正常工作（是否被调用）：
+{% highlight java linos %}
+ class EmployeeType...
+   int payAmount(Employee emp) {
+       switch (getTypeCode()) {
+           case ENGINEER:
+              throw new RuntimeException ("Should be being overridden");
+           case SALESMAN:
+              return emp.getMonthlySalary() + emp.getCommission();
+           case MANAGER:
+              return emp.getMonthlySalary() + emp.getBonus();
+           default:
+              throw new RuntimeException("Incorrect Employee");
+       }
+   }
+{% endhighlight %}
+
+<p>
+接下来，我重复上述过程，直到所有分支都被去除为止：
+{% highlight java linos %}
+ class Salesman...
+   int payAmount(Employee emp) {
+       return emp.getMonthlySalary() + emp.getCommission();
+   }
+
+ class Manager...
+   int payAmount(Employee emp) {
+       return emp.getMonthlySalary() + emp.getBonus();
+   }
+{% endhighlight %}
+
+<p>
+然后，将superclass 的payAmount() 函数声明为抽象函数：
+{% highlight java linos %}
+ class EmployeeType...
+   abstract int payAmount(Employee emp);
+{% endhighlight %}
+

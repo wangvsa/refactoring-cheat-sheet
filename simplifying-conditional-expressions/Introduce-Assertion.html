@@ -2,3 +2,124 @@
 layout: simplifying-conditional-expressions
 head_en: Introduce Assertion
 ---
+<p>
+某一段代码需要对程序状态（state）做出某种假设。
+
+<p><b>以assertion（断言）明确表现这种假设。</b></p>
+
+{% highlight java linos %}
+  double getExpenseLimit() {
+      // should have either expense limit or a primary project
+      return (_expenseLimit != NULL_EXPENSE) ?
+          _expenseLimit:
+          _primaryProject.getMemberExpenseLimit();
+  }
+{% endhighlight %}
+  
+<p class="p-img"><img alt="" src="{{site.baseurl}}/images/arrow.gif" /></p>
+
+{% highlight java linos %}
+  double getExpenseLimit() {
+      Assert.isTrue (_expenseLimit != NULL_EXPENSE || _primaryProject != null);
+      return (_expenseLimit != NULL_EXPENSE) ?
+          _expenseLimit:
+          _primaryProject.getMemberExpenseLimit();
+  }
+{% endhighlight %}
+
+<h3>动机（Motivation）</h3>
+<p>
+常常会有这样一段代码：只有当某个条件为真时，该段代码才能正常运行。例如「平方报计算」只对正值才能进行（译注：这里没考虑复数与虚数），又例如某个对象 可能假设其值域（fields）至少有一个不等于null。
+<p>
+这样的假设通常并没有在代码中明确表现出来，你必须阅读整个算法才能看出。有时程序员会以注释写出这样的假设。而我要介绍的是一种更好的技术：使用assertion（断言）明确标明这些假设。
+<p>
+assertion 是一个条件式，应该总是为真。如果它失败，表示程序员犯了错误。因此assertion的失败应该导致一个unchecked exception 7（不可控异常〕。Assertions 绝对不能被系统的其他部分使用。实际上程序最后成品往往将assertions 统统删除。因此，标记「某些东西是个assertion」是很重要的。
+<p>
+7译注：所谓unchecked exception 是指「未曾于函数签名式（signature）中列出」的异常。
+<p>
+Assertions 可以作为交流与调试的辅助。在交流（沟通〕的角度上，assertions 可以帮助程序阅读者理解代码所做的假设；在调试的角度上，assertions 可以在距离「臭虫」最近的地方抓住它们。当我编写自我测试代码的时候，我发现，assertions 在调试方面的帮助变得不那么重要了，但我仍然非常看重它们在交流方面的价值。
+
+<h3>作法（Mechanics）</h3>
+<p>
+如果程序员不犯错，assertions 就应该不会对系统运行造成任何影响，所以加入assertions 永远不会影响程序的行为。
+<ul>
+  <li>如果你发现代码「假设某个条件始终（必须）为真]，就加入一个assertion 明确说明这种情况。
+    <ul>
+      <li>你可以新建一个Assert class，用于处理各种情况下的assertions 。</li>
+    </ul>
+  </li>
+</ul>
+
+<p>
+注意，不要滥用assertions 。请不要使用它来检查你「认为应该为真」的条件，请只使用它来检查「一定必须为真」的条件。滥用assertions 可能会造成难以维护的重复逻辑。在一段逻辑中加入assertions 是有好处的，因为它迫使你重新考虑这段代 码的约束条件。如果「不满足这些约朿条件，程序也可以正常运行」，assertions 就不会带给你任何帮助，只会把代码变得混乱，并且有可能妨碍以后的修改。
+<p>
+你应该常常问自己：如果assertions 所指示的约束条件不能满足，代码是否仍能正常运行？如果可以，就把assertions 拿掉。
+<p>
+另外，还需要注意assertions 中的重复代码。它们和其他任何地方的重复代码一样不好闻。你可以大胆使用Extract Method 去掉那些重复代码。
+
+<h3>范例：（Example）</h3>
+<p>
+下面是一个简单例子：开支（经费）限制。后勤部门的员工每个月有固定的开支限额；业务部门的员工则按照项目的开支限额来控制自己的开支。一个员工可能没有开支额度可用，也可能没有参与项目，但两者总得要有一个（否则就没有经费可用 了）。在开支限额相关程序中，上述假设总是成立的，因此：
+{% highlight java linos %}
+ class Employee...
+   private static final double NULL_EXPENSE = -1.0;
+   private double _expenseLimit = NULL_EXPENSE;
+   private Project _primaryProject;
+  double getExpenseLimit() {
+      return (_expenseLimit != NULL_EXPENSE) ?
+          _expenseLimit:
+          _primaryProject.getMemberExpenseLimit();
+  }
+  boolean withinLimit (double expenseAmount) {
+      return (expenseAmount <= getExpenseLimit());
+  }
+{% endhighlight %}
+
+<p>
+这段代码包含了一个明显假设：任何员工要不就参与某个项目，要不就有个人开支限额。我们可以使用assertion 在代码中更明确地指出这一点：
+{% highlight java linos %}
+  double getExpenseLimit() {
+      Assert.isTrue (_expenseLimit != NULL_EXPENSE || _primaryProject != null);
+      return (_expenseLimit != NULL_EXPENSE) ?
+          _expenseLimit:
+          _primaryProject.getMemberExpenseLimit();
+  }
+{% endhighlight %}
+
+<p>
+这条assertion 不会改变程序的任何行为。另一方面，如果assertion中的条件不为真，我就会收到一个运行期异常：也许是在withinLimit() 函数中抛出一个空指针（null pointer）异常，也许是在Assert.isTrue() 函数中抛出一个运行期异常。有时assertion 可以帮助程序员找到臭虫，因为它离出错地点很近。但是，更多时候，assertion 的价值在于：帮助程序员理解代码正确运行的必要条件。
+
+<p>
+我常对assertion 中的条件式使用Extract Method ，也许是为了将若干地方的重复码提炼到同一个函数中，也许只是为了更清楚说明条件式的用途。
+
+<p>
+在Java 中使用assertions 有点麻烦：没有一种简单机制可以协助我们插入这东西8。 assertions 可被轻松拿掉，所以它们不可能影响最终成品的性能。编写一个辅助类（例如Assert class）当然有所帮助，可惜的是assertions 参数中的任何表达式不论什么情况都一定会被执行一遍。阻止它的惟一办法就是使用类似下面的手法：
+
+<p>
+8译注：J2SE1.4已经支持assert语句。
+{% highlight java linos %}
+  double getExpenseLimit() {
+      Assert.isTrue (Assert.ON &&
+          (_expenseLimit != NULL_EXPENSE || _primaryProject != null));
+      return (_expenseLimit != NULL_EXPENSE) ?
+          _expenseLimit:
+          _primaryProject.getMemberExpenseLimit();
+  }
+{% endhighlight %}
+
+<p>
+或者是这种手法：
+{% highlight java linos %}
+  double getExpenseLimit() {
+      if (Assert.ON)
+          Assert.isTrue (_expenseLimit != NULL_EXPENSE || _primaryProject != null);
+      return (_expenseLimit != NULL_EXPENSE) ?
+          _expenseLimit:
+          _primaryProject.getMemberExpenseLimit();
+  }
+{% endhighlight %}
+
+<p>
+如果Assert.ON 是个常量，编译器（译注：而非运行期间）就会对它进行检查； 如果它等于false ，就不再执行条件式后半段代码。但是，加上这条语句实在有点丑陋，所以很多程序员宁可仅仅使用Assert.isTrue() 函数，然后在项目结束前以过滤程序滤掉使用assertions 的每一行代码（可以使用Perl 之类的语言来编写这样 的过滤程序）。
+<p>
+Assert class应该有多个函数，函数名称应该帮助程序员理解其功用。除了isTrue() 之外，你还可以为它加上equals() 和shouldNeverReachHere() 等函数。
