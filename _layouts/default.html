@@ -38,6 +38,8 @@
   </div>
 
   <div id="main">
+
+    <a name="top"></a><!-- anchor for back-to-top button--!>
     <div class="header">
       <h1>{{page.head_en}}</h1>
       {% if page.url contains 'index.html' %}
@@ -50,8 +52,15 @@
     <div class="content">
       {{ content }}
     </div>
+
+    <p id="back-to-top">
+      <a href="#top"><span></span>Back to Top</a>
+    </p>
+
   </div>
+
 </div>
+
 
 <script src="{{site.baseurl}}/js/ui.js"></script>
 
