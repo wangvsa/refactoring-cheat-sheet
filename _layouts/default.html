@@ -27,9 +27,10 @@
         {% for node in page.menu_items %}
           {% assign tmp = node | split: '<br>' %}
           {% if tmp[0] == page.head_en %}
-          <li class="pure-menu-selected"><a href="{{page.dir}}/{{tmp[0]|replace:' ','-'}}.html">{{node}}</a></li>
+            {% assign headzh = tmp[1] %}
+            <li class="pure-menu-selected"><a href="{{page.dir}}/{{tmp[0]|replace:' ','-'}}.html">{{node}}</a></li>
           {% else %}
-          <li><a href="{{page.dir}}/{{tmp[0]|replace:' ','-'}}.html">{{node}}</a></li>
+            <li><a href="{{page.dir}}/{{tmp[0]|replace:' ','-'}}.html">{{node}}</a></li>
           {% endif %}
         {% endfor %}
       </ul>
@@ -42,7 +43,7 @@
       {% if page.url contains 'index.html' %}
         <h2>{{page.head_zh}}</h2>
       {% else %}
-        <h2>{{tmp[1]}}</h2>
+        <h2>{{headzh]}}</h2>
       {% endif %}
     </div>
 
