@@ -2,3 +2,213 @@
 layout: simplifying-conditional-expressions
 head_en: Remove Control Flag
 ---
+<p>
+在一系列布尔表达式（boolean expressions）中，某个变量带有「控制标记」（control flag）的作用。
+<p><b>以break 语句或return 的语句取代控制标记。</b>
+
+<h3>动机（Motivation）</h3>
+<p>
+在一系列条件表达式中，你常常会看到「用以判断何时停止条件检查」的控制标记（control flag）：
+{% highlight java linos %}
+ set done to false
+ while not done
+   if (condition)
+       do something
+       set done to true
+   next step of loop
+{% endhighlight %}
+
+<p>
+这样的控制标记带来的麻烦超过了它所带来的便利。人们之所以会使用这样的控制标记，因为结构化编程原则告诉他们：每个子程序（routines）只能有一个入口（entry） 和一个出口（exit）。我赞同「单一入口」原则（而且现代编程语言也强迫我们这样做），但是「单一出口」原则会让你在代码中加入讨厌的控制标记，大大降低条件表达式的可读性。这就是编程语言提供break 语句和continue 语句的原因：你可以用它们跳出复杂的条件语句。去掉控制标记所产生的效果往往让你大吃一惊：条件语句真正的用途会清晰得多。
+
+<h3>作法（Mechanics）</h3>
+<p>
+对控制标记（control flags）的处理，最显而易见的办法就是使用Java 提供的break 语句或continue 语句。
+<ul>
+  <li>找出「让你得以跳出这段逻辑」的控制标记值。</li>
+  <li>找出「将可跳出条件式之值赋予标记变量」的那个语句，代以恰当的break 语句或continue 语句。</li>
+  <li>每次替换后，编译并测试。</li>
+</ul>
+<p>
+在未能提供break 和continue 语句的编程语言中，我们可以使用另一种办法：
+<ul>
+  <li>运用Extract Method，将整段逻辑提炼到一个独立函数中。</li>
+  <li>找出「让你得以跳出这段逻辑」的那些控制标记值。</li>
+  <li>找出「将可跳出条件式之值赋予标记变量」的那个语句，代以恰当的return 语句。</li>
+  <li>每次替换后，编译并测试。</li>
+</ul>
+
+<p>
+即使在支持break 和continue 语句的编程语言中，我通常也优先考虑上述第二方案。因为return 语句可以非常清楚地表示：不再执行该函数中的其他任何代码。 如果还有这一类代码，你早晚需要将这段代码提炼出来。
+<p>
+请注意标记变量是否会影响这段逻辑的最后结果。如果有影响，使用break 语句之后你还得保留控制标记值。如果你已经将这段逻辑提炼成一个独立函数，也可以将控制标记值放在return 语句中返回。
+
+<h3>范例：以break 取代简单的控制标记</h3>
+<p>
+下列函数用来检查一系列人名之中是否包含两个可疑人物的名字（这两个人的名字硬编码于代码中〕：
+{% highlight java linos %}
+  void checkSecurity(String[] people) {
+      boolean found = false;
+      for (int i = 0; i < people.length; i++) {
+          if (! found) {
+             if (people[i].equals ("Don")){
+               sendAlert();
+               found = true;
+             }
+             if (people[i].equals ("John")){
+               sendAlert();
+               found = true;
+             }
+          }
+      }
+  }
+{% endhighlight %}
+
+<p>
+这种情况下很容易找出控制标记：当变量found 被赋予true 时，搜索就结束。我可以逐一引入break 语句：
+{% highlight java linos %}
+  void checkSecurity(String[] people) {
+      boolean found = false;
+      for (int i = 0; i < people.length; i++) {
+          if (! found) {
+             if (people[i].equals ("Don")){
+               sendAlert();
+             break;
+             }
+             if (people[i].equals ("John")){
+               sendAlert();
+               found = true;
+             }
+          }
+      }
+  }
+{% endhighlight %}
+
+<p>
+最后获得这样的成功：
+{% highlight java linos %}
+  void checkSecurity(String[] people) {
+      boolean found = false;
+      for (int i = 0; i < people.length; i++) {
+          if (! found) {
+             if (people[i].equals ("Don")){
+               sendAlert();
+               break;
+             }
+             if (people[i].equals ("John")){
+               sendAlert();
+               break;
+             }
+          }
+      }
+  }
+{% endhighlight %}
+
+<p>
+然后我就可以把对控制标记的所有引用去掉：
+{% highlight java linos %}
+  void checkSecurity(String[] people) {
+      for (int i = 0; i < people.length; i++) {
+          if (people[i].equals ("Don")){
+             sendAlert();
+             break;
+          }
+          if (people[i].equals ("John")){
+             sendAlert();
+             break;
+          }
+      }
+  }
+{% endhighlight %}
+
+<h3>范例：以return 返回控制标记</h3>
+<p>
+本项重构的另一种形式将使用return 语句。为了阐述这种用法，我把前面的例子稍加修改，以控制标记记录搜索结果：
+{% highlight java linos %}
+  void checkSecurity(String[] people) {
+      String found = "";
+      for (int i = 0; i < people.length; i++) {
+          if (found.equals("")) {
+             if (people[i].equals ("Don")){
+               sendAlert();
+               found = "Don";
+             }
+             if (people[i].equals ("John")){
+               sendAlert();
+               found = "John";
+             }
+          }
+      }
+      someLaterCode(found);
+  }
+{% endhighlight %}
+
+<p>
+在这里，变量found 做了两件事：它既是控制标记，也是运算结果。遇到这种情况，我喜欢先把计算found 变量的代码提炼到一个独立函数中：
+{% highlight java linos %}
+  void checkSecurity(String[] people) {
+      String found = foundMiscreant(people);
+      someLaterCode(found);
+  }
+
+  String foundMiscreant(String[] people){
+      String found = "";
+      for (int i = 0; i < people.length; i++) {
+          if (found.equals("")) {
+             if (people[i].equals ("Don")){
+               sendAlert();
+               found = "Don";
+             }
+             if (people[i].equals ("John")){
+               sendAlert();
+               found = "John";
+             }
+          }
+      }
+      return found;
+  }
+{% endhighlight %}
+
+<p>
+然后以return 语句取代控制标记：
+{% highlight java linos %}
+  String foundMiscreant(String[] people){
+      String found = "";
+      for (int i = 0; i < people.length; i++) {
+          if (found.equals("")) {
+             if (people[i].equals ("Don")){
+               sendAlert();
+              return "Don";
+             }
+             if (people[i].equals ("John")){
+               sendAlert();
+               found = "John";
+             }
+          }
+      }
+      return found;
+  }
+{% endhighlight %}
+
+<p>
+最后完全去掉控制标记：
+{% highlight java linos %}
+  String foundMiscreant(String[] people){
+      for (int i = 0; i < people.length; i++) {
+          if (people[i].equals ("Don")){
+             sendAlert();
+             return "Don";
+          }
+          if (people[i].equals ("John")){
+             sendAlert();
+             return "John";
+          }
+      }
+      return "";
+  }
+{% endhighlight %}
+
+<p>
+即使不需要返回某值，你也可以使用语句来取代控制标记。这时候你只需 要一个空的return 语句就行了。
+<p>
+当然，如果以此办法去处理带有副作用（连带影响）的函数，会有一些问题。所以我需要先以 Separate Query from Modifier 将函数副作用分离出去。稍后你会看到这方面的例子。
