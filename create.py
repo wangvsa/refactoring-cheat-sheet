@@ -1,21 +1,13 @@
 #!/usr/bin/python
 
 headlist = [
-'Pull Up Field',
-'Pull Up Method',
-'Pull Up Constructor Body',
-'Push Down Method',
-'Push Down Field',
-'Extract Subclass',
-'Extract Superclass',
-'Extract Interface',
-'Collapse Hierarchy',
-'Form Template Method',
-'Replace Inheritance with Delegation',
-'Replace Delegation with Inheritance'
+'Tease Apart Inheritance',
+'Convert Procedural Design to Objects',
+'Separate Domain from Presentation',
+'Extract Hierarchy',
 ]
 
-basedir = 'dealing-with-generalization'
+basedir = 'big-refactorings'
 
 for element in headlist:
     print(element)
