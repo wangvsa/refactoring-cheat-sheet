@@ -2,3 +2,128 @@
 layout: making-method-calls-simpler
 head_en: Replace Parameter with Explicit Methods
 ---
+<p>
+你有一个函数，其内完全取决于参数值而采取不同反应。
+<p><b>针对该参数的每一个可能值，建立一个独立函数。</b></p>
+
+{% highlight java linos %}
+  void setValue (String name, int value) {
+      if (name.equals("height"))
+          _height = value;
+      if (name.equals("width"))
+          _width = value;
+      Assert.shouldNeverReachHere();
+  }
+{% endhighlight %}
+
+
+<p class="p-img"><img alt="" src="{{site.baseurl}}/images/arrow.gif" /></p>
+
+{% highlight java linos %}
+  void setHeight(int arg) {
+      _height = arg;
+  }
+  void setWidth (int arg) {
+      _width = arg;
+  }
+{% endhighlight %}
+
+<h3>动机（Motivation）</h3>
+<p>
+Replace Parameter with Explicit Methods洽恰相反于Parameterize Method。如果某个参数有离散取值，而函数内又以条件式检查这些参数值，并根据不同参数值做出不同的反应，那么就应该使用本项重构。调用者原本必须赋予参数适当的值，以决定该函数做出何种响应；现在，既然你提供了不同的函数给调用 者使用，就可以避免出现条件式。此外你还可以获得「编译期代码检验」的好处， 而且接口也更清楚。如果以参数值决定函数行为，那么函数用户不但需要观察该函数，而且还要判断参数值是否合法，而「合法的参数值」往往很少在文档中被清楚地提出。
+<p>
+就算不考虑「编译期检验」的好处，只是为了获得一个清晰的接口，也值得你执行本项重构。哪怕只是给一个内部的布尔（boolean）变量赋值，相较之下Switch.beOn() 也比Switch.setState(true) 要清楚得-多。
+<p>
+但是，如果参数值不会对函数行为有太多影响，你就不应该使用Replace Parameter with Explicit Methods。如果情况真是这样，而你也只需要通过参数为一个值域赋值，那么直接使用设值函数（setter）就行了。如果你的确需要「条件判断」 式的行为，可考虑使用Replace Conditional with Polymorphism。
+
+<h3>作法（Mechanics）</h3>
+<ul>
+  <li>针对参数的每一种可能值，新建一个明确函数。</li>
+  <li>修改条件式的每个分支，使其调用合适的新函数。</li>
+  <li>修改每个分支后，编译并测试。</li>
+  <li>修改原函数的每一个被调用点，改而调用上述的某个合适的新函数。</li>
+  <li>编译，测试。</li>
+  <li>所有调用端都修改完毕后，删除原（带有条件判断的）函数。</li>
+</ul>
+
+<h3>范例：（Example）</h3>
+<p>
+下列代码中，我想根据不同的参数值，建立Employee 之下不同的subclass。以下 代码往往是Replace Constructor with Factory Method 的施行成果：
+{% highlight java linos %}
+  static final int ENGINEER = 0;
+  static final int SALESMAN = 1;
+  static final int MANAGER = 2;
+
+  static Employee create(int type) {
+      switch (type) {
+          case ENGINEER:
+             return new Engineer();
+          case SALESMAN:
+             return new Salesman();
+          case MANAGER:
+             return new Manager();
+          default:
+             throw new IllegalArgumentException("Incorrect type code value");
+      }
+  }
+{% endhighlight %}
+
+由于这是一个factory method，我不能实施Replace Conditional with Polymorphism ，因为使用该函数时我根本尚未创建出对象。我并不期待太多新的subclasses，所以一个明确的接口是合理的（译注：不甚理解作者文意）。首先，我要根据参数值建立相应的新函数：
+{% highlight java linos %}
+  static Employee createEngineer() {
+      return new Engineer();
+  }
+  static Employee createSalesman() {
+      return new Salesman();
+  }
+  static Employee createManager() {
+      return new Manager();
+  }
+{% endhighlight %}
+
+然后把「switch 语句的各个分支」替换为「对新函数的调用」：
+{% highlight java linos %}
+  static Employee create(int type) {
+      switch (type) {
+          case ENGINEER:
+             return Employee.createEngineer();
+          case SALESMAN:
+             return new Salesman();
+          case MANAGER:
+             return new Manager();
+          default:
+             throw new IllegalArgumentException("Incorrect type code value");
+      }
+  }
+{% endhighlight %}
+
+每修改一个分支，都需要编译并测试，直到所有分支修改完毕为止：
+{% highlight java linos %}
+  static Employee create(int type) {
+      switch (type) {
+          case ENGINEER:
+             return Employee.createEngineer();
+          case SALESMAN:
+             return Employee.createSalesman();
+          case MANAGER:
+             return Employee.createManager();
+          default:
+             throw new IllegalArgumentException("Incorrect type code value");
+      }
+  }
+{% endhighlight %}
+
+<p>
+接下来，我把注意力转移到旧函数的调用端。我把诸如下面这样的代码：
+{% highlight java linos %}
+ Employee kent = Employee.create(ENGINEER)
+{% endhighlight %}
+
+<p>
+替换为：
+{% highlight java linos %}
+ Employee kent = Employee.createEngineer()
+{% endhighlight %}
+
+<p>
+修改完create() 函数的所有调用者之后，我就可以把create() 函数删掉了。同时也可以把所有常量都删掉。

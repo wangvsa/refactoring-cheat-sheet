@@ -2,3 +2,82 @@
 layout: making-method-calls-simpler
 head_en: Parameterize Method
 ---
+<p>
+若干函数做了类似的工作，但在函数本体中却包含了不同的值。
+<p><b>建立单一函数，以参数表达那些不同的值。</b></p>
+
+<p class="p-img"><img alt="" src="{{site.baseurl}}/images/10fig05.gif" /></p>
+
+<h3>动机（Motivation）</h3>
+<p>
+你可能会发现这样的两个函数：它们做着类似的工作，但因少数几个值致使动作略有不同。这种情况下，你可以将这些各自分离的函数替换为一个统一函数，并通过参数来处理那些变化情况，用以简化问题。这样的修改可以去除重复的代码，并提高灵活性，因为你可以用这个参数处理其他（更多种）变化情况。
+
+作法（Mechanics）
+<ul>
+  <li>新建一个带有参数的函数，使它可以替换先前所有的重复性函数（repetitive methods）。</li>
+  <li>编译。</li>
+  <li>将「对旧函数的调用动作」替换为「对新函数的调用动作」。</li>
+  <li>编译，测试。</li>
+  <li>对所有旧函数重复上述步骤，每次替换后，修改并测试。</li>
+</ul>
+
+<p>
+也许你会发现，你无法用这种办法处理整个函数，但可以处理函数中的一部分代码。 这种情况下，你应该首先将这部分代码提炼到一个独立函数中，然后再对那个提炼所得的函数使用Parameterize Method。
+
+范例：（Example）
+<p>
+下面是一个最简单的例子：
+{% highlight java linos %}
+ class Employee {
+   void tenPercentRaise () {
+       salary *= 1.1;
+ }
+
+   void fivePercentRaise () {
+       salary *= 1.05;
+ }
+ {% endhighlight %}
+
+<p>
+这段代码可以替换如下：
+{% highlight java linos %}
+ void raise (double factor) {
+   salary *= (1 + factor);
+ }
+ {% endhighlight %}
+
+<p>
+当然，这个例子实在太简单了，所有人都能做到。
+
+<p>
+下面是一个稍微复杂的例子：
+{% highlight java linos %}
+   protected Dollars baseCharge() {
+       double result = Math.min(lastUsage(),100) * 0.03;
+       if (lastUsage() > 100) {
+           result += (Math.min (lastUsage(),200) - 100) * 0.05;
+       };
+       if (lastUsage() > 200) {
+           result += (lastUsage() - 200) * 0.07;
+       };
+       return new Dollars (result);
+   }
+ {% endhighlight %}
+
+上述代码可以替换如下：
+{% highlight java linos %}
+   protected Dollars baseCharge() {
+       double result = usageInRange(0, 100) * 0.03;
+       result += usageInRange (100,200) * 0.05;
+       result += usageInRange (200, Integer.MAX_VALUE) * 0.07;
+       return new Dollars (result);
+   }
+
+   protected int usageInRange(int start, int end) {
+       if (lastUsage() > start) return Math.min(lastUsage(),end) - start;
+       else return 0;
+   }
+ {% endhighlight %}
+
+<p>
+本项重构的伎俩在于：以「可将少量数值视为参数」为依据，找出带有重复性的代码。
