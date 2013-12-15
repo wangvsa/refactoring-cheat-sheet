@@ -2,3 +2,159 @@
 layout: moving-features-between-objects
 head_en: Move Method
 ---
+
+<p>
+（译注：本节大量保留class,method,source,target等字眼）
+ 
+<p>
+你的程序中，有个函数与其所驻class之外的另一个class进行更多交流：调用后者，或被后者调用。
+ 
+<p>
+在该函数最常引用（指涉）的class中建立一个有着类似行为的新函数。将旧函数变成一个单纯的委托函数（delegating method），或是将旧函数完全移除。
+ 
+<p class="p-img"><img alt="" src="/refactoring-cheat-sheet/images/07fig01.gif"/></p> 
+
+<br>
+<h3>动机（Motivation）</h3>
+ 
+<p>
+「函数搬移」是重构理论的支柱。如果一个class有太多行为，或如果一个class与另一个class有太多合作而形成高度耦合（highly coupled)，我就会搬移函数。通过这种手段，我可以使系统中的classes更简单，这些classes最终也将更干净利落地实现系统交付的任务。
+ 
+<p>
+常常我会浏览class的所有函数，从中寻找这样的函数：使用另一个对象的次数比使用自己所驻对象的次数还多。一旦我移动了一些值域，就该做这样的检查。一旦发现「有可能被我搬移」的函数，我就会观察调用它的那一端、它调用的那一端，以及继承体系中它的任何一个重定义函数。然后，我会根据「这个函数与哪个对象的交流比较多」，决定其移动路径。
+ 
+<p>
+这往往不是一个容易做出的决定。如果不能肯定是否应该移动一个函数，我就会继续观察其他函数。移动其他函数往往会让这项决定变得容易一些。有时候，即使你移动了其他函数，还是很难对眼下这个函数做出决定。其实这也没什么大不了的。 如果真的很难做出决定，那么或许「移动这个函数与否」并不那么重要。所以，我会凭本能去做，反正以后总是可以修改的。
+</p>
+
+<br>
+<h3>作法（Mechanics）</h3>
+<ul> 
+  <li>检查source class定义之source method所使用的一切特性（features），考虑它们是否也该被搬移。（译注：此处所谓特性泛指class定义的所有东西，包括值域和函数。）</li>
+  <ul>
+    <li>如果某个特性只被你打算搬移的那个函数用到，你应该将它一并搬移。如果另有其他函数使用了这个特性，你可以考虑将使用该特性的所有函数全都一并搬移。有时候搬移一组函数比逐一搬移简单些。</li>
+  </ul>
+  <li>检查source class的subclass和superclass，看看是否有该函数的其他声明。</li>
+  <ul>
+    <li>如果出现其他声明，你或许无法进行搬移，除非target class也同样表现出多态性（polylmorphism〕。</li>
+  </ul>
+  <li>在target class中声明这个函数。</li>
+  <ul>
+    <li>你可以为此函数选择一个新名称——对target class更有意义的名称。</li>
+  </ul>
+  <li>将source method的代码拷贝到target method中。调整后者，使其能在新家中正常运行。</li>
+  <ul>
+    <li>如果target method使用了source特性，你得决定如何从target method引用source object。如果target class中没有相应的引用机制，就把source object reference当作参数，传给新建立的target class。</li>
+    <li>如果source method包含异常处理式（exception handler），你得判断逻辑上应该由哪个来处理这一异常。如果应该由source class负责，就把异常处理式留在原地。</li>
+  </ul>
+  <li>编译target class。</li>
+  <br>
+  <li>决定如何从source正确引用target object。</li>
+  <ul>
+    <li>可能会有一个现成的值域或函数帮助你取得target class。如果没有，就看能否轻松建立一个这样的函数。如果还是不行，你得在source class中新建一个新值域来保存target object。这可能是一个永久性修改，但你也可以让它保持暂时的地位，因为后继的其他重构项目可能会把这个新建值域去掉。</li>
+  </ul>
+ 
+  <li>修改source method，使之成为一个delegating method（纯委托函数〕。</li>
+  <br>
+  <li>编译，测试。</li>
+  <br>
+  <li>决定「删除source method」或将它当作一个delegating method保留下来。</li>
+  <ul>
+    <li>如果你经常要在source object中引用target method，那么将source method作为delegating method保留下来会比较简单。</li>
+    <li>如果你想移除source method，请将source class中对source method的所有引用动作，替换为「对target method的引用动作」。</li>
+  </ul>
+  <li>编译，测试。</li>
+</ul> 
+
+<br>
+<h3>范例（Examples）</h3>
+<p> 
+我用一个表示「帐户」的account class来说明这项重构：
+
+{% highlight java linos %}
+class Account...
+  double overdraftCharge() {    //译注：透支金计费，它和其他class的关系似乎比较密切。
+      if (_type.isPremium()) {
+          double result = 10;
+          if (_daysOverdrawn > 7) result += (_daysOverdrawn - 7) * 0.85;
+          return result;
+      }
+      else return _daysOverdrawn * 1.75;
+  }
+ 
+  double bankCharge() {
+      double result = 4.5;
+      if (_daysOverdrawn > 0) result += overdraftCharge();
+      return result;
+  }
+  private AccountType _type;
+  private int _daysOverdrawn;
+{% endhighlight %}
+
+<p>
+假设有数种新帐户，每一种都有自己的「透支金计费规则」。所以我希望将overdraftCharge()搬移到AccountType class去。
+<p> 
+第一步要做的是：观察被overdraftCharge()使用的每一特性（features），考虑是否值得将它们与overdraftCharge()—起移动。此例之中我需要让daysOverdrawn值域留在Account class，因为其值会随不同种类的帐户而变化。然后，我将overdraftCharge()函数码拷贝到AccountType中，并做相应调整。
+ 
+{% highlight java linos %}
+class AccountType...
+  double overdraftCharge(int daysOverdrawn) {
+      if (isPremium()) {
+          double result = 10;
+          if (daysOverdrawn > 7) result += (daysOverdrawn - 7) * 0.85;
+          return result;
+      }
+      else return daysOverdrawn * 1.75;
+      } 
+{% endhighlight %}
+  
+<p> 
+在这个例子中，「调整」的意思是：(1)对于「使用AccountType特性」的语句，去掉_type；(2)想办法得到依旧需要的Account class特性。当我需要使用source class特性，我有四种选择：(1)将这个特性也移到target class；(2)建立或使用一个从target class到source的引用〔指涉)关系；(3)将source object当作参数传给target class；(4)如果所需特性是个变量，将它当作参数传给target method。
+ 
+<p> 
+本例中我将_daysOverdrawn变量作为参数传给target method(上述（4））。
+ 
+<p> 
+调整target method使之通过编译，而后我就可以将source method的函数本体替换为一个简单的委托动作（delegation），然后编译并测试：
+ 
+{% highlight java linos %}
+class Account...
+  double overdraftCharge() {
+      return _type.overdraftCharge(_daysOverdrawn);
+      }
+{% endhighlight %}
+
+<p> 
+我可以保留代码如今的样子，也可以删除source method。如果决定删除，就得找出source method的所有调用者，并将这些调用重新定向，改调用Account的bankCharge()：
+ 
+{% highlight java linos %}
+class Account...
+  double bankCharge() {
+      double result = 4.5;
+      if (_daysOverdrawn > 0) result += _type.overdraftCharge(_daysOverdrawn);
+      return result;
+      }
+{% endhighlight %}
+ 
+<p> 
+所有调用点都修改完毕后，我就可以删除source method在Account中的声明了。我可以在每次删除之后编译并测试，也可以一次性批量完成。如果被搬移的函数不是private，我还需要检查其他classes是否使用了这个函数。在强型（strongly typed) 语言中，删除source method声明式后，编译器会帮我发现任何遗漏。
+ 
+<p> 
+此例之中被移函数只取用（指涉〕一个值域，所以我只需将这个值域作为参数传给target method就行了。如果被移函数调用了Account中的另一个函数，我就不能这么简单地处理。这种情况下我必须将source object传递给target method：
+ 
+{% highlight java linos %}
+class AccountType...
+  double overdraftCharge(Account account) {
+      if (isPremium()) {
+          double result = 10;
+          if (account.getDaysOverdrawn() > 7)
+             result += (account.getDaysOverdrawn() - 7) * 0.85;
+          return result;
+      }
+      else return account.getDaysOverdrawn() * 1.75;
+      }
+{% endhighlight %}
+ 
+<p> 
+如果我需要source class的多个特性，那么我也会将source object传递给target method。不过如果target method需要太多source class特性，就得进一步重构。通常这种情况下我会分解target method，并将其中一部分移回source class。
+
