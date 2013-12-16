@@ -4,3 +4,109 @@ head_en: Inline Class
 ---
 
 <p>
+你的某个class没有做太多事情（没有承担足够责任）。 
+<p> 
+  <b>将class的所有特性搬移到另一个class中，然后移除原class。</b> 
+ 
+<p class="p-img"><img alt="" src="/refactoring-cheat-sheet/images/07fig04.gif"/></p>
+
+<br>
+<h3>动机（Motivation）</h3>
+<p> 
+Inline Class正好与Extract Class 相反。如果一个class不再承担足够 责任、不再有单独存在的理由〔这通常是因为此前的重构动作移走了这个class的 责任），我就会挑选这一「萎缩class」的最频繁用户（也是个class），以Inline Class手法将「妻缩class」塞进去。
+</p>
+<br>
+<h3>作法（Mechanics）</h3>
+<ul>
+  <li>在absorbing class（合并端的那个class）身上声明source class的public协议， 并将其中所有函数委托（delegate）至source class。</li>
+  <ul>
+    <li>如果「以一个独立接口表示source class函数」更合适的话，就应该在inlining之前先使用Extract Interface。</li>
+  </ul>
+
+  <li>修改所有source class引用点，改而引用absorbing class。</li>
+  <ul>
+    <li>将source class声明为private，以斩断package之外的所有引用可能。 同时并修改source class的名称，这便可使编译器帮助你捕捉到所有对于source class的"dangling references "（虚悬引用点）。</li> 
+  </ul> 
+  <li>编译，测试。</li>
+  <br>
+  <li>运用Move Method 和 Move Field ，将source class的特性全部搬移至absorbing class。</li>
+  <br>
+  <li>为source class举行一个简单的丧礼。</li>
+</ul>
+
+<br>
+<h3>范例（Examples）</h3>
+<p> 
+先前（上个重构项〉我从TelephoneNumber「提炼出另一个class，现在我要将它inlining塞回到Person去。一开始这两个classes是分离的：
+
+{% highlight java linos %}
+ class Person...
+   public String getName() {
+       return _name;
+   }
+   public String getTelephoneNumber(){
+       return _officeTelephone.getTelephoneNumber();
+   }
+   TelephoneNumber getOfficeTelephone() {
+       return _officeTelephone;
+   }
+ 
+   private String _name;
+   private TelephoneNumber _officeTelephone = new TelephoneNumber();
+ 
+ class TelephoneNumber...
+   public String getTelephoneNumber() {
+       return ("(" + _areaCode + ") " + _number);
+   }
+   String getAreaCode() {
+       return _areaCode;
+   }
+   void setAreaCode(String arg) {
+       _areaCode = arg;
+   }
+   String getNumber() {
+       return _number;
+   }
+   void setNumber(String arg) {
+       _number = arg;
+   }
+   private String _number;
+   private String _areaCode;
+{% endhighlight %}
+
+<p>
+首先我在Person中声明TelephoneNumber「的所有「可见」（public）函数：
+
+{% highlight java linos %}
+ class Person...
+   String getAreaCode() {
+       return _officeTelephone.getAreaCode();        //译注：请注意其变化
+   }
+   void setAreaCode(String arg) {
+       _officeTelephone.setAreaCode(arg);                //译注：请注意其变化
+   }
+   String getNumber() {
+       return _officeTelephone.getNumber();        //译注：请注意其变化
+   }
+   void setNumber(String arg) {
+       _officeTelephone.setNumber(arg);                //译注：请注意其变化
+   }
+{% endhighlight %}
+
+<p>
+现在，我要找出TelephoneNumber的所有用户，让它们转而使用Person接口。于是下列代码：
+
+{% highlight java linos %}
+       Person martin = new Person();
+       martin.getOfficeTelephone().setAreaCode ("781");
+{% endhighlight %}     
+
+<p>
+  就变成了：
+{% highlight java linos %}       Person martin = new Person();      
+       martin.setAreaCode ("781");
+{% endhighlight %}
+
+<p>
+现在，我可以持续使用Move Method 和 Move Field ，直到TelephoneNumber不复存在。
+ 

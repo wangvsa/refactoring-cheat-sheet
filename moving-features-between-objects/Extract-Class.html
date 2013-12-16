@@ -4,3 +4,169 @@ head_en: Extract Class
 ---
 
 <p>
+某个class做了应该由两个classes做的事。
+<p> 
+  <b>建立一个新class，将相关的值域和函数从旧class搬移到新class。</b>
+<p class="p-img"><img alt="" src="/refactoring-cheat-sheet/images/07fig03.gif"/></p>
+<br>
+<h3>动机（Motivation）</h3>
+<p> 
+你也许听过类似这样的教诲：一个class应该是一个清楚的抽象（abstract），处理一些明确的责任。但是在实际工作中，class会不断成长扩展。你会在这儿加入一些功能，在那儿加入一些数据。给某个class添加一项新责任时，你会觉得不值得为这项责任分离出一个单独的class。于是，随着责任不断増加，这个class会变得过份复杂。很快，你的class就会变成一团乱麻。
+<p> 
+这样的class往往含有大量函数和数据。这样的class往往太大而不易理解。此时你需要考虑哪些部分可以分离出去，并将它们分离到一个单独的class中。如果某些数据和某些函数总是一起出现，如果某些数据经常同时变化甚至彼此相依，这就表示你应该将它们分离出去。一个有用的测试就是问你自己，如果你搬移了某些值域和函数，会发生什么事？其他值域和函数是否因此变得无意义？
+<p> 
+另一个往往在开发后期出现的信号是class的「subtyped方式」。如果你发现subtyping只影响class的部分特性，或如果你发现某些特性「需要以此方式subtyped」，某些特性「需要以彼方式subtyped」，这就意味你需要分解原来的class。
+</p>
+
+<br>
+<h3>作法（Mechanics）</h3>
+<ul> 
+  <li>决定如何分解c;ass所负责任。</li>
+  <br>
+  <li>建立一个新class，用以表现从旧class中分离出来的责任。</li>
+  <ul>
+    <li>如果旧class剩下的责任与旧class名称不符，为旧class易名。</li>
+  </ul>
+  <li>建立「从旧class访问新class」的连接关系（link）。</li>
+  <ul>
+    <li>也许你有可能需要一个双向连接。但是在真正需要它之前，不要建立 「从新class通往旧class」的连接。</li>
+  </ul>
+  <li>对于你想搬移的每一个值域，运用Move Field 搬移之。</li>
+  <br>
+  <li>每次搬移后，编译、测试。</li>
+  <br>
+  <li>使用Move Method 将必要函数搬移到新class。先搬移较低层函数（也就是「被其他函数调用」多于「调用其他函数」者），再搬移较高层函数。</li> 
+  <br>
+  <li>每次搬移之后，编译、测试。</li> 
+  <br>
+  <li>检查，精简每个class的接口。</li>
+  <ul>
+    <li>如果你建立起双向连接，检查是否可以将它改为单向连接。</li>
+  </ul>
+  <li>决定是否让新class曝光。如果你的确需要曝光它，决定让它成为reference object (引用型对象〕或immutable value object（不可变之「实值型对象」）。</li>
+</ul>
+
+<br>
+<h3>范例（Examples）</h3>
+<p> 
+让我们从一个简单的Person class开始： 
+{% highlight java linos %}                                       
+ class Person...
+   public String getName() {
+       return _name;
+   }
+   public String getTelephoneNumber() {
+       return ("(" + _officeAreaCode + ") " + _officeNumber);
+   }
+   String getOfficeAreaCode() {
+       return _officeAreaCode;
+   }
+   void setOfficeAreaCode(String arg) {
+       _officeAreaCode = arg;
+   }
+   String getOfficeNumber() {
+       return _officeNumber;
+   }
+   void setOfficeNumber(String arg) {
+       _officeNumber = arg;
+   }
+ 
+   private String _name;
+   private String _officeAreaCode;
+   private String _officeNumber;
+   {% endhighlight %}
+<p> 
+在这个例子中，我可以将「与电话号码相关」的行为分离到一个独立class中。首 先我耍定义一个TelephoneNumber class来表示「电话号码」这个概念：
+
+{% highlight java linos %} 
+ class TelephoneNumber {
+ }
+ {% endhighlight %}
+
+ <p>
+易如反掌！然后，我要建立从Person到TelephoneNumber的连接：
+ 
+{% highlight java linos %} 
+ class Person
+ private TelephoneNumber _officeTelephone = new TelephoneNumber();
+ {% endhighlight %}
+
+<p> 
+现在，我运用Move Field 移动一个值域：
+
+{% highlight java linos %} 
+ class TelephoneNumber {
+   String getAreaCode() {
+       return _areaCode;
+   }
+   void setAreaCode(String arg) {
+       _areaCode = arg;
+   }
+   private String _areaCode;
+ }
+ class Person...
+   public String getTelephoneNumber() {
+       return ("(" + getOfficeAreaCode() + ") " + _officeNumber);
+   }
+   String getOfficeAreaCode() {
+       return _officeTelephone.getAreaCode();
+   }
+   void setOfficeAreaCode(String arg) {
+       _officeTelephone.setAreaCode(arg);
+   }
+   {% endhighlight %}
+
+<p> 
+  然后我可以移动其他值域，并运用Move Method 将相关函数移动到TelephoneNumber class中：
+{% highlight java linos %}
+ class Person...
+   public String getName() {
+       return _name;
+   }
+   public String getTelephoneNumber(){
+       return _officeTelephone.getTelephoneNumber();
+   }
+   TelephoneNumber getOfficeTelephone() {
+       return _officeTelephone;
+   }
+ 
+   private String _name;
+   private TelephoneNumber _officeTelephone = new TelephoneNumber();
+ class TelephoneNumber...
+   public String getTelephoneNumber() {
+       return ("(" + _areaCode + ") " + _number);
+   }
+   String getAreaCode() {
+       return _areaCode;
+   }
+   void setAreaCode(String arg) {
+       _areaCode = arg;
+   }
+   String getNumber() {
+       return _number;
+   }
+   void setNumber(String arg) {
+       _number = arg;
+   }
+   private String _number;
+   private String _areaCode;
+   {% endhighlight %}
+
+<p>
+下一步要做的决定是：要不要对客户揭示这个新口class？我可以将Person中「与电 话号码相关」的函数委托（delegating）至TelephoneNumber，从而完全隐藏这个新class；也可以直接将它对用户曝光。我还可以将它暴露给部分用户（位于同一个package中的用户），而不暴露给其他用户。
+<p> 
+如果我选择暴露新class，我就需要考虑别名（aliasing）带来的危险。如果我暴露了TelephoneNumber ，而有个用户修改了对象中的_areaCode值域值，我又怎么能知道呢？而且，做出修改的可能不是直接用户，而是用户的用户的用户。
+<p> 
+  面对这个问题，我有下列数种选择：
+<ol>
+  <li>允许任何对象修改TelephoneNumber 对象的任何部分。这就使得TelephoneNumber 对象成为引用对象（reference object），于是我应该考虑使用 Change Value to Reference。这种情况下，Person应该是TelephoneNumber的访问点。</li>
+  <br>
+  <li>不许任何人「不通过Person对象就修改TelephoneNumber 对象」。为了达到目的，我可以将TelephoneNumber「设为不可修改的（immutable），或为它提供一个不可修改的接口（immutable interface）。</li>
+  <br>
+  <li>另一个办法是：先复制一个TelephoneNumber 对象，然后将复制得到的新对象传递给用户。但这可能会造成一定程度的迷惑，因为人们会认为他们可以修改TelephoneNumber对象值。此外，如果同一个TelephoneNumber 对象 被传递给多个用户，也可能在用户之间造成别名（aliasing）问题。</li>
+</ol>
+<p> 
+Extract Class 是改善并发（concurrent）程序的一种常用技术，因为它使你可以为提炼后的两个classes分别加锁（locks）。如果你不需要同时锁定两个对象， 你就不必这样做。这方面的更多信息请看Lea[Lea]， 3.3节。
+<p> 
+这里也存在危险性。如果需要确保两个对象被同时锁定，你就面临事务（transaction）问题，需要使用其他类型的共享锁〔shared locks〕。正如Lea[Lea] 8.1节所讨论， 这是一个复杂领域，比起一般情况需要更繁重的机制。事务（transaction）很有实用性，但是编写事务管理程序（transaction manager）则超出了大多数程序员的职责范围。
+ 

@@ -4,3 +4,173 @@ head_en: Introduce Local Extension
 ---
 
 <p>
+你所使用的server class需要一些额外函数，但你无法修改这个class。
+<p> 
+  <b>建立一个新class，使它包含这些额外函数。让这个扩展品成为source class的subclass （子类〕或wrapper（外覆类）。</b>
+<p class="p-img"><img alt="" src="/refactoring-cheat-sheet/images/07fig08.gif"/></p>
+
+<br>
+<h3>动机（Motivation）</h3>
+<p> 
+很遗憾，classes的作者无法预知未来，他们常常没能为你预先准备一些有用的函数。如果你可以修改源码，最好的办法就是直接加入自己需要的函数。但你经常无法修改源码。如果只需要一两个函数，你可以使用Introduce Foreign Method。 但如果你需要的额外函数超过两个，外加函数（foreign methods）就很难控制住它 们了。所以，你需要将这些函数组织在一起，放到一个恰当地方去。要达到这一目 的，标准对象技术subclassing和wrapping是显而易见的办法。这种情况下我把 subclass 或wrapper称为local extention（本地扩展〕。
+<p> 
+所谓local extention是一个独立的class，但也是其extended class的subtype（译注： 这里的subtype不同于subclass；它和extended class并不一定存在严格的继承关系，只要能够提供extended class的所有特性即可）。这意味它提供original class的一切特性，同时并额外添加新特性。在任何使用original class的地方，你都可以使用local extention取而代之。
+<p> 
+使用local extention（本地扩展）使你得以坚持「函数和数据应该被包装在形式良好 的单元内」这一原则。如果你一直把本该放在extended class 中的代码零散放置于其他classes中，最终只会让其他这些classes变得过分复杂，并使得其中函数难以被复用。
+<p> 
+在subclass和wrapper之间做选择时，我通常首选subclass，因为这样的工作量比较少。制作subclass的最大障碍在于，它必须在对象创建期（object-createion time）实施。如果我可以接管对象创建过程，那当然没问题；但如果你想在对象创建之后再使用local extention ；就有问题了。此外，"subclassing"还迫使我必须产生一个subclass对象，这种情况下如果有其他对象引用了旧对象，我们就同时有两个对象保存了原数据！如果原数据是不可修改的（immutable），那也没问题，我可以放心进行拷贝；但如果原数据允许被修改，问题就来了，因为这时候闹了双包，一个修改动作无法同时改变两份拷贝。这时候我就必须改用wrapper。但使用wrapper时， 对local extention的修改会波及原物（original），反之亦然。        
+</p>
+
+<br>
+<h3>作法（Mechanics）</h3>
+<ul> 
+  <li>建立一个extension class，将它作为原物（原类〉的subclass或wrapper。</li> 
+  <br>
+  <li>在extension class 中加入转型构造函数（converting constructors ）。</li>
+  <ul>
+    <li>所谓「转型构造函数」是指接受原物（original）作为参数。如果你釆用subclassing方案，那么转型构造函数应该调用适当的subclass构造函数；如果你采用wrapper方案，那么转型构造函数应该将它所获得之引数（argument）赋值给「用以保存委托关系（delegate）」的那个值域。</li>
+  </ul>
+  <li>在extension class中加入新特性。</li>
+  <br>
+  <li>根据需要，将原物（original）替换为扩展物（extension）。</li>
+  <br>
+  <li>将「针对原始类（original class）而定义的所有外加函数（foreign methods）」 搬移到扩展类extension中。</li>
+</ul>
+
+<br>
+<h3>范例（Examples）</h3>
+<p> 
+我将以Java 1.0.1的Date class为例。Java 1.1已经提供了我想要的功能，但是在它到来之前的那段日子，很多时候我需要扩展Java 1.0.1的Date class。
+<p> 
+第一件待决事项就是使用subclass或wrapper。subclassing是比较显而易见的办法：
+{% highlight java linos %}
+        Class mfDate extends Date {
+           public nextDay()...
+           public dayOfYear()...{% endhighlight %}
+
+<p> 
+wrapper则需要用上委托（delegation）：
+{% highlight java linos %}        class mfDate {
+           private Date _original;{% endhighlight %}
+
+<br>
+<h3>范例：是用Subclass（子类）</h3>
+<p> 
+首先，我要建立一个新的MfDateSub class来表示「日期」（译注："Mf"是作者Martin Fowler的姓名缩写），并使其成为Date的subclass：
+{% highlight java linos %}        class MfDateSub extends Date
+{% endhighlight %}
+
+<p> 
+然后，我需要处理Date 和我的extension class之间的不同处。MfDateSub 构造函数需要委托（delegating）给Date构造函数：
+ 
+{% highlight java linos %}        public MfDateSub (String dateString) {
+           super (dateString);
+        };{% endhighlight %}
+      
+<p> 
+现在，我需要加入一个转型构造函数，其参数是一个隶属原类的对象：
+ 
+{% highlight java linos %}        public MfDateSub (Date arg) {
+           super (arg.getTime());
+        }{% endhighlight %}
+
+<p>      
+现在，我可以在extension class中添加新特性，并使用Move Method 将所有外加函数（foreign methods）搬移到extension class。于是，下面的代码：
+ 
+{% highlight java linos %}        client class...
+           private static Date nextDay(Date arg) {
+           // foreign method, should be on date
+             return new Date (arg.getYear(),arg.getMonth(), arg.getDate() + 1);
+        }{% endhighlight %}
+        
+<p> 
+经过搬移之后，就成了：
+ 
+{% highlight java linos %}        class MfDate...
+           Date nextDay() {
+              return new Date (getYear(),getMonth(), getDate() + 1);
+        }{% endhighlight %}
+
+<br>  
+<h3>范例：是用wrapper（外覆类）</h3>
+<p> 
+首先声明一个wrapping class：
+ 
+{% highlight java linos %}        class mfDate {
+          private Date _original;
+        }{% endhighlight %}
+
+<p>
+使用wrapping方案时，我对构造函数的设定与先前有所不同。现在的构造函数将只是执行一个单纯的委托动作（delegation）：
+ 
+{% highlight java linos %}        public MfDateWrap (String dateString) {
+           _original = new Date(dateString);
+        };{% endhighlight %}
+
+<p>   
+而转型构造函数则只是对其instance变量赋值而己：
+ 
+{% highlight java linos %}        public MfDateWrap (Date arg) {
+           _original = arg;
+        }{% endhighlight %}
+   
+<p> 
+接下来是一项枯燥乏味的工作：为原始类的所有函数提供委托函数。我只展示两个函数，其他函数的处理依此类推。
+{% highlight java linos %}        public int getYear() {
+           return _original.getYear();
+        }
+ 
+           public boolean equals (MfDateWrap arg) {
+              return (toDate().equals(arg.toDate()));
+        }{% endhighlight %}
+    
+<p> 
+完成这项工作之后，我就可以后使用Move Method 将日期相关行为搬移到新class中。于是以下代码：
+ 
+{% highlight java linos %}        client class...
+           private static Date nextDay(Date arg) {
+           // foreign method, should be on date
+              return new Date (arg.getYear(),arg.getMonth(), arg.getDate() + 1);
+        }{% endhighlight %}
+
+<p>
+经过搬移之后，就变成：
+ 
+{% highlight java linos %}        class MfDate...
+           Date nextDay() {
+              return new Date (getYear(),getMonth(), getDate() + 1);
+        }{% endhighlight %}
+        
+<p> 
+使用wrappers有一个特殊问题：如何处理「接受原始类之实体为参数」的函数？例如：
+ 
+{% highlight java linos %}        public boolean after (Date arg)
+{% endhighlight %}
+
+<p>  
+由于无法改变原始类〔original），所以我只能以一种方式使用上述的after() ：
+ 
+{% highlight java linos %}        aWrapper.after(aDate)                         // can be made to work
+        aWrapper.after(anotherWrapper)                // can be made to work
+        aDate.after(aWrapper)                         // will not work{% endhighlight %}
+  
+<p>  
+这样覆写（overridden）的目的是为了向用户隐藏wrapper 的存在。这是一个好策略，因为wrapper 的用户的确不应该关心wrapper 的存在，的确应该可以同样地对待wrapper（外覆类）和orignal（(原始类）。但是我无法完全隐藏此一信息，因为某些系统所提供的函数（例如equals() 会出问题。你可能会认为：你可以在MfDateWrap class 中覆写equals()，像这样：
+ 
+{% highlight java linos %}        public boolean equals (Date arg)     // causes problems
+{% endhighlight %} 
+
+<p>
+但这样做是危险的，因为尽管我达到了自己的目的，Java 系统的其他部分都认为equals() 符合交换律：如果a.equals(b)为真,那么b.equals(a)也必为真。违反这一规则将使我遭遇一大堆莫名其妙的错误。要避免这样的尴尬境地，惟一办法就是修改Date class。但如果我能够修改Date ，我又何必进行此项重构？所以，在这种情况下，我只能（必须〕向用户暴露「我进行了包装」这一事实。我将以一个新函数来进行日期之间的相等性检查（equality tests）： 
+{% highlight java linos %}        public boolean equalsDate (Date arg)
+{% endhighlight %}
+
+<p>  
+我可以重载equalsDate() ，让一个重载版本接受Date 对象，另一个重载版本接受MfDateWrap 对象。这样我就不必检查未知对象的型别了：
+{% highlight java linos %}        public boolean equalsDate (MfDateWrap arg)
+{% endhighlight %}
+
+<p>  
+subclassing方案中就没有这样的问题，只要我不覆写原函数就行了。但如果我覆写了original class 中的函数，那么寻找函数时，我会被搞得晕头转向。一般来说，我不会在extension class 中覆写0original class 的函数，我只会添加新函数。
+<p> 
+  <i>译注：equality（相等性）是一个很基础的大题目。《Effective Java》 by Joshua Bloch 第3章，以及《Practical Java》by Peter Haggar 第2章，对此均有很深入的讨论。这两本书对于其他的基础大题目如Serizable，Comparable，Cloneable，hashCode() 也都有深刻讨论。</i>
