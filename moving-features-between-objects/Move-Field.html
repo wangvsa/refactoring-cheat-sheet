@@ -4,3 +4,134 @@ head_en: Move Field
 ---
 
 <p>
+（译注：本节大量保留class,method,source,target等字眼）
+
+<p>
+你的程序中，某个field（值域〕被其所驻class之外的另一个class更多地用到。
+ 
+<p>
+<b>在target class 建立一个new field，修改source field的所有用户，令它们改用此new field。</b>
+
+<p class="p-img"><img alt="" src="/refactoring-cheat-sheet/images/07fig02.gif"/></p>
+
+<br>
+<h3>动机（Motivation）</h3>
+ 
+<p>
+在classes之间移动状态（states）和行为，是重构过程中必不可少的措施。随着系统发展，你会发现自己需要新的class，并需要将原本的工作责任拖到新的class中。这个星期中合理而正确的设计决策，到了下个星期可能不再正确。这没问题；如果你从来没遇到这种情况，那才有问题。
+ 
+<p>
+如果我发现，对于一个field（值域），在其所驻class之外的另一个class中有更多函数使用了它，我就会考虑搬移这个field。上述所谓「使用」可能是通过设值/取值（setting/getting）函数间接进行。我也可能移动该field的用户（某函数），这取决于是否需要保持接口不受变化。如果这些函数看上去很适合待在原地，我就选择搬移field。
+ 
+<p>
+  使用Extract Class 时，我也可能需要搬移field。此时我会先搬移field，然后再搬移函数。
+</p>
+
+<br> 
+<h3>作法（Mechanics）</h3>
+<ul> 
+  <li>如果field的属性是public，首先使用Encapsulate Field 将它封装起来。</li> 
+  <ul>
+    <li>如果你有可能移动那些频繁访问该field的函数，或如果有许多函数访问某个field，先使用Self Encapsulate Field 也许会有帮助。</li>
+  </ul>
+  <li>	编译，测试。</li>
+  <br>
+  <li>在target class中建立与source field相同的field，并同时建立相应的设值/取值 （setting/getting）函数。</li>
+  <br>
+  <li>编译target class。</li>
+  <br>
+  <li>决定如何在source object中引用target object。</li>
+  <ul>
+    <li>一个现成的field或method可以助你得到target object。如果没有，就看能否轻易建立这样一个函数。如果还不行，就得在source class中新建一个field来存放target object。这可能是个永久性修改，但你也可以暂不公开它，因为后续重构可能会把这个新建field除掉。</li>
+  </ul>
+  <li>删除source field。</li>
+  <br>
+  <li>将所有「对source field的引用」替换为「对target适当函数的调用」。</li>
+  <ul>	
+    <li>如果是「读取」该变量，就把「对source field的引用」替换为「对target取值函数（getter）的调用」；如果是「赋值」该变量，就把对source field的引用」替换成「对设值函数（setter）的调用」。</li>
+    <br>
+    <li>如果source field不是private，就必须在source class的所有subclasses中查找source field的引用点，并进行相应替换。</li>
+  </ul>
+  <li>编译，测试。</li>
+</ul> 
+
+<br>
+<h3>范例（Examples）</h3>
+<p> 
+下面是Account class的部分代码：
+
+{% highlight java linos %}
+class Account...
+  private AccountType _type;
+  private double _interestRate;
+ 
+  double interestForAmount_days (double amount, int days) {
+      return _interestRate * amount * days / 365;
+  }{% endhighlight %} 
+
+<p>
+我想把表示利率的_interestRate搬移到AccountType class去。目前已有数个函数引用了它，interestForAmount_days() 就是其一。下一步我要在AccountType中建立_interestRate field以及相应的访问函数：
+
+{% highlight java linos %}
+class AccountType...
+  private double _interestRate;
+ 
+  void setInterestRate (double arg) {
+      _interestRate = arg;
+  }
+ 
+  double getInterestRate () {
+      return _interestRate;
+  }{% endhighlight %}
+
+<p>
+这时候我可以编译新的AccountType class。
+<p>
+现在，我需要让Account class中访问此_interestRate field的函数转而使用AccountType对象，然后删除Account class中的_interestRate field。我必须删除source field，才能保证其访问函数的确改变了操作对象，因为编译器会帮我指出未正确获得修改的函数。
+ 
+{% highlight java linos %}
+  private double _interestRate;
+  double interestForAmount_days (double amount, int days) {
+      return _type.getInterestRate() * amount * days / 365;
+  }{% endhighlight %}
+
+<br>
+<h3>范例：使用Self Encapsulate（自我封装）</h3>
+<p>
+如果有很多函数已经使用了_interestRate field，我应该先运用Self Encapsulate Field：
+ 
+{% highlight java linos %}
+ class Account...
+   private AccountType _type;
+   private double _interestRate;
+ 
+   double interestForAmount_days (double amount, int days) {
+       return getInterestRate() * amount * days / 365;
+   }
+ 
+   private void setInterestRate (double arg) {
+       _interestRate = arg;
+   }
+ 
+   private double getInterestRate () {
+       return _interestRate;
+   }{% endhighlight %}
+   
+<p> 
+这样，在搬移field之后，我就只需要修改访问函数（accessors）就行了 ：
+ 
+{% highlight java linos %}
+   double interestForAmountAndDays (double amount, int days) {
+       return getInterestRate() * amount * days / 365;
+   }
+ 
+   private void setInterestRate (double arg) {
+      _type.setInterestRate(arg);
+   }
+ 
+   private double getInterestRate () {
+       return _type.getInterestRate();
+   }{% endhighlight %}
+ 
+<p> 
+如果以后有必要，我可以修改访问函数（accessors）的用户，让它们使用新对象。 Self Encapsulate Field 使我得以保持小步前进。如果我需要对做许多处理，保持小步前进是有帮助的。特别值得一提的是：首先使用Self Encapsulate Field 使我得以更轻松使用Move Method 将函数搬移到target class中。如果待移函数引用了field的访问函数（accessors），那么那些引用点是无须修 改的。

@@ -4,3 +4,90 @@ head_en: Hide Delegate
 ---
 
 <p>
+客户直接调用其server object（服务对象）的delegate class。
+<p> 
+  <b>在server端（某个class〕建立客户所需的所有函数，用以隐藏委托关系（delegation）。</b></p>
+  <br>
+<p class="p-img"><img alt="" src="/refactoring-cheat-sheet/images/07fig05.gif"/></p> 
+
+<br> 
+<h3>动机（Motivation）</h3>
+<p>
+「封装」即使不是对象的最关键特征，也是最关键特征之一。「封装」意味每个对象都应该尽可能少了解系统的其他部分。如此一来，一旦发生变化，需要了解这一 变化的对象就会比较少——这会使变化比较容易进行。
+<p>
+任何学过对象技术的人都知道：虽然Java允许你将值域声明为public，但你还是应该隐藏对象的值域。随着经验日渐丰富，你会发现，有更多可以（并值得）封装的东西。
+<p>
+如果某个客户调用了「建立于server object (服务对象）的某个值域基础之上」的函数，那么客户就必须知晓这一委托对象（delegate object。译注：即server object的那个特殊值域）。万一委托关系发生变化，客户也得相应变化。你可以在server 端放置一个简单的委托函数（delegating method），将委托关系隐藏起来，从而去除这种依存性（图7.1）。这么一来即便将来发生委托关系上的变化，变化将被限制在server中，不会波及客户。
+</p>
+<br>
+<p class="p-img"><img alt="" src="/refactoring-cheat-sheet/images/07fig06.gif"/></p> 
+<center><font size="2px">图7.1  简单的委托关系（delegation）</font size="2px"></center>
+  <br>
+<p> 
+对于某些客户或全部客户，你可能会发现，有必要先使用Extract Class 。一旦你对所有客户都隐藏委托关系（delegation），你就可以将server 接口中的所有 委托都移除。
+</p>
+
+<br>
+<h3>作法（Mechanics）</h3>
+<ul> 
+  <li>对于每一个委托关系中的函数，在server端建立一个简单的委托函数（delegating method）。</li>
+  <br>
+  <li>调整客户，令它只调用server 提供的函数（译注：不得跳过径自调用下层）。</li>
+  <ul>
+    <li>如果client (客户〕和server不在同一个package，考虑修改委托函数 （delegate method）的访问权限，让client得以在package之外调用它。</li>
+  </ul>
+  <li>每次调整后，编译并测试。</li>
+  <br>
+  <li>如果将来不再有任何客户需要取用图7.1的Delegate （受托类），便可移除server中的相关访问函数（accessor for the delegate）。</li>
+  <br>
+  <li>编译，测试。</li>
+</ul>
+
+<br>
+<h3>范例（Examples）</h3>
+<p> 
+本例从两个classes开始，代表「人」的Person和代表「部门」的Department：
+
+{% highlight java linos %}
+ class Person {
+   Department _department;
+ 
+   public Department getDepartment() {
+       return _department;
+   }
+   public void setDepartment(Department arg) {
+       _department = arg;
+   }
+ }
+ 
+ class Department {
+   private String _chargeCode;
+   private Person _manager;
+ 
+   public Department (Person manager) {
+       _manager = manager;
+   }
+ 
+   public Person getManager() {
+       return _manager;
+   }
+   ...{% endhighlight %}  
+
+   <p>   
+   如果客户希望知道某人的经理是谁，他必须先取得Department对象：
+   {% highlight java linos %}
+ manager = john.getDepartment().getManager();{% endhighlight %}
+
+ <p>
+这样的编码就是对客户揭露了Department的工作原理，于是客户知道：Department用以追踪「经理」这条信息。如果对客户隐藏Department，可以减少耦合（coupling）。 为了这一目的，我在Person中建立一个简单的委托函数：
+{% highlight java linos %}
+   public Person getManager() {
+       return _department.getManager();
+   }{% endhighlight %}
+
+   <p>
+现在，我得修改Person的所有客户，让它们改用新函数：
+{% highlight java linos %}
+ manager = john.getManager();{% endhighlight %}
+ <p>
+只要完成了对Department所有函数的委托关系，并相应修改了Person的所有客 户，我就可以移除Person中的访问函数getDepartment()了。

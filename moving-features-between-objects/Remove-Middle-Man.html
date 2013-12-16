@@ -4,3 +4,63 @@ head_en: Remove Middle Man
 ---
 
 <p>
+某个class做了过多的简单委托动作（simple delegation）。 
+<p> 
+  <b>让客户直接调用delegate（受托类）。</b>
+<p class="p-img"><img alt="" src="/refactoring-cheat-sheet/images/07fig07.gif"/></p>
+ 
+
+<br>
+<h3>动机（Motivation）</h3>
+<p> 
+在Hide Delegate的「动机」栏，我谈到了「封装 delegated object（受托对 象）」的好处。但是这层封装也是要付出代价的，它的代价就是：每当客户要使用 delegate（受托类）的新特性时，你就必须在server 端添加一个简单委托函数。随着delegate的特性（功能）愈来愈多，这一过程会让你痛苦不己。server 完全变成了一 个「中间人」，此时你就应该让客户直接调用delegate。
+<p> 
+很难说什么程度的隐藏才是合适的。还好，有了Hide Delegate和Remove Middle Man，你大可不必操心这个问题，因为你可以在系统运行过程中不断进行调整。随着系统的变化，「合适的隐藏程度」这个尺度也相应改变。六个月 前恰如其分的封装，现今可能就显得笨拙。重构的意义就在于：你永远不必说对不起——只要把出问题的地方修补好就行了。
+</p>
+
+<br>
+<h3>作法（Mechanics）</h3>
+<ul> 
+  <li>建立一个函数，用以取用delegate（受托对象）。</li>
+  <br>
+  <li>对于每个委托函数（delegate method），在server中删除该函数，并将「客户对该函数的调用」替换为「对delegate（受托对象）的调用」。</li>
+  <br>
+  <li>处理每个委托函数后，编译、测试。</li>
+</ul> 
+
+<br>
+<h3>范例（Examples）</h3>
+<p> 
+我将以另一种方式使用先前用过的「人与部门」例子。还记得吗，上一项重构结束时，Person将Department隐藏起来了：
+{% highlight java linos %} class Person...
+   Department _department;        
+   public Person getManager() {
+       return _department.getManager();
+ 
+ class Department...
+   private Person _manager;
+   public Department (Person manager) {
+       _manager = manager;
+  }{% endhighlight %} 
+
+<P> 
+为了找出某人的经理，客户代码可能这样写：
+{% highlight java linos %} manager = john.getManager();{% endhighlight %}
+
+<p> 
+像这样，使用和封装Department都很简单。但如果大量函数都这么做，我就不得不在Person之中安置大量委托行为（delegations）。这就是移除中间人的时候了。 首先在Person建立一个「受托对象（delegate）取得函数」：
+{% highlight java linso %} class Person...
+   public Department getDepartment() {
+       return _department;
+   }{% endhighlight %} 
+
+<p>
+然后逐一处理每个委托函数。针对每一个这样的函数，我要找出通过Person使用的函数，并对它进行修改，使它首先获得受托对象（delegate），然后直接使用之：
+
+  {% highlight java linos %}
+ manager = john.getDepartment().getManager();{% endhighlight %} 
+
+<p>
+然后我就可以删除Person的getManager() 函数。如果我遗漏了什么，编译器会 告诉我。
+<p> 
+为方便起见，我也可能想要保留一部分委托关系（delegations）。此外我也可能希望对某些客户隐藏委托关系，并让另一些用户直接使用受托对象。基于这些原因，一些简单的委托关系（以及对应的委托函数）也可能被留在原地。
