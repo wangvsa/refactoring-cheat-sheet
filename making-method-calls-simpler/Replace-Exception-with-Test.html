@@ -2,3 +2,153 @@
 layout: making-method-calls-simpler
 head_en: Replace Exception with Test
 ---
+<p>
+面对一个「调用者可预先加以检查」的条件，你抛出了一个异常。
+<p><b>修改调用者，使它在调用函数之前先做检查。</b></p>
+
+{% highlight java linos %}
+double getValueForPeriod (int periodNumber) {
+    try {
+        return _values[periodNumber];
+    } catch (ArrayIndexOutOfBoundsException e) {
+        return 0;
+    }
+}
+{% endhighlight %}
+
+<p class="p-img"><img alt="" src="{{site.baseurl}}/images/arrow.gif" /></p>
+
+{% highlight java linos %}
+double getValueForPeriod (int periodNumber) {
+    if (periodNumber >= _values.length) return 0;
+    return _values[periodNumber];
+}
+{% endhighlight %}
+
+
+<h3>动机（Motivation）</h3>
+<p>
+异常（exception）的出现是程序语言的一大进步。运用Replace Error Code with Exception，异常便可协助我们避免很多复杂的错误处理逻辑。但是，就像许多好东西一样，异常也会被滥用，从而变得不再让人偷快（就连味道极好的Aventinus 啤酒，喝得太多也会让我厌烦[Jackson]）。「异常」只应该被用于异常 的、罕见的行为，也就是那些「产生意料外的错误」的行为，而不应该成为「条件 检查」的替代品。如果你可以合理期望调用者在调用函数之前先检査某个条件，那么你就应该提供一个测试，而调用者应该使用它。
+
+
+<h3>作法（Mechanics）</h3>
+<ul>
+  <li>在函数调用点之前，放置一个测试句，将函数内的catch 区段中的代码拷贝到测试句的适当if 分支中。</li>
+  <li>在catch 区段起始处加入一个assertion，确保catch 区段绝对不会被执行。</li>
+  <li>编译，测试。</li>
+  <li>移除所有catch 区段，然后将区段内的代码拷贝到try 之外，然后移除try 区段。</li>
+  <li>编译，测试，</li>
+</ul>
+
+<h3>范例：（Example）</h3>
+<p>
+下面的例子中，我以一个ResourcePool 对象管理「创建代价高昂、可复用」的资源（例如数据库连接，database connection）。这个对象带有两个「池」（pools）， 一个用以保存可用资源，一个用以保存已分配资源。当用户索求一份资源时，ResourcePool 对象从「可用资源池』中取出一份资源交出，并将这份资源转移到 「已分配资源池」。当用户释放一份资源时，ResourcePool 对象就将该资源从「已 分配资源池」放回「可用资源池」。如果「可用资源池」不能满足用户的索求，ResourcePool 对象就创建一份新资源。
+
+<p>
+资源供应函数可能如下所示：
+{% highlight java linos %}
+class ResourcePool
+  Resource getResource() {
+      Resource result;
+      try {
+          result = (Resource) _available.pop();
+          _allocated.push(result);
+          return result;
+      } catch (EmptyStackException e) {
+          result = new Resource();
+          _allocated.push(result);
+          return result;
+      }
+}
+Stack _available;
+Stack _allocated;
+{% endhighlight %}
+
+<p>
+在这里，「可用资源用尽」并不是一种意料外的事件，因此我不该使用异常 （exceptions）表示这种情况。
+
+<p>
+为了去掉这里的异常，我首先必须添加一个适当的提前测试，并在其中处理「可用 资源池为空」的情况：
+{% highlight java linos %}
+  Resource getResource() {
+      Resource result;
+      if (_available.isEmpty()) {
+         result = new Resource();
+         _allocated.push(result);
+         return result;
+     }
+      else {
+          try {
+             result = (Resource) _available.pop();
+             _allocated.push(result);
+             return result;
+          } catch (EmptyStackException e) {
+             result = new Resource();
+             _allocated.push(result);
+             return result;
+          }
+      }
+   }
+{% endhighlight %}
+
+<p>
+现在getResource() 应该绝对不会抛出异常了。我可以添加assertion 保证这一点：
+{% highlight java linos %}
+  Resource getResource() {
+      Resource result;
+      if (_available.isEmpty()) {
+          result = new Resource();
+          _allocated.push(result);
+          return result;
+      }
+      else {
+          try {
+              result = (Resource) _available.pop();
+              _allocated.push(result);
+              return result;
+          } catch (EmptyStackException e) {
+            Assert.shouldNeverReachHere("available was empty on pop");
+             result = new Resource();
+             _allocated.push(result);
+             return result;
+          }
+      }
+  }
+
+class Assert...
+  static void shouldNeverReachHere(String message) {
+      throw new RuntimeException (message);
+  }
+{% endhighlight %}
+
+<p>
+编译并测试。如果一切运转正常，就可以将try 区段中的代码拷贝到try 区段之外，然后将区段全部移除：
+{% highlight java linos %}
+  Resource getResource() {
+      Resource result;
+      if (_available.isEmpty()) {
+          result = new Resource();
+          _allocated.push(result);
+          return result;
+      }
+      else {
+          result = (Resource) _available.pop();
+       _allocated.push(result);
+       return result;
+    }
+  }
+{% endhighlight %}
+
+<p>
+在这之后我常常发现，我可以对条件代码（conditional code）进行整理。本例之中我可以使用Consolidate Duplicate Conditional Fragments：
+{% highlight java linos %}
+  Resource getResource() {
+      Resource result;
+      if (_available.isEmpty())
+          result = new Resource();
+      else
+          result = (Resource) _available.pop();
+      _allocated.push(result);
+      return result;
+  }
+{% endhighlight %}

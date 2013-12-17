@@ -2,3 +2,169 @@
 layout: making-method-calls-simpler
 head_en: Replace Constructor with Factory Method
 ---
+<p>
+你希望在创建对象时不仅仅是对它做简单的建构动作（simple construction ）。
+<p><b>将constructor （构造函数）替换为factory method（工厂函数）。</b></p>
+
+{% highlight java linos %}
+Employee (int type) {
+    _type = type;
+}
+{% endhighlight %}
+
+<p class="p-img"><img alt="" src="{{site.baseurl}}/images/arrow.gif" /></p>
+
+{% highlight java linos %}
+static Employee create(int type) {
+    return new Employee(type);
+}
+{% endhighlight %}
+
+<h3>动机（Motivation）</h3>
+<p>
+使用Replace Constructor with Factory Method 的最显而易见的动机就是在subclassing 过程中以factory method 以取代type code。你可能常常需要根据type code 创建相应的对象，现在，创建名单中还得加上subclasses，那些subclasses 也是根据type code 来创建。然而由于构造函数只能返回「被索求之对象」，因此你需要将构造函数替换为Factory Method [Gang of Four]。
+<p>
+此外，如果构造函数的功能不能满足你的需要，也可以使用factory method 来代替它。Factory method 也是Change Value to Reference 的基础。你也可以令你的factory method 根据参数的个数和型别，选择不同的创建行为。
+
+<h3>作法（Mechanics）</h3>
+<ul>
+  <li>新建一个factory method ，让它调用现有的构造函数。</li>
+  <li>将「对构造函数的调用」替换为「对factory method 的调用」。</li>
+  <li>每次替换后，编译并测试。</li>
+  <li>将构造函数声明为private。</li>
+  <li>编译。</li>
+</ul>
+
+<h3>范例：（Example）</h3>
+<p>
+又是那个单调乏味的例子：员工薪资系统。我以Employee 表示「员工」：
+{% highlight java linos %}
+class Employee {
+
+  private int _type;
+  static final int ENGINEER = 0;
+  static final int SALESMAN = 1;
+  static final int MANAGER = 2;
+
+  Employee (int type) {
+      _type = type;
+  }
+{% endhighlight %}
+
+我希望为Employee 提供不同的subclasses，并分别给予它们相应的type code。因此，我需要建立一个factory method ：
+{% highlight java linos %}
+  static Employee create(int type) {
+     return new Employee(type);
+  }
+{% endhighlight %}
+
+<p>
+然后，我要修改构造函数的所有调用点，让它们改用上述新建的factory method ， 并将构造函数声明为private ：
+{% highlight java linos %}
+client code...
+  Employee eng = Employee.create(Employee.ENGINEER);
+
+class Employee...
+  private Employee (int type) {
+     _type = type;
+  }
+{% endhighlight %}
+
+<h3>范例：根据字符串（String）创建subclass 对象</h3>
+
+<p>
+迄今为止，我还没有获得什么实质收获。目前的好处在于：我把「对象创建之调用 动作的接收者」和「被创建之对象所属的class 」分开了。如果我随后使用Replace Type Code with Subclasses 把type code 转换为Employee 的subclass ，我就可以运用factory method ，将这些subclass 对用户隐藏起来：
+{% highlight java linos %}
+  static Employee create(int type) {
+      switch (type) {
+          case ENGINEER:
+             return new Engineer();
+          case SALESMAN:
+             return new Salesman();
+          case MANAGER:
+             return new Manager();
+          default:
+             throw new IllegalArgumentException("Incorrect type code value");
+      }
+  }
+{% endhighlight %}
+
+<p>
+可惜的是，这里面有一个switch 语句。如果我添加一个新的subclass ，就必须记得更新这里的switch 语句，而我又偏偏很健忘。
+
+<p>
+绕过这个switch 语句的一个好办法是使用Class.forName() 。第一件要做的事是修改参数型别，这从根本上说是Rename Method 的一种变体。首先我得建 立一个函数，让它接收一个字符串引数（string argument）：
+{% highlight java linos %}
+  static Employee create (String name) {
+      try {
+          return (Employee) Class.forName(name).newInstance();
+      } catch (Exception e) {
+          throw new IllegalArgumentException ("Unable to instantiate" + name);
+      }
+  }
+{% endhighlight %}
+
+<p>
+然后让稍早那个「create() 函数int 版」调用新建的「create() 函数String 版」：
+{% highlight java linos %}
+class Employee {
+  static Employee create(int type) {
+      switch (type) {
+          case ENGINEER:
+             return create("Engineer");
+          case SALESMAN:
+             return create("Salesman");
+          case MANAGER:
+             return create("Manager");
+          default:
+             throw new IllegalArgumentException("Incorrect type code value");
+      }
+  }
+{% endhighlight %}
+
+<p>
+然后，我得修改create() 函数的调用者，将下列这样的语句：
+{% highlight java linos %}
+Employee.create(ENGINEER)
+{% endhighlight %}
+
+<p>
+修改为：
+{% highlight java linos %}
+Employee.create("Engineer")
+{% endhighlight %}
+
+<p>
+完成之后，我就可以将「create() 函数，int 版本」移除了。
+<p>
+现在，当我需要添加新的Employee subclasses，就不再需要更新create() 函数了。 但我却因此失去了编译期检验，使得一个小小的拼写错误就可能造成运行期错误。如果有必要防止运行期错误，我会使用明确函数来创建对象（见本页下）。但这样一来，每添加一个新的subclass ，我就必须添加一个新函数。这就是为了型别安全而牺牲掉的灵活性。还好，即使我做了错误选择，也可以使用Parameterize Method 或 Replace Parameter with Explicit Methods 撤销决定。
+<p>
+另一个「必须谨慎使用（Class.forName() 」的原因是：它向用户暴露了subclass 名称。不过这并不是太糟糕，因为你可以使用其他字符串，并在factory method 中执行其他行为。这也是「不使用Inline Method 去除factory method 的一个好理由。
+
+<h3>范例：以明确函数（Explicit Methods）创建subclass</h3>
+<p>
+我可以通过另一条途径来隐藏subclass ——使用明确函数。如果你只有少数几个subclasses，而且它们都不再变化，这条途径是很有用的。我可能有个抽象的Person class，它有两个subclass ：Male 和Female。首先我在superclass 中为每个subclass 定义一个factory method ：
+{% highlight java linos %}
+class Person...
+  static Person createMale(){
+      return new Male();
+  }
+  static Person createFemale() {
+      return new Female();
+  }
+{% endhighlight %}
+
+<p>
+然后我可以把下面的调用：
+{% highlight java linos %}
+Person kent = new Male();
+{% endhighlight %}
+
+<p>
+替换成：
+{% highlight java linos %}
+Person kent = Person.createMale();
+{% endhighlight %}
+
+<p>
+但是这就使得superclass 必须知晓subclass 。如果想避免这种情况，你需要一个更为复杂的设计，例如 Product Trader 模式[Bäumer and Riehle]。绝大多数情况下你并不需要如此复杂的设计，上面介绍的作法已经绰绰有余。

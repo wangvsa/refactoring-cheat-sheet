@@ -2,3 +2,140 @@
 layout: making-method-calls-simpler
 head_en: Remove Setting Method
 ---
+<p>
+你的class 中的某个值域，应该在对象初创时被设值，然后就不再改变。
+<p><b>去掉该值域的所有设值函数（setter）。</b></p>
+
+<p class="p-img"><img alt="" src="{{site.baseurl}}/images/10fig07.gif" /></p>
+
+<h3>动机（Motivation）</h3>
+<p>
+如果你为某个值域提供了设值函数（setter），这就暗示这个值域值可以被改变。如果你不希望在对象初创之后此值域还有机会被改变，那就不要为它提供设值函数 （同时并将该值域设为final ）。这样你的意图会更加清晰，并且往往可以排除其值被修改的可能性——这种可能性往往是非常大的。
+<p>
+如果你保留了间接访问变量的方法，就可能经常有程序员盲目使用它们[Beck]。这些人甚至会在构造函数中使用设值函数！我猜想他们或许是为了代码的一致性，但却忽视了设值函数往后可能带来的混淆。
+
+<h3>作法（Mechanics）</h3>
+<ul>
+  <li>检查设值函数（setter）被使用的情况，看它是否只被构造函数调用，或者被构造函数所调用的另一个函数调用。</li>
+  <li>修改构造函数，使其直接访问设值函数所针对的那个变量。
+    <ul>
+      <li>如果某个subclass 通过设值函数给superclass 的某个private 值域设了值，那么你就不能这样修改。这种情况下你应该试着在superclass 中提供一个protected 函数（最好是构造函数）来给这些值域设值。不论你怎么做，都不要给superclass 中的函数起一个与设值函数混淆的名字。</li>
+    </ul>
+  </li>
+  <li>编译，测试。</li>
+  <li>移除这个设值函数，将它所计对的值域设为final 。</li>
+  <li>编译，测试。</li>
+</ul>
+
+<h3>范例：（Example）</h3>
+<p>
+译注：本书英文版网站上的勘误网页（www.refactoring.com/errata.html）显示，本页程序有些问题，惟因前后颇有牵连，故勘误表上并未明确条列代码之修改。请读者自行上网査阅理解。
+
+<p>
+下面是一个简单例子：
+{% highlight java linos %}
+class Account {
+
+  private String _id;
+
+  Account (String id) {
+      setId(id);
+  }
+
+  void setId (String arg) {
+     _id = arg;
+  }
+{% endhighlight %}
+
+<p>
+以上代码可修改为：
+{% highlight java linos %}
+class Account {
+
+  private final String _id;
+
+  Account (String id) {
+     _id = id;
+  }
+{% endhighlight %}
+
+<p>
+问题可能以数种不同的形式出现。首先，你可能会在设值函数中对引数做运算：
+{% highlight java linos %}
+class Account {
+
+  private String _id;
+
+  Account (String id) {
+      setId(id);
+  }
+
+  void setId (String arg) {
+     _id = "ZZ" + arg;
+  }
+{% endhighlight %}
+
+<p>
+如果对引数的修改很简单（就像上面这样）而且又只有一个构造函数，我可以直接在构造函数中做相同的修改。如果修改很复杂，或者有一个以上的函数调用它，我就需要提供一个独立函数。我需要为新函数起个好名字，清楚表达该函数的用途：
+{% highlight java linos %}
+class Account {
+  private final String _id;
+  Account (String id) {
+      initializeId(id);
+  }
+
+  void initializeId (String arg) {
+     _id = "ZZ" + arg;
+  }
+{% endhighlight %}
+
+<p>
+如果subclass 需要对superclass 的private 变量赋初值，情况就比较麻烦一些：
+{% highlight java linos %}
+class InterestAccount extends Account...
+
+  private double _interestRate;
+
+  InterestAccount (String id, double rate) {
+      setId(id);
+      _interestRate = rate;
+  }
+{% endhighlight %}
+
+<p>
+问题是我无法在InterestAccount() 中直接访问id 变量。最好的解决方法是使用superclass 构造函数：
+{% highlight java linos %}
+class InterestAccount...
+
+  InterestAccount (String id, double rate) {
+      super(id);
+      _interestRate = rate;
+  }
+{% endhighlight %}
+
+<p>
+如果不能那样做，那么使用一个命名良好的函数就是最好的选择：
+{% highlight java linos %}
+class InterestAccount...
+
+  InterestAccount (String id, double rate) {
+      initializeId(id);
+      _interestRate = rate;
+  }
+{% endhighlight %}
+
+<p>
+另一种需要考虑的情况就是对一个群集（collections）设值：
+{% highlight java linos %}
+class Person {
+  Vector getCourses() {
+      return _courses;
+  }
+  void setCourses(Vector arg) {
+     _courses = arg;
+  }
+  private Vector _courses;
+{% endhighlight %}
+
+<p>
+在这里，我希望将设值函数替换为"add"操作加上"remove"操作。我己经在 Encapsulate Collection 中谈到了这一点。

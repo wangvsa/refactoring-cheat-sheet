@@ -2,3 +2,143 @@
 layout: making-method-calls-simpler
 head_en: Hide Method
 ---
+<p>
+有一个函数，从来没有被其他任何class 用到。
+<p><b>将这个函数修改为private 。</b></p>
+
+<p class="p-img"><img alt="" src="{{site.baseurl}}/images/10fig08.gif" /></p>
+
+<h3>动机（Motivation）</h3>
+<p>
+重构往往促使你修改「函数的可见度」（ visibility of methods）。提高函数可见度的情况很容易想像：另一个class 需要用到某个函数，因此你必须提高该函数的可见度。但是要指出一个函数的可见度是否过高，就稍微困难一些。理想状况下你可以使用工具检查所有函数，指出可被隐藏起来的函数。即使没有这样的工具，你也应该时常进行这样的检查。
+<p>
+一种特别常见的情况是：当你而对一个过于丰富、提供了过多行为的接口时，就值得将非必要的取值函数（getter）和设值函数（setter）隐藏起来。尤其当你面对的是一个「只不过做了点简单封装」的数据容器（data holder）时，情况更是如此。 随着愈来愈多行为被放入这个class 之中，你会发现许多取值/设值函数不再需要为public ，因此可以把它们隐藏起来。如果你把取值/设值函数设为private ，并在他处直接访问变量，那就可以放心移除取值/设值函数了。
+
+<h3>作法（Mechanics）</h3>
+<ul>
+  <li>经常检查有没有可能降低某个函数的可见度（使它更私有化）。
+    <ul>
+    <li>使用lint-style 工具，尽可能频繁地检查。当你在另一个class 中移除对某个函数的调用时，也应该进行检查。</li>
+    <li>特别对设值函数（setter）进行上述的检查。</li>
+    </ul>
+  </li>
+  <li>尽可能降低所有函数的可见度。</li>
+  <li>每完成一组函数的隐藏之后，编译并测试。
+    <ul>
+      <li>如果有不适当的隐藏，编译器很自然会检验出来，因此不必每次修改 后都进行编译。如有任何错误出现，很容易被发现。</li>
+    </ul>
+  </li>
+</ul>
+
+
+<h3>范例：（Example）</h3>
+<p>
+译注：本书英文版网站上的勘误网页（www.refactoring.com/errata.html）显示，本页程序有些问题，惟因前后颇有牵连，故勘误表上并未明确条列代码之修改。请读者自行上网査阅理解。
+<p>
+下面是一个简单例子：
+{% highlight java linos %}
+class Account {
+
+  private String _id;
+
+  Account (String id) {
+      setId(id);
+  }
+
+  void setId (String arg) {
+     _id = arg;
+  }
+{% endhighlight %}
+
+<p>
+以上代码可修改为：
+{% highlight java linos %}
+class Account {
+
+  private final String _id;
+
+  Account (String id) {
+     _id = id;
+  }
+{% endhighlight %}
+
+<p>
+问题可能以数种不同的形式出现。首先，你可能会在设值函数中对引数做运算：
+{% highlight java linos %}
+class Account {
+
+  private String _id;
+
+  Account (String id) {
+      setId(id);
+  }
+
+  void setId (String arg) {
+     _id = "ZZ" + arg;
+  }
+{% endhighlight %}
+
+<p>
+如果对引数的修改很简单（就像上面这样）而且又只有一个构造函数，我可以直接在构造函数中做相同的修改。如果修改很复杂，或者有一个以上的函数调用它，我就需要提供一个独立函数。我需要为新函数起个好名字，清楚表达该函数的用途：
+{% highlight java linos %}
+class Account {
+  private final String _id;
+  Account (String id) {
+      initializeId(id);
+  }
+
+  void initializeId (String arg) {
+     _id = "ZZ" + arg;
+  }
+{% endhighlight %}
+
+<p>
+如果subclass 需要对superclass 的private 变量赋初值，情况就比较麻烦一些：
+{% highlight java linos %}
+class InterestAccount extends Account...
+
+  private double _interestRate;
+
+  InterestAccount (String id, double rate) {
+      setId(id);
+      _interestRate = rate;
+  }
+{% endhighlight %}
+
+<p>
+问题是我无法在InterestAccount() 中直接访问id 变量。最好的解决方法是使用superclass 构造函数：
+{% highlight java linos %}
+class InterestAccount...
+
+  InterestAccount (String id, double rate) {
+      super(id);
+      _interestRate = rate;
+  }
+{% endhighlight %}
+
+<p>
+如果不能那样做，那么使用一个命名良好的函数就是最好的选择：
+{% highlight java linos %}
+class InterestAccount...
+
+  InterestAccount (String id, double rate) {
+      initializeId(id);
+      _interestRate = rate;
+  }
+{% endhighlight %}
+
+<p>
+另一种需要考虑的情况就是对一个群集（collections）设值：
+{% highlight java linos %}
+class Person {
+  Vector getCourses() {
+      return _courses;
+  }
+  void setCourses(Vector arg) {
+     _courses = arg;
+  }
+  private Vector _courses;
+{% endhighlight %}
+
+<p>
+在这里，我希望将设值函数替换为"add"操作加上"remove"操作。我己经在 Encapsulate Collection 中谈到了这一点。
