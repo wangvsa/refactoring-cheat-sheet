@@ -2,3 +2,31 @@
 layout: dealing-with-generalization
 head_en: Pull Up Field
 ---
+<p>
+两个subclasses 拥有相同的值域。
+<p><b>将此一值域移至superclass。</b></p>
+
+<p class="p-img"><img alt="" src="{{site.baseurl}}/images/11fig01.gif" /></p>
+
+<br>
+<h3>动机（Motivation）</h3>
+<p>
+如果各个subclass 是分别开发的，或者是在重构过程中组合起来的，你常会发现它们拥有重复特性，特别是值域更容易重复。这样的值域有时拥有近似的名字，但也并非绝对如此。判断若干值域是否重复，惟一的办法就是观察函数如何使用它们。如果它们被使用的方式很相似，你就可以将它们归纳到superclass 去。
+<p>
+本项重构从两方面减少重复：首先它去除了「重复的数据声明」；其次它使你可以将使用该值域的行为从subclass 移至superclass，从而去除「重复的行为」。
+</p>
+
+<br>
+<h3>作法（Mechanics）</h3>
+<ul>
+  <li>针对待提升之值域，检查它们的所有被使用点，确认它们以同样的方式被使用。</li>
+  <li>如果这些值域的名称不同，先将它们改名，使每一个名称都和你想为superclass 值域取的名称相同。</li>
+  <li>编译，测试。</li>
+  <li>在superclass 中新建一个值域。</li>
+    <ul>
+      <li>如果这些值域是private ，你必须将superclass 的值域声明为protected，这样subclasses 才能引用它。</li>
+    </ul>
+  <li>移除subclass 中的值域。</li>
+  <li>编译，测试。</li>
+  <li>考虑对superclass 的新建值域使用Self Encapsulate Field 。</li>
+</ul>
