@@ -2,3 +2,219 @@
 layout: dealing-with-generalization
 head_en: Extract Subclass
 ---
+<p>
+class 中的某些特性（features）只被某些（而非全部）实体（instances）用到。
+<p>
+  <b>新建一个subclass ，将上面所说的那一部分特性移到subclass 中。</b>
+<p class="p-img"><img alt="" src="/refactoring-cheat-sheet/images/11fig07.gif"/></p>
+
+<br>
+<h3>动机（Motivation）</h3>
+<p>
+使用Extract Subclass 的主要动机是：你发现class 中的某些行为只被一部分实体用到，其他实体不需要它们。有时候这种行为上的差异是通过type code 区分 的，此时你可以使用 Replace Type Code with Subclasses 或 Replace Type Code with State/Strategy。但是，并非一定要出现了type code 才表示需要考虑使用subclass 。
+<p>
+Extract Class 是Extract Subclass 之外的另一种选择，两者之间的抉择其实就是委托（delegation）和继承（inheritance）之间的抉择。Extract Subclass 通常更容易进行，但它也有限制：一旦对象创建完成，你无法再改变「与型别相关的行为」（class-based behavior ）。但如果使用Extract Class ，你只需插入另一个不同组件（ plugging in different components）就可以改变对象的行为。此外，subclasses 只能用以表现一组变化（one set of variations）。如果你希望class 以数种不同的方式变化，就必须使用委托（delegation）。
+</p>
+
+<br>
+<h3>作法（Mechanics）</h3>
+<ul>
+  <li>为source class 定义一个新的subclass 。</li>
+  
+  <li>为这个新的subclass 提供构造函数。</li>
+  <ul>
+    <li>简单的作法是：让subclass 构造函数接受与superclass 构造函数相同的参数，并通过super 调用superclass 构造函数。</li>
+    <li>如果你希望对用户隐藏subclass 的存在，可使用Replace Constructor with Factory Method。</li>
+  </ul>
+  <li>找出调用superclass 构造函数的所有地点。如果它们需要的是新建的subclass ， 令它们改而调用新构造函数。</li>
+  <ul>
+    <li>如果subclass 构造函数需要的参数和superclass 构造函数的参数不同，可以使用Rename Method 修改其参数列。如果subclass 构造函数不需要superclass 构造函数的某些参数，可以使用Rename Method 将它们去除。</li>
+    <li>如果不再需要直接实体化（具现化，instantiated）superclass ，就将它声明为抽象类。</li>
+  </ul>
+  <li>逐一使用Push Down Method 和 Push Down Field 将source class 的特性移到subclass 去。</li>
+  <ul>
+    <li>和Extract Class 不同的是，先处理函数再处理数据，通常会简单一些。</li>
+    <li>当一个public 函数被下移到subclass 后，你可能需要重新定义该函数的调用端的局部变量或参数型别，让它们改调用subclass 中的新函数。如果忘记进行这一步骤，编译器会提醒你。</li>
+  </ul>
+  <li>找到所有这样的值域：它们所传达的信息如今可由继承体系自身传达（这一类值域通常是boolean 变量或type code ）。以 Self Encapsulate Field 避免直接使用这些值域，然后将它们的取值函数（getter）替换为多态常量函数（polymorphic constant methods）。所有使用这些值域的地方都应该以Replace Conditional with Polymorphism 重构。</li>
+  <ul>
+    <li>任何函数如果位于source class 之外，而又使用了上述值域的访问函数（accessors），考虑以 Move Method 将它移到source class 中， 然后再使用Replace Conditional with Polymorphism。</li>
+  </ul>
+  <li>每次下移之后，编译并测试。</li>
+</ul>  
+  
+<br>
+<h3>范例：（Example）</h3>
+<p>
+下面是JobItem class，用来决定当地修车厂的工作报价：
+{% highlight java linos %}
+    class JobItem ...
+      public JobItem (int unitPrice, int quantity, boolean isLabor, Employee employee) {
+        _unitPrice = unitPrice;
+        _quantity = quantity;
+        _isLabor = isLabor;
+        _employee = employee;
+      }
+      public int getTotalPrice() {
+        return getUnitPrice() * _quantity;
+      }
+      public int getUnitPrice(){
+        return (_isLabor) ?
+          _employee.getRate():
+          _unitPrice;
+      }
+      public int getQuantity(){
+        return _quantity;
+      }
+      public Employee getEmployee() {
+        return _employee;
+      }
+      private int _unitPrice;
+      private int _quantity;
+      private Employee _employee;
+      private boolean _isLabor;
+
+    class Employee...
+      public Employee (int rate) {
+        _rate = rate;
+      }
+      public int getRate() {
+        return _rate;
+      }
+      private int _rate;
+{% endhighlight %}
+
+<p>
+我要提炼出一个LaborItem subclass，因为上述某些行为和数据只在labor (劳工） 情况下才需要。首先建立这样一个class：
+{% highlight java linos %}
+    class LaborItem extends JobItem {}
+{% endhighlight %}
+
+<p>
+我需要为LaborItem 提供一个构造函数，因为JobItem 没有「无引数构造函数」 （ no-arg constructor）。我把superclass 构造函数的参数列拷贝过来：
+{% highlight java linos %}
+      public LaborItem (int unitPrice, int quantity, boolean isLabor, Employee employee) {
+        super (unitPrice, quantity, isLabor, employee);
+      }
+{% endhighlight %}   
+   
+<p>
+这就足以让新的subclass 通过编译了。但是这个构造函数会造成混淆：某些参数是LaborItem 所需要的，另一些不是。稍后我再来解决这个问题。
+<p>
+下一步是要找出对JobItem 构造函数的调用，并从中找出「可替换为LaborItem 构造函数」者。因此，下列语句：
+{% highlight java linos %}
+       JobItem j1 = new JobItem (0, 5, true, kent);
+{% endhighlight %}       
+       
+<p>
+就被修改为：
+{% highlight java linos %}
+       JobItem j1 = new LaborItem (0, 5, true, kent);
+{% endhighlight %}
+       
+<p>
+此时我尚未修改变量型别，只是修改了构造函数所属的class 。之所以这样做，是因为我希望只在必要地点才使用新型别。到目前为止，subclass 还没有专属接口，因 此我还不想宣布任何改变。
+<p>
+现在正是清理构造函数参数列的好时机。我将针对每个构造函数使用Rename Method。首先处理superclass 构造函数。我要新建一个构造函数，并把旧构造函数声明为protected （不能直接声明为private ，因为subclass 还需要它）：
+{% highlight java linos %}
+    class JobItem...
+      protected JobItem (int unitPrice, int quantity, boolean isLabor, Employee employee) {
+        _unitPrice = unitPrice;
+        _quantity = quantity;
+        _isLabor = isLabor;
+        _employee = employee;
+      }
+      public JobItem (int unitPrice, int quantity) {
+        this (unitPrice, quantity, false, null)
+      }
+{% endhighlight %}      
+      
+<p>
+现在，外部调用应该使用新构造函数：
+{% highlight java linos %}
+       JobItem j2 = new JobItem (10, 15);
+{% endhighlight %}       
+
+<p>
+编译、测试都通过后，我再使用 Rename Method 修改subclass 构造函数：
+{% highlight java linos %}
+    class LaborItem
+      public LaborItem (int quantity, Employee employee) {
+        super (0, quantity, true, employee);
+      }
+{% endhighlight %}      
+      
+<p>
+此时的我仍然暂时使用protected superclass 构造函数。
+<p>
+现在，我可以将JobItem 的特性向下搬移。先从函数幵始，我先运用 Push Down Method 对付getEmployee() 函数：
+{% highlight java linos %}
+    class LaborItem...
+      public Employee getEmployee() {
+        return _employee;
+      }
+    class JobItem...
+      protected Employee _employee;
+{% endhighlight %}      
+      
+<p>
+因为_employee 值域也将在稍后被下移到LaborItem ，所以我现在先将它声明为protected。
+<p>
+将_employee 值域声明protected 之后，我可以再次清理构造函数，让_employee 只在「即将去达的subclass 中」被初始化：
+{% highlight java linos %}
+    class JobItem...
+      protected JobItem (int unitPrice, int quantity, boolean isLabor) {
+        _unitPrice = unitPrice;
+        _quantity = quantity;
+        _isLabor = isLabor;
+      }
+    class LaborItem ...
+      public LaborItem (int quantity, Employee employee) {
+        super (0, quantity, true);
+        _employee = employee;
+      }
+{% endhighlight %}
+      
+<p>
+_isLabor 值域所传达的信息，现在已经成为继承体系的内在信息，因此我可以移 除这个值域了。最好的方式是：先使用Self Encapsulate Field，然后再修改访问函数（accessors），改用多态常量函数。所谓「多态常量函数」会在不同的subclass 实现版本中返回不同的固定值：
+{% highlight java linos %}
+    class JobItem...
+      protected boolean isLabor() {
+        return false;
+      }
+    class LaborItem...
+      protected boolean isLabor() {
+        return true;
+      }
+{% endhighlight %}      
+      
+<p>
+然后，我就可以摆脱_isLabor 值域了。
+<p>
+现在，我可以观察isLabor() 函数的用户，并运用Replace Conditional with Polymorphism 重构它们。我找到了下列这样的函数：
+{% highlight java linos %}
+    class JobItem...
+      public int getUnitPrice(){
+        return (isLabor()) ?
+          _employee.getRate():
+          _unitPrice;
+      }
+{% endhighlight %}
+      
+<p>
+将它重构为：
+{% highlight java linos %}
+    class JobItem...
+      public int getUnitPrice(){
+        return _unitPrice;
+      }
+    class LaborItem...
+      public int getUnitPrice(){
+        return  _employee.getRate();
+      }
+{% endhighlight %}
+
+<p>
+当使用某项值域的函数全被下移至subclass 后，我就可以使用 Push Down Field 将值域也下移。如果尚还无法移动值域，那就表示，我需要对函数做更多处理，可能需要实施Push Down Method 或 Replace Conditional with Polymorphism。
+<p>
+由于_unitPrice 值域只被LaborItem 以外的对象（也就是parts job items）所用， 所以我可以再次运用Extract Subclass 对JobItem 提炼出一个subclass ：PartsItem 。完成后，我可以将JobItem 声明为抽象类。
