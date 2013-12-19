@@ -2,3 +2,44 @@
 layout: big-refactorings
 head_en: Convert Procedural Design to Objects
 ---
+
+<p>
+你手上有一些代码，以传统的过程化风格（procedural style）写就。
+<p>
+  <b>将数据记录（data records）<sup>9</sup> 变成对象，将行为分开，并将行为移入相关对象之中。</b>
+<p>
+  <i><sup>9</sup> 译注：这里所谓的记录（record），是指像C struct 那样的结构。</i>
+</p>
+
+<p class="p-img"><img alt="" src="/refactoring-cheat-sheet/images/12fig08.gif"/></p>
+
+<br>
+<h3>动机（Motivation）</h3>
+<p>
+有一次，我们的一位客户，在项目开始时，给开发者提出了两条必须遵守的条件：（1）必须使用Java；（2）不能使用对象。
+<p>
+这让我们忍俊不禁。尽管是面向对象语言，「使用对象」可远不仅仅是「调用构造函数」而已。对象的使用也需要花时间去学习。往往你会面对一些过程化风格（procedural style）的代码所带来的问题，并因而希望它们变得更面向对象一些。 典型的情况是：class 中有着长长的过程化函数和极少的数据，以及所谓的「哑数据 对象」——除了数据访问函数（accessors）外没有其他任何函数。如果你要转换的是一个纯粹的过程化程序（procedural program），可能连这些东西都没有。
+<p>
+我们并不是说绝对不应该出现「只有行为而几乎没有数据」的对象。在Strategy 模式中，我们常常使用一些小型的strategy 对象来改变宿主对象的行为，这些小型的strategy 对象就是「只有行为而没有数据」。但是这样的对象通常比较小，而且只有在我们特规需要灵活性的时候，才会使用它们。
+</p>
+
+<br>
+<h3>作法（Mechanics）</h3>
+<ul>
+  <li>针对每一个记录型别（record type），将它转变为「只含访问函数」的「哑数据对象』（dump data object ）。</li>
+  <ul>
+    <li>如果你的数据来自关系式数据库（relational database），就把数据库中的每个表（table）变成一个「哑数据对象」。</li>
+  </ul>
+  <li>针对每一处过程化风格，将该处的代码提炼到一个独立class 中。</li>
+  <ul>
+    <li>你可以把提炼所得的class 做成一个Singleton（单件；为了方便重新初始化），或是把提炼所得的函数声明为static。</li>
+  </ul>
+  <li>针对每一个长长的程序（procedure），实施Extract Method 及其他相关重构，将它分解。再以Move Method 将分解后的函数分别移到它所相关的哑数据类（dump data class）中。</li>
+  <li>重复上述步骤，直到原始中的所有函数都被移除。如果原始是一个完全过程化（purely procedural〕的class ，将它拿掉将大快人心。</li>
+</ul>
+
+<br>
+<h3>范例：（Example）</h3>
+<p>
+  第1章的范例很好地展示了Convert Procedural Design to Objects，尤其是第一阶段（对statement() 函数的分解和安置）。完成这项重构之后，你就拥有了一个「聪明的」数据对象，可以对它进行其他种重构了。 
+</p>
