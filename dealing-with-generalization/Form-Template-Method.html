@@ -22,7 +22,7 @@ head_en: Form Template Method
 <ul>
   <li>在各个subclass 中分解目标函数，使分解后的各个函数要不完全相同，要不完全不同。</li>
   
-  <li>运用Pull Up Method 将各subclass 内寒全相同的函数上移至superclass 。</li>
+  <li>运用<a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Method.html">Pull Up Method</a> 将各subclass 内寒全相同的函数上移至superclass 。</li>
   
   <li>对于那些（剩余的、存在于各subclasses 内的）完全不同的函数，实施Rename Method，使所有这些函数的签名式（signature）完全相同。</li>
   <ul>
@@ -30,7 +30,7 @@ head_en: Form Template Method
   </ul>
   <li>修改上述所有签名式后，编译并测试。</li>
   
-  <li>运用Pull Up Method 将所有原函数上移至superclass 。在superclass 中将那些「有所不同、代表各种不同措施」的函数定义为抽象函数。</li>
+  <li>运用<a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Method.html">Pull Up Method</a> 将所有原函数上移至superclass 。在superclass 中将那些「有所不同、代表各种不同措施」的函数定义为抽象函数。</li>
   
   <li>编译，测试。</li>
   
@@ -83,7 +83,7 @@ head_en: Form Template Method
 {% endhighlight %}    
       
 <p>
-使用 Form Template Method 之前，我需要对上述两个函数做一些整理，使它们成为「某个共同superclass 」下的subclass 函数。为了这一目的，我使用函数对象（method object）[Beck] 针对「报表打印工作」创建一个「独立的策略继承体系」（separate strategy hierarchy ），如图11.1。
+使用 <a href="{{site.baseurl}}/dealing-with-generalization/Form-Template-Method.html">Form Template Method</a> 之前，我需要对上述两个函数做一些整理，使它们成为「某个共同superclass 」下的subclass 函数。为了这一目的，我使用函数对象（method object）[Beck] 针对「报表打印工作」创建一个「独立的策略继承体系」（separate strategy hierarchy ），如图11.1。
 
 <p class="p-img"><img alt="" src="/refactoring-cheat-sheet/images/11fig12.gif"/></p>
 <center><font size="2px">图7.1  简单的委托关系（delegation）</font size="2px"></center>
@@ -152,7 +152,7 @@ head_en: Form Template Method
 <p>
 搬移之后，我还对这两个函数的名称做了一些修改，使它们更好地适应Strategy 模式的要求。我之所以为它们取相同名称，因为两者之间的差异不在于函数，而在于函数所属的class 。如果你想试着编译这段代码，还必须在Customer class 中添加一个getRentals() 函数，并放宽getTotalCharge() 函数和getTotalFrequentRenterPoints() 函数的可视性（visibility ）。
 <p>
-面对两个subclass 中的相似函数，我可以开始实施Form Template Method 了。本重构的关键在于：运用 Extract Method 将两个函数的不同部分提炼出 来，从而将相像的代码（similar code）和变动的代码（ varying code ）分开。每次提炼后，我就建立一个签名式（signature）相同但本体（bodies）不同的函数。
+面对两个subclass 中的相似函数，我可以开始实施<a href="{{site.baseurl}}/dealing-with-generalization/Form-Template-Method.html">Form Template Method</a> 了。本重构的关键在于：运用 Extract Method 将两个函数的不同部分提炼出 来，从而将相像的代码（similar code）和变动的代码（ varying code ）分开。每次提炼后，我就建立一个签名式（signature）相同但本体（bodies）不同的函数。
 <p>
 第一个例子就是打印报表表头（headers）。上述两个函数都通过Customer 对象获取信息，但对运算结果（字符串）的格式化方式不同。我可以将「对字符串的格式化动作」提炼到独立函数中，并将提炼所得命以相同的签名式（signature）：
 
@@ -254,7 +254,7 @@ head_en: Form Template Method
 {% endhighlight %}    
       
 <p>
-所有这些修改都完成后，两个value() 函数看上去已经非常相似了，因此我可以使用Pull Up Method 将它们提升到superclass 中。提升完毕后，我需要在superclass 中把subclass 函数声明为抽象函数。
+所有这些修改都完成后，两个value() 函数看上去已经非常相似了，因此我可以使用<a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Method.html">Pull Up Method</a> 将它们提升到superclass 中。提升完毕后，我需要在superclass 中把subclass 函数声明为抽象函数。
 
 {% highlight java linos %}
     class Statement...

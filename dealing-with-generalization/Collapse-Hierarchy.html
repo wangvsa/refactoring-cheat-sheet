@@ -19,7 +19,7 @@ superclass 和subclass 之间无太大区别。
 <h3>作法（Mechanics）</h3>
 <ul>
   <li>选择你想移除的class ：是superclass 还是subclass ？</li>
-  <li>使用Pull Up Field 和 Pull Up Method，或者Push Down Method 和 Push Down Field，把想要移除的class 内的所有行为和数据 （值域）搬移到另一个class 。</li>
+  <li>使用<a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Field.html">Pull Up Field</a> 和 <a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Method.html">Pull Up Method</a>，或者<a href="{{site.baseurl}}/dealing-with-generalization/Push-Down-Method.html">Push Down Method</a> 和 <a href="{{site.baseurl}}/dealing-with-generalization/Push-Down-Field.html">Push Down Field</a>，把想要移除的class 内的所有行为和数据 （值域）搬移到另一个class 。</li>
   <li>每次移动后，编译并测试。</li>
   <li>调整「即将被移除的那个class 」的所有引用点，令它们改而引用合并（折叠）后留下的class 。这个动作将会影响变量的声明、参数的型别以及构造函数。</li>
   <li>移除我们的目标；此时的它应该已经成为一个空类（empty class）。</li>

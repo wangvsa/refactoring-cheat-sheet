@@ -11,9 +11,9 @@ class 中的某些特性（features）只被某些（而非全部）实体（ins
 <br>
 <h3>动机（Motivation）</h3>
 <p>
-使用Extract Subclass 的主要动机是：你发现class 中的某些行为只被一部分实体用到，其他实体不需要它们。有时候这种行为上的差异是通过type code 区分 的，此时你可以使用 Replace Type Code with Subclasses 或 Replace Type Code with State/Strategy。但是，并非一定要出现了type code 才表示需要考虑使用subclass 。
+使用<a href="{{site.baseurl}}/dealing-with-generalization/Extract-Subclass.html">Extract Subclass</a> 的主要动机是：你发现class 中的某些行为只被一部分实体用到，其他实体不需要它们。有时候这种行为上的差异是通过type code 区分 的，此时你可以使用 Replace Type Code with Subclasses 或 Replace Type Code with State/Strategy。但是，并非一定要出现了type code 才表示需要考虑使用subclass 。
 <p>
-Extract Class 是Extract Subclass 之外的另一种选择，两者之间的抉择其实就是委托（delegation）和继承（inheritance）之间的抉择。Extract Subclass 通常更容易进行，但它也有限制：一旦对象创建完成，你无法再改变「与型别相关的行为」（class-based behavior ）。但如果使用Extract Class ，你只需插入另一个不同组件（ plugging in different components）就可以改变对象的行为。此外，subclasses 只能用以表现一组变化（one set of variations）。如果你希望class 以数种不同的方式变化，就必须使用委托（delegation）。
+Extract Class 是<a href="{{site.baseurl}}/dealing-with-generalization/Extract-Subclass.html">Extract Subclass</a> 之外的另一种选择，两者之间的抉择其实就是委托（delegation）和继承（inheritance）之间的抉择。<a href="{{site.baseurl}}/dealing-with-generalization/Extract-Subclass.html">Extract Subclass</a> 通常更容易进行，但它也有限制：一旦对象创建完成，你无法再改变「与型别相关的行为」（class-based behavior ）。但如果使用Extract Class ，你只需插入另一个不同组件（ plugging in different components）就可以改变对象的行为。此外，subclasses 只能用以表现一组变化（one set of variations）。如果你希望class 以数种不同的方式变化，就必须使用委托（delegation）。
 </p>
 
 <br>
@@ -31,7 +31,7 @@ Extract Class 是Extract Subclass 之外的另一种选择，两者之间的抉�
     <li>如果subclass 构造函数需要的参数和superclass 构造函数的参数不同，可以使用Rename Method 修改其参数列。如果subclass 构造函数不需要superclass 构造函数的某些参数，可以使用Rename Method 将它们去除。</li>
     <li>如果不再需要直接实体化（具现化，instantiated）superclass ，就将它声明为抽象类。</li>
   </ul>
-  <li>逐一使用Push Down Method 和 Push Down Field 将source class 的特性移到subclass 去。</li>
+  <li>逐一使用<a href="{{site.baseurl}}/dealing-with-generalization/Push-Down-Method.html">Push Down Method</a> 和 <a href="{{site.baseurl}}/dealing-with-generalization/Push-Down-Field.html">Push Down Field</a> 将source class 的特性移到subclass 去。</li>
   <ul>
     <li>和Extract Class 不同的是，先处理函数再处理数据，通常会简单一些。</li>
     <li>当一个public 函数被下移到subclass 后，你可能需要重新定义该函数的调用端的局部变量或参数型别，让它们改调用subclass 中的新函数。如果忘记进行这一步骤，编译器会提醒你。</li>
@@ -147,7 +147,7 @@ Extract Class 是Extract Subclass 之外的另一种选择，两者之间的抉�
 <p>
 此时的我仍然暂时使用protected superclass 构造函数。
 <p>
-现在，我可以将JobItem 的特性向下搬移。先从函数幵始，我先运用 Push Down Method 对付getEmployee() 函数：
+现在，我可以将JobItem 的特性向下搬移。先从函数幵始，我先运用 <a href="{{site.baseurl}}/dealing-with-generalization/Push-Down-Method.html">Push Down Method</a> 对付getEmployee() 函数：
 {% highlight java linos %}
     class LaborItem...
       public Employee getEmployee() {
@@ -215,6 +215,6 @@ _isLabor 值域所传达的信息，现在已经成为继承体系的内在信�
 {% endhighlight %}
 
 <p>
-当使用某项值域的函数全被下移至subclass 后，我就可以使用 Push Down Field 将值域也下移。如果尚还无法移动值域，那就表示，我需要对函数做更多处理，可能需要实施Push Down Method 或 Replace Conditional with Polymorphism。
+当使用某项值域的函数全被下移至subclass 后，我就可以使用 <a href="{{site.baseurl}}/dealing-with-generalization/Push-Down-Field.html">Push Down Field</a> 将值域也下移。如果尚还无法移动值域，那就表示，我需要对函数做更多处理，可能需要实施<a href="{{site.baseurl}}/dealing-with-generalization/Push-Down-Method.html">Push Down Method</a> 或 Replace Conditional with Polymorphism。
 <p>
-由于_unitPrice 值域只被LaborItem 以外的对象（也就是parts job items）所用， 所以我可以再次运用Extract Subclass 对JobItem 提炼出一个subclass ：PartsItem 。完成后，我可以将JobItem 声明为抽象类。
+由于_unitPrice 值域只被LaborItem 以外的对象（也就是parts job items）所用， 所以我可以再次运用<a href="{{site.baseurl}}/dealing-with-generalization/Extract-Subclass.html">Extract Subclass</a> 对JobItem 提炼出一个subclass ：PartsItem 。完成后，我可以将JobItem 声明为抽象类。

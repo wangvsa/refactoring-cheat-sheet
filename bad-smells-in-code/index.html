@@ -65,7 +65,7 @@ title: Bad Smells in Code
         <p>
         最单纯的Duplicated Code就是「同一个class内的两个函数含有相同表达式（expression）」。这时候你需要做的就是采用Extract Method提炼出重复的代码，然后让这两个地点都调用被提炼出来的那一段代码。 
         <p>
-        另一种常见情况就是「两个互为兄弟〔sibling）的subclasses内含相同表达式」。要避免这种情况，只需对两个classes都使用Extract Method，然后再对被提炼出来的代码使用 Pull Up Field，将它推入superclass内。如果代码之 间只是类似，并非完全相同，那么就得运用Extract Method将相似部分和差异部分割开，构成单独一个函数。然后你可能发现或许可以运用Form Template Method获得一个Template Method设计模式。如果有些函数以不同的算法做相同的事，你可以择定其中较清晰的一个，并使用Substitute Algorithm将其他函数的算法替换掉。 
+        另一种常见情况就是「两个互为兄弟〔sibling）的subclasses内含相同表达式」。要避免这种情况，只需对两个classes都使用Extract Method，然后再对被提炼出来的代码使用 <a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Field.html">Pull Up Field</a>，将它推入superclass内。如果代码之 间只是类似，并非完全相同，那么就得运用Extract Method将相似部分和差异部分割开，构成单独一个函数。然后你可能发现或许可以运用<a href="{{site.baseurl}}/dealing-with-generalization/Form-Template-Method.html">Form Template Method</a>获得一个Template Method设计模式。如果有些函数以不同的算法做相同的事，你可以择定其中较清晰的一个，并使用Substitute Algorithm将其他函数的算法替换掉。 
         <p>
         如果两个毫不相关的classes内出现Duplicated Code，你应该考虑对其中一个使用Extract Class，将重复代码提炼到一个独立class中，然后在另一个class内 使用这个新class。但是，重复代码所在的函数也可能的确只应该属于某个class， 另一个class只能调用它，抑或这个函数可能属于第三个class，而另两个classes应该引用这第三个class。你必须决定这个函数放在哪儿最合适，并确保它被安置后就不会再在其他任何地方出现。
       <h2 class="content-subhead"><a name="long-method"/>Long Method（过长函数）</h2>
@@ -89,13 +89,13 @@ title: Bad Smells in Code
         <p>
         如果想利用单一class做太多事情，其内往往就会出现太多instance变量。一旦如此，Duplicated Code也就接踵而至了。 
         <p>
-        你可以运用Extract Class将数个变量一起提炼至新class内。提炼时应该选择class内彼此相关的变量，将它们放在一起。例如"depositAmount"和 "depositCurrency"可能应该隶属同一个class。通常如果class内的数个变量有着相同的前缀或字尾，这就意味有机会把它们提炼到某个组件内。如果这个组件适合作为一个subclass，你会发现Extract Subclass往往比较简单。 
+        你可以运用Extract Class将数个变量一起提炼至新class内。提炼时应该选择class内彼此相关的变量，将它们放在一起。例如"depositAmount"和 "depositCurrency"可能应该隶属同一个class。通常如果class内的数个变量有着相同的前缀或字尾，这就意味有机会把它们提炼到某个组件内。如果这个组件适合作为一个subclass，你会发现<a href="{{site.baseurl}}/dealing-with-generalization/Extract-Subclass.html">Extract Subclass</a>往往比较简单。 
         <p>
-        有时候class并非在所有时刻都使用所有instance变量。果真如此，你或许可以多次使用Extract Class或Extract Subclass。 
+        有时候class并非在所有时刻都使用所有instance变量。果真如此，你或许可以多次使用Extract Class或<a href="{{site.baseurl}}/dealing-with-generalization/Extract-Subclass.html">Extract Subclass</a>。 
         <p>
         和「太多instance变量」一样，class内如果有太多代码，也是「代码重复、混乱、死亡」的绝佳滋生地点。最简单的解决方案（还记得吗，我们喜欢简单的解决方案）是把赘余的东西消弭于class内部。如果有五个「百行函数」，它们之中很多代码都相同，那么或许你可以把它们变成五个「十行函数」和十个提炼出来的「双行函 数」。 
         <p>
-        和「拥有太多instance变量」一样，一个class如果拥有太多代码，往往也适合使用Extract Class和Extract Subclass。这里有个有用技巧：先确定客户端如何使用它们，然后运用Extract Interface为每一种使用方式提炼出一个接口。这或许可以帮助你看清楚如何分解这个class。 
+        和「拥有太多instance变量」一样，一个class如果拥有太多代码，往往也适合使用Extract Class和<a href="{{site.baseurl}}/dealing-with-generalization/Extract-Subclass.html">Extract Subclass</a>。这里有个有用技巧：先确定客户端如何使用它们，然后运用<a href="{{site.baseurl}}/dealing-with-generalization/Extract-Interface.html">Extract Interface</a>为每一种使用方式提炼出一个接口。这或许可以帮助你看清楚如何分解这个class。 
         <p>
         如果你的Large class是个GUI class，你可能需要把数据和行为移到一个独立的领域对象（domain objec）去。你可能需要两边各保留一些重复数据，并令这些数据同步（sync.）。Duplicate Observed Data告诉你该怎么做。这种情况下，特别是如果你使用旧式Abstract Windows Toolkit (AWT)组件，你可以采用这种方式去掉GUI class并代以Swing组件。 
       <h2 class="content-subhead"><a name="long-parameter-list"/>Long Parameter List（过长参数列）</h2>
@@ -158,11 +158,11 @@ title: Bad Smells in Code
         消除这种重复性的一般策略是：让一个继承体系的实体（instance）指涉（参考、引用、refer to）另一个继承体系的实体(instances)。如果再接再厉运用Move Method 和 Move Field，就可以将指涉端（ referring class ）的继承体系消弭于无形。
       <h2 class="content-subhead"><a name="lazy-class"/>Lazy Class（冗赘类）</h2>
         <p>
-        你所创建的每一个class，都得有人去理解它、维护它，这些工作都是要花钱的。如 果一个class的所得不值其身价，它就应该消失。项目中经常会出现这样的情况： 某个class原本对得起自己的身价，但重构使它身形缩水，不再做那么多工作；或开发者事前规划了某些变化，并添加一个class来应付这些变化，但变化实际上没 有发生。不论上述哪一种原因，请让这个class庄严赴义吧。如果某些subclass没有做满足够工作，试试 Collapse Hierarchy。对于几乎没用的组件，你应该以Inline Class对付它们。 
+        你所创建的每一个class，都得有人去理解它、维护它，这些工作都是要花钱的。如 果一个class的所得不值其身价，它就应该消失。项目中经常会出现这样的情况： 某个class原本对得起自己的身价，但重构使它身形缩水，不再做那么多工作；或开发者事前规划了某些变化，并添加一个class来应付这些变化，但变化实际上没 有发生。不论上述哪一种原因，请让这个class庄严赴义吧。如果某些subclass没有做满足够工作，试试 <a href="{{site.baseurl}}/dealing-with-generalization/Collapse-Hierarchy.html">Collapse Hierarchy</a>。对于几乎没用的组件，你应该以Inline Class对付它们。 
       <h2 class="content-subhead"><a name="speculative-generality"/>Speculative Generality（夸夸其谈未来性）</h2>
         这个令我们十分敏感的坏味道，命名者是Brian Foote。当有人说『噢，我想我们总有一天需要做这事』并因而企图以各式各样的挂勾（hooks）和特殊情况来处理一 些非必要的事情，这种坏味道就出现了。那么做的结果往往造成系统更难理解和维护。如果所有装置都会被用到，那就值得那么做；如果用不到，就不值得。用不上的装置只会挡你的路，所以，把它搬开吧。 
         <p>
-        如果你的某个abstract class其实没有太大作用，请运用Collapse Hierarchy。非必要之delegation （委托）可运用Inline Class 除掉。如果函数的某些参数未被用上，可对它实施 Remove Parameter。如果函数名称带有多余的抽象意味，应该对它实施Rename Method 让它现实一些。 
+        如果你的某个abstract class其实没有太大作用，请运用<a href="{{site.baseurl}}/dealing-with-generalization/Collapse-Hierarchy.html">Collapse Hierarchy</a>。非必要之delegation （委托）可运用Inline Class 除掉。如果函数的某些参数未被用上，可对它实施 Remove Parameter。如果函数名称带有多余的抽象意味，应该对它实施Rename Method 让它现实一些。 
         <p>
         如果函数或class的惟一用户是test cases （测试用例），这就飘出了坏味道Speculative Generality。如果你发现这样的函数或class，请把它们连同其test cases都删掉。但如果它们的用途是帮助test cases检测正当功能，当然必须刀下留人。 
       <h2 class="content-subhead"><a name="temporary-field"/>Temporary Field（令人迷惑的暂时值域）</h2>
@@ -183,17 +183,17 @@ title: Bad Smells in Code
         <p>
         对象的基本特征之一就是封装（encapsulation）――对外部世界隐藏其内部细节。封装往往伴随delegation （委托）。比如说你问主管是否有时间参加一个会议，他就把这个消息委托给他的记事簿，然后才能回答你。很好，你没必要知道这位主管到底使用传统记事簿或电子记事簿抑或秘书来记录自己的约会。 
         <p>
-        但是人们可能过度运用delegation。你也许会看到某个class接口有一半的函数都委托给其他class，这样就是过度运用。这时你应该使用Remove Middle Man，直接和实责对象打交道。如果这样「不干实事」的函数只有少数几个，可以运用 Inline Method 把它们" Inlining"，放进调用端。如果这些Middle Man还有其他行 为，你可以运用 Replace Delegation with Inheritance 把它变成实责对象的subclass，这样你既可以扩展原对象的行为，又不必负担那么多的委托动作。 
+        但是人们可能过度运用delegation。你也许会看到某个class接口有一半的函数都委托给其他class，这样就是过度运用。这时你应该使用Remove Middle Man，直接和实责对象打交道。如果这样「不干实事」的函数只有少数几个，可以运用 Inline Method 把它们" Inlining"，放进调用端。如果这些Middle Man还有其他行 为，你可以运用 <a href="{{site.baseurl}}/dealing-with-generalization/Replace-Delegation-with-Inheritance.html">Replace Delegation with Inheritance</a> 把它变成实责对象的subclass，这样你既可以扩展原对象的行为，又不必负担那么多的委托动作。 
       <h2 class="content-subhead"><a name="inappropriate-intimacy"/>Inappropriate Intimacy（狎昵关系）</h2>
         <p>
         有时你会看到两个classes过于亲密，花费太多时间去探究彼此的private成分。如果这发生在两个「人」之间，我们不必做卫道之士；但对于classes，我们希望它们严守清规。 
         <p>
         就像古代恋人一样，过份狎昵的classes必须拆散。你可以采用 Move Method 和 Move Field 帮它们划清界线，从而减少狎昵行径。你也可以看看是否运用 Change Bidirectional Association to Unidirectional 让其中一个class对另一个斩断情丝。如果两个实在是情投意合，可以运用Extract Class 把两者共同点提炼到一个安全地点，让它们坦荡地使用这个新class。或者也可以尝试运用 Hide Delegate 让另一个class来为它们传递相思情。 
         <p>
-        继承（inheritance）往往造成过度亲密，因为subclass对superclass的了解总是超过superclass的主观愿望。如果你觉得该让这个孩子独自生活了，请运用Replace Delegation with Inheritance 让它离开继承体系。 
+        继承（inheritance）往往造成过度亲密，因为subclass对superclass的了解总是超过superclass的主观愿望。如果你觉得该让这个孩子独自生活了，请运用<a href="{{site.baseurl}}/dealing-with-generalization/Replace-Delegation-with-Inheritance.html">Replace Delegation with Inheritance</a> 让它离开继承体系。 
       <h2 class="content-subhead"><a name="alternative-classes-with-different-interfaces"/>Alternative Classes with Different Interfaces（异曲同工的类）</h2>
         <p>
-        如果两个函数做同一件事，却有着不同的签名式（signatures），请运用Rename Method 根据它们的用途重新命名。但这往往不够，请反复运用Move Method 将某些行为移入classes，直到两者的协议（protocols ）一致为止。如果你必须重复而赘余地移入代码才能完成这些，或许可运用Extract Superclass 为自己赎 点罪。 
+        如果两个函数做同一件事，却有着不同的签名式（signatures），请运用Rename Method 根据它们的用途重新命名。但这往往不够，请反复运用Move Method 将某些行为移入classes，直到两者的协议（protocols ）一致为止。如果你必须重复而赘余地移入代码才能完成这些，或许可运用<a href="{{site.baseurl}}/dealing-with-generalization/Extract-Superclass.html">Extract Superclass</a> 为自己赎 点罪。 
       <h2 class="content-subhead"><a name="incomplete-library-class"/>Incomplete Library Class（不完美的程序库类）</h2>
         <p>
         复用（reuse）常被视为对象的终极目的。我们认为这实在是过度估计了（我们只是使用而己）。但是无可否认，许多编程技术都建立在library classes （程序库类）的基础上，没人敢说是不是我们都把排序算法忘得一干二净了。 
@@ -212,11 +212,11 @@ title: Bad Smells in Code
         <p>
         Subclasses 应该继承superclasses的函数和数据。但如果它们不想或不需要继承，又该怎么办呢？它们得到所有礼物，却只从中挑选几样来玩！
         <p>
-        按传统说法，这就意味继承体系设计错误。你需要为这个subclass 新建一个兄弟（sibling class），再运用Push Down Method 和 Push Down Field 把所有用不到的函数下推给那兄弟。这样一来superclass就只持有所有subclasses共享的东西。常常你会听到这样的建议：所有superclasses都应该是抽象的（abstract）。
+        按传统说法，这就意味继承体系设计错误。你需要为这个subclass 新建一个兄弟（sibling class），再运用<a href="{{site.baseurl}}/dealing-with-generalization/Push-Down-Method.html">Push Down Method</a> 和 <a href="{{site.baseurl}}/dealing-with-generalization/Push-Down-Field.html">Push Down Field</a> 把所有用不到的函数下推给那兄弟。这样一来superclass就只持有所有subclasses共享的东西。常常你会听到这样的建议：所有superclasses都应该是抽象的（abstract）。
         <p>
         既然使用「传统说法」这个略带贬义的词，你就可以猜到，我们不建议你这么做，起码不建议你每次都这么做。我们经常利用subclassing手法来复用一些行为，并发现这可以很好地应用于日常工作。这也是一种坏味道，我们不否认，但气味通常并不强烈。所以我们说：如果Refused Bequest引起困惑和问题，请遵循传统忠告。但不必认为你每次都得那么做。十有八九这种坏味道很淡，不值得理睬。
         <p>
-        如果subclass复用了superclass的行为（实现），却又不愿意支持superclass的接口，Refused Bequest的坏味道就会变得浓烈。拒绝继承superclass的实现，这一点我们不介意；但如果拒绝继承superclass的接口，我们不以为然。不过即使你不愿意继承接口，也不要胡乱修改继承体系，你应该运用Replace Inheritance with Delegation 来达到目的。
+        如果subclass复用了superclass的行为（实现），却又不愿意支持superclass的接口，Refused Bequest的坏味道就会变得浓烈。拒绝继承superclass的实现，这一点我们不介意；但如果拒绝继承superclass的接口，我们不以为然。不过即使你不愿意继承接口，也不要胡乱修改继承体系，你应该运用<a href="{{site.baseurl}}/dealing-with-generalization/Replace-Inheritance-with-Delegation.html">Replace Inheritance with Delegation</a> 来达到目的。
       <h2 class="content-subhead"><a name="comments"/>Comments（过多的注释）</h2>
         <p>
         别担心，我们并不是说你不该写注释。从嗅觉上说，Comments不是一种坏味道；事实上它们还是一种香味呢。我们之所以要在这里提到Comments，因为人们常把它当作除臭剂来使用。常常会有这样的情况：你看到一段代码有着长长的注释，然后发现，这些注释之所以存在乃是因为代码很糟糕。这种情况的发生次数之多，实 在令人吃惊。

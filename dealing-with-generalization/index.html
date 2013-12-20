@@ -4,10 +4,10 @@ head_en : Dealing with Generalization
 head_zh: 处理概括关系
 ---
 <p>
-有一批重构手法专门用来处理「概括关系」（generalization ；译注：这里指的是class 继承」这档事），其中主要是将函数（methods）上下移动于继承体系之中。 Pull Up Field 和 Pull Up Method 都用于将class 特性向继承体系的上端移动，Push Down Method 和 Push Down Field 则将class 特性向继承体系的下端移动。构造函数比较难以向上拉动，因此专门有一个Pull Up Constructor Body 处理它。我们不会将构造函数往下推，因为 Replace Constructor with Factory Method 通常更管用。
+有一批重构手法专门用来处理「概括关系」（generalization ；译注：这里指的是class 继承」这档事），其中主要是将函数（methods）上下移动于继承体系之中。 <a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Field.html">Pull Up Field</a> 和 <a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Method.html">Pull Up Method</a> 都用于将class 特性向继承体系的上端移动，<a href="{{site.baseurl}}/dealing-with-generalization/Push-Down-Method.html">Push Down Method</a> 和 <a href="{{site.baseurl}}/dealing-with-generalization/Push-Down-Field.html">Push Down Field</a> 则将class 特性向继承体系的下端移动。构造函数比较难以向上拉动，因此专门有一个<a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Constructor-Body.html">Pull Up Constructor Body</a> 处理它。我们不会将构造函数往下推，因为 Replace Constructor with Factory Method 通常更管用。
 <p>
-如果有若干函数大体上相同，只在细节上有所差异，可以使用Form Template Method 将它们的共同点和不同点分开。
+如果有若干函数大体上相同，只在细节上有所差异，可以使用<a href="{{site.baseurl}}/dealing-with-generalization/Form-Template-Method.html">Form Template Method</a> 将它们的共同点和不同点分开。
 <p>
-除了在继承体系中移动class 特性之外，你还可以建立新class ，改变整个继承体系。 Extract Subclass、Extract Superclass 和 Extract Interface 都是这样的重构手法，它们在继承体系的不同位置构造出新元素。如果你想在型别系统（type system）中标示（mark）一小部分函数， Extract Interface 特别有用。如果你发现继承体系中的某些classes 没有存在必要，可以使用 Collapse Hierarchy 将它们移除。
+除了在继承体系中移动class 特性之外，你还可以建立新class ，改变整个继承体系。 <a href="{{site.baseurl}}/dealing-with-generalization/Extract-Subclass.html">Extract Subclass</a>、<a href="{{site.baseurl}}/dealing-with-generalization/Extract-Superclass.html">Extract Superclass</a> 和 <a href="{{site.baseurl}}/dealing-with-generalization/Extract-Interface.html">Extract Interface</a> 都是这样的重构手法，它们在继承体系的不同位置构造出新元素。如果你想在型别系统（type system）中标示（mark）一小部分函数， <a href="{{site.baseurl}}/dealing-with-generalization/Extract-Interface.html">Extract Interface</a> 特别有用。如果你发现继承体系中的某些classes 没有存在必要，可以使用 <a href="{{site.baseurl}}/dealing-with-generalization/Collapse-Hierarchy.html">Collapse Hierarchy</a> 将它们移除。
 <p>
-有时候你会发现继承并非最佳选择，你真正需要的其实是委托（delegation），那么， Replace Inheritance with Delegation 可以帮助你把继承改为委托。有时候你又会想要做反向修改，此时就可使用Replace Delegation with Inheritance。
+有时候你会发现继承并非最佳选择，你真正需要的其实是委托（delegation），那么， <a href="{{site.baseurl}}/dealing-with-generalization/Replace-Inheritance-with-Delegation.html">Replace Inheritance with Delegation</a> 可以帮助你把继承改为委托。有时候你又会想要做反向修改，此时就可使用<a href="{{site.baseurl}}/dealing-with-generalization/Replace-Delegation-with-Inheritance.html">Replace Delegation with Inheritance</a>。

@@ -16,7 +16,7 @@ head_en: Replace Type Code with Subclasses
 <p>
 为建立这样的继承体系，最简单的办法就是Replace Type Code with Subclasses：以type code 的宿主类为base class，针对每种type code 建立相应的subclass 。 但是以下两种情况你不能那么做：(1) type code 值在对象创建之后发生了改变；(2)  由于某些原因，type code 宿主类已经有了subclass 。如果你恰好面临这两种情况之一，就需要使用Replace Type Code with State/Strategy 。
 <p>
-Replace Type Code with Subclasses 的主要作用其实是搭建一个舞台，让Replace Conditional with Polymorphism 得以一展身手。如果宿主类中并没有出现条件式，那么 Replace Type Code with Class 更合适，风险也比较低。使用Replace Type Code with Subclasses 的另一个原因就是，宿主类中出现 了「只与具备特定type code 之对象相关」的特性。完成本项重构之后，你可以使用 Push Down Method 和 Push Down Field 将这些特性推到合适的subclass去，以彰显它们「只与特定情况相关」这一事实。
+Replace Type Code with Subclasses 的主要作用其实是搭建一个舞台，让Replace Conditional with Polymorphism 得以一展身手。如果宿主类中并没有出现条件式，那么 Replace Type Code with Class 更合适，风险也比较低。使用Replace Type Code with Subclasses 的另一个原因就是，宿主类中出现 了「只与具备特定type code 之对象相关」的特性。完成本项重构之后，你可以使用 <a href="{{site.baseurl}}/dealing-with-generalization/Push-Down-Method.html">Push Down Method</a> 和 <a href="{{site.baseurl}}/dealing-with-generalization/Push-Down-Field.html">Push Down Field</a> 将这些特性推到合适的subclass去，以彰显它们「只与特定情况相关」这一事实。
 <p>
 Replace Type Code with Subclasses 的好处在于：它把「对不同行为的了解」从class 用户那儿转移到了class 自身。如果需要再加入新的行为变化，我只需添加subclass 一个就行了。如果没有多态机制，我就必须找到所有条件式，并逐一修改它们。因此，如果未来还有可能加入新行为，这项重构将特别有价值。
 
@@ -114,4 +114,4 @@ Replace Type Code with Subclasses 的好处在于：它把「对不同行为的�
 <p>
 当然，我总是避免使用switch 语句。但这里只有一处用到switch 语句，并且只用于决定创建何种对象，这样的switch 语句是可以接受的。
 <p>
-很自然地，在建立了这些subclass 之后，你就应该使用 Push Down Method 和 Push Down Field，将「只与特定种类的雇员相关」的函数和值域推到相关的subclass 去。
+很自然地，在建立了这些subclass 之后，你就应该使用 <a href="{{site.baseurl}}/dealing-with-generalization/Push-Down-Method.html">Push Down Method</a> 和 <a href="{{site.baseurl}}/dealing-with-generalization/Push-Down-Field.html">Push Down Field</a>，将「只与特定种类的雇员相关」的函数和值域推到相关的subclass 去。

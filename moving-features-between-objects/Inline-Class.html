@@ -20,7 +20,7 @@ Inline Class正好与Extract Class 相反。如果一个class不再承担足够 
 <ul>
   <li>在absorbing class（合并端的那个class）身上声明source class的public协议， 并将其中所有函数委托（delegate）至source class。</li>
   <ul>
-    <li>如果「以一个独立接口表示source class函数」更合适的话，就应该在inlining之前先使用Extract Interface。</li>
+    <li>如果「以一个独立接口表示source class函数」更合适的话，就应该在inlining之前先使用<a href="{{site.baseurl}}/dealing-with-generalization/Extract-Interface.html">Extract Interface</a>。</li>
   </ul>
 
   <li>修改所有source class引用点，改而引用absorbing class。</li>

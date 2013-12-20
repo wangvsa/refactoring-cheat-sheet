@@ -30,7 +30,7 @@ head_en: Pull Up Constructor Body
 <p>
 构造函数（constructors ）是很奇妙的东西。它们不是普通函数，使用它们比使用普通函数受到更多的限制。
 <p>
-如果你看见各个subclass 中的函数有共同行为，你的第一个念头应该是将共同行为提炼到一个独立函数中，然后将这个函数提升到superclass 。对构造函数而言，它们彼此的共同行为往往就是「对象的建构」。这时候你需要在superclass 中提供一个构造函数，然后让subclass 都来调用它。很多时候，「调用superclass 构造函数」就是subclass 构造函数的惟一动作。这里不能运用Pull Up Method，因为你无法在subclass 中继承superclass 构造函数（你可曾痛恨过这个规定？）。
+如果你看见各个subclass 中的函数有共同行为，你的第一个念头应该是将共同行为提炼到一个独立函数中，然后将这个函数提升到superclass 。对构造函数而言，它们彼此的共同行为往往就是「对象的建构」。这时候你需要在superclass 中提供一个构造函数，然后让subclass 都来调用它。很多时候，「调用superclass 构造函数」就是subclass 构造函数的惟一动作。这里不能运用<a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Method.html">Pull Up Method</a>，因为你无法在subclass 中继承superclass 构造函数（你可曾痛恨过这个规定？）。
 <p>
 如果重构过程过于复杂，你可以考虑转而使用Replace Constructor with Factory Method。
 </p>
@@ -50,7 +50,7 @@ head_en: Pull Up Constructor Body
   </ul>
   <li>编译，测试。</li>
   <ul>
-    <li>如果日后subclass 构造函数再出现共同代码，你可以首先使用 Extract Method 将那一部分提炼到一个独立函数，然后使用Pull Up Method 将该函数上移到superclass。</li>
+    <li>如果日后subclass 构造函数再出现共同代码，你可以首先使用 Extract Method 将那一部分提炼到一个独立函数，然后使用<a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Method.html">Pull Up Method</a> 将该函数上移到superclass。</li>
   </ul>
 </ul>
 
@@ -110,7 +110,7 @@ Employee 的值域应该在Employee 构造函数中被设妥初值。因此我�
 {% endhighlight %}   
 
 <p>
-我不能把调用assignCar() 的行为移到superclass 构造函数中，因为惟有把合适的值赋给_grade 值域后才能执行assignCar() 。此时我需要Extract Method 和 Pull Up Method。
+我不能把调用assignCar() 的行为移到superclass 构造函数中，因为惟有把合适的值赋给_grade 值域后才能执行assignCar() 。此时我需要Extract Method 和 <a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Method.html">Pull Up Method</a>。
 {% highlight java linos %}
     class Employee...
       void initialize() {

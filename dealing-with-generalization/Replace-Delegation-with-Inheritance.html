@@ -13,9 +13,9 @@ head_en: Replace Delegation with Inheritance
 <br>
 <h3>动机（Motivation）</h3>
 <p>
-本重构与 Replace Delegation with Inheritance 恰恰相反。如果你发现自己需要使用「受托 class」中的所有函数，并且费了很大力气编写所有极简的请托函数（delegating methods），本重构可以帮助你轻松回头使用「继承」。
+本重构与 <a href="{{site.baseurl}}/dealing-with-generalization/Replace-Delegation-with-Inheritance.html">Replace Delegation with Inheritance</a> 恰恰相反。如果你发现自己需要使用「受托 class」中的所有函数，并且费了很大力气编写所有极简的请托函数（delegating methods），本重构可以帮助你轻松回头使用「继承」。
 <p>
-两条告诫需牢记于心。首先，如果你并没有使用「受托class 」的所有函数（而非只是部分函数），那么就不应该使用Replace Delegation with Inheritance，因为subclass 应该总是遵循（奉行）superclass 的接口。如果过多的请托函数让你烦心，你有别的选择：你可以通过 Remove Middle Man 让客户端自己调用受托函数，也可以使用Extract Superclass 将两个classes 接口相同的部分提炼到superclass 中， 然后让两个classes 都继承这个新的superclass ；你还可以以类似手法使用Extract Interface。
+两条告诫需牢记于心。首先，如果你并没有使用「受托class 」的所有函数（而非只是部分函数），那么就不应该使用<a href="{{site.baseurl}}/dealing-with-generalization/Replace-Delegation-with-Inheritance.html">Replace Delegation with Inheritance</a>，因为subclass 应该总是遵循（奉行）superclass 的接口。如果过多的请托函数让你烦心，你有别的选择：你可以通过 Remove Middle Man 让客户端自己调用受托函数，也可以使用<a href="{{site.baseurl}}/dealing-with-generalization/Extract-Superclass.html">Extract Superclass</a> 将两个classes 接口相同的部分提炼到superclass 中， 然后让两个classes 都继承这个新的superclass ；你还可以以类似手法使用<a href="{{site.baseurl}}/dealing-with-generalization/Extract-Interface.html">Extract Interface</a>。
 <p>
 另一种需要当心的情况是：受托对象被不止一个其他对象共享，而且受托对象是可变的（mutable）。在这种情况下，你就不能将「委托关系」替换为「继承关系」，因为这样就无法再共享数据了。数据共享是必须由「委托关系」承担的一种责任，你无法把它转给「继承关系」。如果受托对象是不可变的（immutable），数据共享就不 成问题，因为你大可放心地拷贝对象，谁都不会知道。
 </p>
