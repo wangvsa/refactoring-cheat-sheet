@@ -78,7 +78,7 @@ title: Bad Smells in Code
         <p>
         百分之九十九的场合里，要把函数变小，只需使用Extract Method。找到函数中适合集在一起的部分，将它们提炼出来形成一个新函数。
         <p>
-        如果函数内有大量的参数和临时变量，它们会对你的函数提炼形成阻碍。如果你尝试运用Extract Method，最终就会把许多这些参数和临时变量当作参数，传递给被提炼出来的新函数，导致可读性几乎没有任何提升。啊是的，你可以经常运用Replace Temp with Query 来消除这些暂时元素。Introduce Parameter Object 和Preserve Whole Object 则可以将过长的参数列变得更简洁一些。 
+        如果函数内有大量的参数和临时变量，它们会对你的函数提炼形成阻碍。如果你尝试运用Extract Method，最终就会把许多这些参数和临时变量当作参数，传递给被提炼出来的新函数，导致可读性几乎没有任何提升。啊是的，你可以经常运用Replace Temp with Query 来消除这些暂时元素。<a href="{{site.baseurl}}/making-method-calls-simpler/Introduce-Parameter-Object.html">Introduce Parameter Object</a> 和<a href="{{site.baseurl}}/making-method-calls-simpler/Preserve-Whole-Object.html">Preserve Whole Object</a> 则可以将过长的参数列变得更简洁一些。 
         <p>
         如果你已经这么做了，仍然有太多临时变量和参数，那就应该使出我们的杀手锏： Replace Method with Method Object。
         <p>
@@ -104,7 +104,7 @@ title: Bad Smells in Code
         <p>
         这是好现象，因为太长的参数列难以理解，太多参数会造成前后不一致、不易使用，而且一旦你需要更多数据，就不得不修改它。如果将对象传递给函数，大多数修改都将没有必要，因为你很可能只需（在函数内）增加一两条请求（requests），就能得到更多数据。 
         <p>
-        如果「向既有对象发出一条请求」就可以取得原本位于参数列上的一份数据，那么 你应该激活重构准则Replace Parameter with Method 。上述的既有对象可能是函数所属class内的一个值域（field），也可能是另一个参数。你还可以运用Preserve Whole Object 将来自同一对象的一堆数据收集起来，并以该对象替换它们。如果某些数据缺乏合理的对象归属，可使用Introduce Parameter Object 为它们制造出一个「参数对象」。 
+        如果「向既有对象发出一条请求」就可以取得原本位于参数列上的一份数据，那么 你应该激活重构准则<a href="{{site.baseurl}}/making-method-calls-simpler/Replace-Parameter-with-Method.html">Replace Parameter with Method</a> 。上述的既有对象可能是函数所属class内的一个值域（field），也可能是另一个参数。你还可以运用<a href="{{site.baseurl}}/making-method-calls-simpler/Preserve-Whole-Object.html">Preserve Whole Object</a> 将来自同一对象的一堆数据收集起来，并以该对象替换它们。如果某些数据缺乏合理的对象归属，可使用<a href="{{site.baseurl}}/making-method-calls-simpler/Introduce-Parameter-Object.html">Introduce Parameter Object</a> 为它们制造出一个「参数对象」。 
         <p>
         此间存在一个重要的例外。有时候你明显不希望造成「被调用之对象」与「较大对 象」间的某种依存关系。这时候将数据从对象中拆解出来单独作为参数，也很合情合理。但是请注意其所引发的代价。如果参数列太长或变化太频繁，你就需要重新考虑自己的依存结构（dependency structure）了。
       <h2 class="content-subhead"><a name="divergent-change"/>Divergent Change（发散式变化）</h2>
@@ -128,7 +128,7 @@ title: Bad Smells in Code
         有数个复杂精巧的模式(patterns)破坏了这个规则。说起这个话题，「四巨头」[Gang of Four]的Strategy 和Visitor立刻跳入我的脑海，Kent Beck 的 Self Delegation [Beck]也在此列。使用这些模式是为了对抗坏味道Divergent Change。最根本的原则是：将总是一起变化的东西放在一块儿。「数据」和「引用这些数据」的行为总是一起变化的，但也有例外。如果例外出现，我们就搬移那些行为，保持「变化只在一地发生」。Strategy 和Visitor『使你得以轻松修改函数行为，因为它们将少量需被覆写〔overridden）的行为隔离开来――当然也付出了「多一层间接性」的 代价。
       <h2 class="content-subhead"><a name="data-clumps"/>Data Clumps（数据泥团）</h2>
         <p>
-        数据项（data items）就像小孩子：喜欢成群结队地待在一块儿。你常常可以在很多地方看到相同的三或四笔数据项：两个classes内的相同值域（field）、许多函数签名式（signature）中的相同参数。这些「总是绑在一起出现的数据」真应该放进属于它们自己的对象中。首先请找出这些数据的值域形式（field）出现点，运用Extract Class 将它们提炼到一个独立对象中。然后将注意力转移到函数签名式（signature）上头，运用Introduce Parameter Object 或Preserve Whole Object 为它减肥。这么做的直接好处是可以将很多参数列缩短，简化函数调用动作。是的，不必因为Data Clumps只用上新对象的一部分值域而在意，只要你以新对象取代两个（或更多）值域，你就值回票价了。 
+        数据项（data items）就像小孩子：喜欢成群结队地待在一块儿。你常常可以在很多地方看到相同的三或四笔数据项：两个classes内的相同值域（field）、许多函数签名式（signature）中的相同参数。这些「总是绑在一起出现的数据」真应该放进属于它们自己的对象中。首先请找出这些数据的值域形式（field）出现点，运用Extract Class 将它们提炼到一个独立对象中。然后将注意力转移到函数签名式（signature）上头，运用<a href="{{site.baseurl}}/making-method-calls-simpler/Introduce-Parameter-Object.html">Introduce Parameter Object</a> 或<a href="{{site.baseurl}}/making-method-calls-simpler/Preserve-Whole-Object.html">Preserve Whole Object</a> 为它减肥。这么做的直接好处是可以将很多参数列缩短，简化函数调用动作。是的，不必因为Data Clumps只用上新对象的一部分值域而在意，只要你以新对象取代两个（或更多）值域，你就值回票价了。 
         <p>
         一个好的评断办法是：删掉众多数据中的一笔。其他数据有没有因而失去意义？如果它们不再有意义，这就是个明确信号：你应该为它们产生一个新对象。 
         <p>
@@ -141,14 +141,14 @@ title: Bad Smells in Code
         <p>
         对象技术的新手通常不愿意在小任务上运用小对象――像是结合数值和币别的 money classes 、含一个起始值和一个结束值的range classes、电话号码或邮政编码（ZIP） 等等的特殊strings。你可以运用Replace Data Value with Object 将原本单独存在的数据值替换为对象，从而走出传统的洞窟，进入炙手可热的对象世界。如果欲替换之数据值是 type code（型别码），而它并不影响行为，你可以运用 Replace Type Code with Class 将它换掉。如果你有相依于此 type code的条件式，可运用 Replace Type Code with Subclasses 或 Replace Type Code with State/Strategy 加以处理。 
         <p>
-        如果你有一组应该总是被放在一起的值域（fields），可运用Extract Class。 如果你在参数列中看到基本型数据，不妨试试Introduce Parameter Object。 如果你发现自己正从array中挑选数据，可运用Replace Array with Object。
+        如果你有一组应该总是被放在一起的值域（fields），可运用Extract Class。 如果你在参数列中看到基本型数据，不妨试试<a href="{{site.baseurl}}/making-method-calls-simpler/Introduce-Parameter-Object.html">Introduce Parameter Object</a>。 如果你发现自己正从array中挑选数据，可运用Replace Array with Object。
       <h2 class="content-subhead"><a name="switch-statements"/>Switch Statements（switch惊悚现身）</h2>
         <p>
         面向对象程序的一个最明显特征就是：少用switch (或case）语句。从本质上说， switch语句的问题在于重复（duplication）。你常会发现同样的switch语句散布 于不同地点。如果要为它添加一个新的子句，你必须找到所有switch语句 并修改它们。面向对象中的多态（polymorphism ）概念可为此带来优雅的解决办法。 
         <p>
         大多数时候，一看到switch语句你就应该考虑以「多态」来替换它。问题是态 该出现在哪儿？switch语句常常根据 type code（型别码）进行选择，你要的是「与 该 type code相关的函数或class」。所以你应该使用Extract Method 将switch语句提炼到一个独立函数中，再以Move Method 将它搬移到需要多态性的那个class里头。此时你必须决定是否使用 Replace Type Code with Subclasses 或 Replace Type Code with State/Strategy。一旦这样完成继承结构之后， 你就可以运用Replace Conditional with Polymorphism了。 
         <p>
-        如果你只是在单一函数中有些选择事例，而你并不想改动它们，那么「多态」就有 点杀鸡用牛刀了。这种情况下Replace Parameter with Explicit Methods是个不错的选择。如果你的选择条件之一是null，可以试试Introduce Null Object。)
+        如果你只是在单一函数中有些选择事例，而你并不想改动它们，那么「多态」就有 点杀鸡用牛刀了。这种情况下<a href="{{site.baseurl}}/making-method-calls-simpler/Replace-Parameter-with-Explicit-Methods.html">Replace Parameter with Explicit Methods</a>是个不错的选择。如果你的选择条件之一是null，可以试试Introduce Null Object。)
       <h2 class="content-subhead"><a name="parallel-inheritance-hierarchies"/>Parallel Inheritance Hierarchies（平行继承体系）</h2>
         <p>
         Parallel Inheritance Hierarchies（平行继承体系） 
@@ -162,7 +162,7 @@ title: Bad Smells in Code
       <h2 class="content-subhead"><a name="speculative-generality"/>Speculative Generality（夸夸其谈未来性）</h2>
         这个令我们十分敏感的坏味道，命名者是Brian Foote。当有人说『噢，我想我们总有一天需要做这事』并因而企图以各式各样的挂勾（hooks）和特殊情况来处理一 些非必要的事情，这种坏味道就出现了。那么做的结果往往造成系统更难理解和维护。如果所有装置都会被用到，那就值得那么做；如果用不到，就不值得。用不上的装置只会挡你的路，所以，把它搬开吧。 
         <p>
-        如果你的某个abstract class其实没有太大作用，请运用<a href="{{site.baseurl}}/dealing-with-generalization/Collapse-Hierarchy.html">Collapse Hierarchy</a>。非必要之delegation （委托）可运用Inline Class 除掉。如果函数的某些参数未被用上，可对它实施 Remove Parameter。如果函数名称带有多余的抽象意味，应该对它实施Rename Method 让它现实一些。 
+        如果你的某个abstract class其实没有太大作用，请运用<a href="{{site.baseurl}}/dealing-with-generalization/Collapse-Hierarchy.html">Collapse Hierarchy</a>。非必要之delegation （委托）可运用Inline Class 除掉。如果函数的某些参数未被用上，可对它实施 <a href="{{site.baseurl}}/making-method-calls-simpler/Remove-Parameter.html">Remove Parameter</a>。如果函数名称带有多余的抽象意味，应该对它实施<a href="{{site.baseurl}}/making-method-calls-simpler/Rename-Method.html">Rename Method</a> 让它现实一些。 
         <p>
         如果函数或class的惟一用户是test cases （测试用例），这就飘出了坏味道Speculative Generality。如果你发现这样的函数或class，请把它们连同其test cases都删掉。但如果它们的用途是帮助test cases检测正当功能，当然必须刀下留人。 
       <h2 class="content-subhead"><a name="temporary-field"/>Temporary Field（令人迷惑的暂时值域）</h2>
@@ -193,7 +193,7 @@ title: Bad Smells in Code
         继承（inheritance）往往造成过度亲密，因为subclass对superclass的了解总是超过superclass的主观愿望。如果你觉得该让这个孩子独自生活了，请运用<a href="{{site.baseurl}}/dealing-with-generalization/Replace-Delegation-with-Inheritance.html">Replace Delegation with Inheritance</a> 让它离开继承体系。 
       <h2 class="content-subhead"><a name="alternative-classes-with-different-interfaces"/>Alternative Classes with Different Interfaces（异曲同工的类）</h2>
         <p>
-        如果两个函数做同一件事，却有着不同的签名式（signatures），请运用Rename Method 根据它们的用途重新命名。但这往往不够，请反复运用Move Method 将某些行为移入classes，直到两者的协议（protocols ）一致为止。如果你必须重复而赘余地移入代码才能完成这些，或许可运用<a href="{{site.baseurl}}/dealing-with-generalization/Extract-Superclass.html">Extract Superclass</a> 为自己赎 点罪。 
+        如果两个函数做同一件事，却有着不同的签名式（signatures），请运用<a href="{{site.baseurl}}/making-method-calls-simpler/Rename-Method.html">Rename Method</a> 根据它们的用途重新命名。但这往往不够，请反复运用Move Method 将某些行为移入classes，直到两者的协议（protocols ）一致为止。如果你必须重复而赘余地移入代码才能完成这些，或许可运用<a href="{{site.baseurl}}/dealing-with-generalization/Extract-Superclass.html">Extract Superclass</a> 为自己赎 点罪。 
       <h2 class="content-subhead"><a name="incomplete-library-class"/>Incomplete Library Class（不完美的程序库类）</h2>
         <p>
         复用（reuse）常被视为对象的终极目的。我们认为这实在是过度估计了（我们只是使用而己）。但是无可否认，许多编程技术都建立在library classes （程序库类）的基础上，没人敢说是不是我们都把排序算法忘得一干二净了。 
@@ -203,9 +203,9 @@ title: Bad Smells in Code
         幸好我们有两个专门应付这种情况的工具。如果你只想修改library classes内的一两 个函数，可以运用 Introduce Foreign Method；如果想要添加一大堆额外行为，就得运用Introduce Local Extension。 
       <h2 class="content-subhead"><a name="data-class"/>Data Class（纯稚的数据类）</h2>
         <p>
-        所谓Data Class是指：它们拥有一些值域（fields），以及用于访问（读写〕这些值域的函数，除此之外一无长物。这样的classes只是一种「不会说话的数据容器」，它们几乎一定被其他classes过份细琐地操控着。这些classes早期可能拥有public值域，果真如此你应该在别人注意到它们之前，立刻运用Encapsulate Field 将它们封装起来。如果这些classes内含容器类的值域（collection fields），你应该 检査它们是不是得到了恰当的封装；如果没有，就运用 Encapsulate Collection 把它们封装起来。对于那些不该被其他classes修改的值域，请运用 Remove Setting Method。
+        所谓Data Class是指：它们拥有一些值域（fields），以及用于访问（读写〕这些值域的函数，除此之外一无长物。这样的classes只是一种「不会说话的数据容器」，它们几乎一定被其他classes过份细琐地操控着。这些classes早期可能拥有public值域，果真如此你应该在别人注意到它们之前，立刻运用Encapsulate Field 将它们封装起来。如果这些classes内含容器类的值域（collection fields），你应该 检査它们是不是得到了恰当的封装；如果没有，就运用 Encapsulate Collection 把它们封装起来。对于那些不该被其他classes修改的值域，请运用 <a href="{{site.baseurl}}/making-method-calls-simpler/Remove-Setting-Method.html">Remove Setting Method</a>。
         <p>
-        然后，找出这些「取值/设值」函数（getting and setting methods）被其他classes运用的地点。尝试以Move Method 把那些调用行为搬移到Data Class来。如果无法搬移整个函数，就运用 Extract Method 产生一个可被搬移的函数。不久之后你就可以运用Hide Method 把这些「取值/设值」函数隐藏起来了。
+        然后，找出这些「取值/设值」函数（getting and setting methods）被其他classes运用的地点。尝试以Move Method 把那些调用行为搬移到Data Class来。如果无法搬移整个函数，就运用 Extract Method 产生一个可被搬移的函数。不久之后你就可以运用<a href="{{site.baseurl}}/making-method-calls-simpler/Hide-Method.html">Hide Method</a> 把这些「取值/设值」函数隐藏起来了。
         <p>
         Data Class就像小孩子。作为一个起点很好，但若要让它们像「成年（成熟）」的对象那样参与整个系统的工作，它们就必须承担一定责任。
       <h2 class="content-subhead"><a name="refused-bequest"/>Refused Bequest（被拒绝的遗赠）</h2>
@@ -223,7 +223,7 @@ title: Bad Smells in Code
         <p>
         Comments可以带我们找到本章先前提到的各种坏味道。找到坏味道后，我们首先应该以各种重构手法把坏味道去除。完成之后我们常常会发现：注释已经变得多余了，因为代码已经清楚说明了一切。
         <p>
-        如果你需要注释来解释一块代码做了什么，试试 Extract Method；如果method已经提炼出来，但还是需要注释来解释其行为，试试Rename Method；如果你需要注释说明某些系统的需求规格，试试 Introduce Assertion。
+        如果你需要注释来解释一块代码做了什么，试试 Extract Method；如果method已经提炼出来，但还是需要注释来解释其行为，试试<a href="{{site.baseurl}}/making-method-calls-simpler/Rename-Method.html">Rename Method</a>；如果你需要注释说明某些系统的需求规格，试试 Introduce Assertion。
         <p>
         TIP：当你感觉需要撰写注释，请先尝试重构，试着让所有注释都变得多余。        
         <p>

@@ -18,7 +18,7 @@ head_en: Introduce Parameter Object
 <ul>
   <li>新建一个class，用以表现你想替换的一组参数。将这个设为不可变的（不可被修改的，immutable）。</li>
   <li>编译。</li>
-  <li>针对使用该组参数的所有函数，实施Add Parameter，以上述新建class 之实体对象作为新添参数，并将此一参数值设为null 。
+  <li>针对使用该组参数的所有函数，实施<a href="{{site.baseurl}}/making-method-calls-simpler/Add-Parameter.html">Add Parameter</a>，以上述新建class 之实体对象作为新添参数，并将此一参数值设为null 。
     <ul>
       <li>如果你所修改的函数被其他很多函数调用，那么你可以保留修改前的旧函数，并令它调用修改后的新函数。你可以先对旧函数进行重构， 然后逐一令调用端转而调用新函数，最后再将旧函数删除。</li>
     </ul>

@@ -24,7 +24,7 @@ head_en: Form Template Method
   
   <li>运用<a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Method.html">Pull Up Method</a> 将各subclass 内寒全相同的函数上移至superclass 。</li>
   
-  <li>对于那些（剩余的、存在于各subclasses 内的）完全不同的函数，实施Rename Method，使所有这些函数的签名式（signature）完全相同。</li>
+  <li>对于那些（剩余的、存在于各subclasses 内的）完全不同的函数，实施<a href="{{site.baseurl}}/making-method-calls-simpler/Rename-Method.html">Rename Method</a>，使所有这些函数的签名式（signature）完全相同。</li>
   <ul>
     <li>这将使得原函数变为完全相同，因为它们都执行同样一组函数调用； 但各subclass 会以不同方式响应这些调用。</li>
   </ul>

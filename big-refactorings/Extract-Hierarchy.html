@@ -30,7 +30,7 @@ head_en: Extract Hierarchy
   <ul>
     <li>如果这种变异可能在对象生命期内发生变化，就运用Extract Class 将它提炼为一个独立的class 。</li>
   </ul>
-  <li>针对这种变异，新建一个subclass ，并对原始class 实施Replace Constructor with Factory Method。再修改factory method，令它返回适当的（相应的）subclass 实体。</li>
+  <li>针对这种变异，新建一个subclass ，并对原始class 实施<a href="{{site.baseurl}}/making-method-calls-simpler/Replace-Constructor-with-Factory-Method.html">Replace Constructor with Factory Method</a>。再修改factory method，令它返回适当的（相应的）subclass 实体。</li>
   <li>将含有条件逻辑的函数，一次一个，遂一拷贝到subclass ，然后在明确情况下 （注：对subclass 明确，对superclass 不明确！），简化这些函数。</li>
   <ul>
     <li>如有必要隔离函数中的「条件逻辑」和「非条件逻辑」，可对superclass 实施Extract Method。</li>
@@ -44,7 +44,7 @@ head_en: Extract Hierarchy
 </p>
 <ul>
   <li>针对原始class 的每一种变异（variation）建立一个subclass 。</li>
-  <li>使用Replace Constructor with Factory Method 将原始过class 的构造函数转变成factory method ，并令它针对每一种变异返回适当的subclass 实体。</li>
+  <li>使用<a href="{{site.baseurl}}/making-method-calls-simpler/Replace-Constructor-with-Factory-Method.html">Replace Constructor with Factory Method</a> 将原始过class 的构造函数转变成factory method ，并令它针对每一种变异返回适当的subclass 实体。</li>
   <ul>
     <li>如果原始class 中的各种变异是以type code 标示，先使用 Replace Type Code with Subclasses ；如果那些变异在对象生命期间会改变， 请使用Replace Type Code with State/Strategy。</li>
   </ul>
@@ -67,7 +67,7 @@ BillingScheme 使用大量条件逻辑来计算不同情况（变异）下的费
 <p>
 第一个步骤是，提炼出条件逻辑中经常出现的某种变异性。本例之中可能是「视用户是否为残障人士」而发生的变化。用于标示这种情况的可能是Customer、 BillingScheme 或其他地方的一个标记变量（flag）。
 <p>
-我们针对这种变异建立一个subclass 。为了使用这个subclass ，我们需要确保它被建立并且被使用。因此我们需要处理BillingScheme 构造函数：首先对它实施 Replace Constructor with Factory Method，然后在所得的factory method 中为残障 人士增加一个条件子句，使它在适当时候返回一个DisablityBillingScheme对象。
+我们针对这种变异建立一个subclass 。为了使用这个subclass ，我们需要确保它被建立并且被使用。因此我们需要处理BillingScheme 构造函数：首先对它实施 <a href="{{site.baseurl}}/making-method-calls-simpler/Replace-Constructor-with-Factory-Method.html">Replace Constructor with Factory Method</a>，然后在所得的factory method 中为残障 人士增加一个条件子句，使它在适当时候返回一个DisablityBillingScheme对象。
 <p>
 然后，我们需要观察BillingScheme 的其他函数，寻找那些随着「用户是否为残障人士」而变化的行为。createBill() 就是这样一个函数，因此我们将它拷贝到subclass （图 12,12）。
 </p>

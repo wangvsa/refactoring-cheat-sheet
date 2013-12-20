@@ -4,13 +4,13 @@ import os
 
 # just modify links and basedir
 
-links = [
+links_12 = [
     'Tease Apart Inheritance',
     'Convert Procedural Design to Objects',
     'Separate Domain from Presentation',
     'Extract Hierarchy'
 ]
-basedir = '{{site.baseurl}}/' + 'big-refactorings/'
+basedir_12 = '{{site.baseurl}}/' + 'big-refactorings/'
 
 links_11 = [
 'Pull Up Field',
@@ -27,6 +27,25 @@ links_11 = [
 'Replace Delegation with Inheritance'
 ]
 basedir_11 = '{{site.baseurl}}/' + 'dealing-with-generalization/'
+
+links = [
+'Rename Method',
+'Add Parameter',
+'Remove Parameter',
+'Separate Query from Modifier',
+'Parameterize Method',
+'Replace Parameter with Explicit Methods',
+'Preserve Whole Object',
+'Replace Parameter with Method',
+'Introduce Parameter Object',
+'Remove Setting Method',
+'Hide Method',
+'Replace Constructor with Factory Method',
+'Encapsulate Downcast',
+'Replace Error Code with Exception',
+'Replace Exception with Test'
+]
+basedir = '{{site.baseurl}}/' + 'making-method-calls-simpler/'
 
 targetDirs = [
 'bad-smells-in-code/',

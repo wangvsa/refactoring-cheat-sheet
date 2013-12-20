@@ -6,18 +6,18 @@ head_zh: 简化函数调用
 <p>
 在对象技术中，最重要的概念莫过于「接口」（interface）。容易被理解和被使用的接口，是开发良好面向对象软件的关键。本章将介绍「使接口变得更简洁易用」 的重构手法。
 <p>
-最简单也最重要的一件事就是修改函数名称。「名称」是程序写作者与阅读者交流的关键工具。只要你能理解一段程序的功能，就应该大胆地使用Rename Method 将你所知道的东西传达给其他人。另外，你也可以（并且应该）在适当时机修改变量名称和class 名称。不过，总体来说，「修改名称」只是相对比较简单 的文本替换功夫，所以我没有为它们提供单独的重构项目。
+最简单也最重要的一件事就是修改函数名称。「名称」是程序写作者与阅读者交流的关键工具。只要你能理解一段程序的功能，就应该大胆地使用<a href="{{site.baseurl}}/making-method-calls-simpler/Rename-Method.html">Rename Method</a> 将你所知道的东西传达给其他人。另外，你也可以（并且应该）在适当时机修改变量名称和class 名称。不过，总体来说，「修改名称」只是相对比较简单 的文本替换功夫，所以我没有为它们提供单独的重构项目。
 <p>
-函数参数在「接口」之中扮演十分重要的角色。 Add Parameter 和Remove Parameter 都是很常见的重构手法。初始接触面向对象技术的程序员往往使用很长的参数列（parameter lists），这在其他开发环境中是很典型的方式。但是， 使用对象技术，你可以保持参数列的简短，以下有一些相关的重构可以帮助你缩短参数列。如果来自同一对象的数个值被当作参数传递，你可以运用 Preserve Whole Object 将它们替换为单一对象，从而缩短参数列。如果此前并不存在这样一个对象，你可以运用Introduce Parameter Object将它创建出来。如果函数参数来自该函数可取用的一个对象，则可以使用 Replace Parameter with Method 避免传递参数。如果某些参数被用来在条件式中做选择依据，你可以实施 Replace Parameter with Explicit Methods。另外，你还可以使用Parameterize Method 为数个相似函数添加参数，将它们合并到一起。
+函数参数在「接口」之中扮演十分重要的角色。 <a href="{{site.baseurl}}/making-method-calls-simpler/Add-Parameter.html">Add Parameter</a> 和<a href="{{site.baseurl}}/making-method-calls-simpler/Remove-Parameter.html">Remove Parameter</a> 都是很常见的重构手法。初始接触面向对象技术的程序员往往使用很长的参数列（parameter lists），这在其他开发环境中是很典型的方式。但是， 使用对象技术，你可以保持参数列的简短，以下有一些相关的重构可以帮助你缩短参数列。如果来自同一对象的数个值被当作参数传递，你可以运用 <a href="{{site.baseurl}}/making-method-calls-simpler/Preserve-Whole-Object.html">Preserve Whole Object</a> 将它们替换为单一对象，从而缩短参数列。如果此前并不存在这样一个对象，你可以运用<a href="{{site.baseurl}}/making-method-calls-simpler/Introduce-Parameter-Object.html">Introduce Parameter Object</a>将它创建出来。如果函数参数来自该函数可取用的一个对象，则可以使用 <a href="{{site.baseurl}}/making-method-calls-simpler/Replace-Parameter-with-Method.html">Replace Parameter with Method</a> 避免传递参数。如果某些参数被用来在条件式中做选择依据，你可以实施 <a href="{{site.baseurl}}/making-method-calls-simpler/Replace-Parameter-with-Explicit-Methods.html">Replace Parameter with Explicit Methods</a>。另外，你还可以使用<a href="{{site.baseurl}}/making-method-calls-simpler/Parameterize-Method.html">Parameterize Method</a> 为数个相似函数添加参数，将它们合并到一起。
 <p>
 关于缩减参数列的重构手法，Doug Lea 对我提出了一个警告：并发编程（con-current programming）往往需要使用较长的参数列，因为这样你可以保证传递给函数的参数都是不可被修改的，就像内置型对象和value object 一定地不可变。通常，你可以使用不可变对象（immutable object）取代这样的长参数列，但另一方面你也必须对此类重构保持谨慎。
 <p>
-多年来我一直坚守一个很有价值的习惯：明确地将「修改对象状态」的函数（修改函数，modifiers）和「查询对象状态」的函数（查询函数，queries）分开设计。不知道多少次，我因为将这两种函数混在一起而麻烦缠身；不知道多少次，我看到别 人也因为同样的原因而遇到同样的麻烦。因此，如果我看到这两种函数混在一起， 我就使用 Separate Query from Modifier 将它们分开。
+多年来我一直坚守一个很有价值的习惯：明确地将「修改对象状态」的函数（修改函数，modifiers）和「查询对象状态」的函数（查询函数，queries）分开设计。不知道多少次，我因为将这两种函数混在一起而麻烦缠身；不知道多少次，我看到别 人也因为同样的原因而遇到同样的麻烦。因此，如果我看到这两种函数混在一起， 我就使用 <a href="{{site.baseurl}}/making-method-calls-simpler/Separate-Query-from-Modifier.html">Separate Query from Modifier</a> 将它们分开。
 <p>
-良好的接口只向用户展现必须展现的东西。如果一个接口暴露了过多细节，你可以将不必要暴露的东西隐藏起来，从而改进接口的质量。毫无疑问，所有数据都应该隐藏起来（希望你不需要我来告诉你这一点），同时，所有可以隐藏的函数都应该被隐藏起来。进行重构时，你往往需要暂时暴露某些东西，最后再以 Hide Method 和Remove Setting Method 将它们隐藏起来。
+良好的接口只向用户展现必须展现的东西。如果一个接口暴露了过多细节，你可以将不必要暴露的东西隐藏起来，从而改进接口的质量。毫无疑问，所有数据都应该隐藏起来（希望你不需要我来告诉你这一点），同时，所有可以隐藏的函数都应该被隐藏起来。进行重构时，你往往需要暂时暴露某些东西，最后再以 <a href="{{site.baseurl}}/making-method-calls-simpler/Hide-Method.html">Hide Method</a> 和<a href="{{site.baseurl}}/making-method-calls-simpler/Remove-Setting-Method.html">Remove Setting Method</a> 将它们隐藏起来。
 <p>
-构造函数（constructors）是Java 和C++ 中特别麻烦的一个东西，因为它强迫你必须知道「待建对象」属于哪一个class ，而你往往并不需要知道这一点。你可以使用Replace Constructor with Factory Method 避免了解这「被迫了解的一点」。
+构造函数（constructors）是Java 和C++ 中特别麻烦的一个东西，因为它强迫你必须知道「待建对象」属于哪一个class ，而你往往并不需要知道这一点。你可以使用<a href="{{site.baseurl}}/making-method-calls-simpler/Replace-Constructor-with-Factory-Method.html">Replace Constructor with Factory Method</a> 避免了解这「被迫了解的一点」。
 <p>
-转型（casting）是Java 程序员心中另一处永远的痛。你应该尽量使用Encapsulate Downcast 将「向下转型动作」封装隐藏起来，避免让class 用户做那种动作。
+转型（casting）是Java 程序员心中另一处永远的痛。你应该尽量使用<a href="{{site.baseurl}}/making-method-calls-simpler/Encapsulate-Downcast.html">Encapsulate Downcast</a> 将「向下转型动作」封装隐藏起来，避免让class 用户做那种动作。
 <p>
-和许多现代编程语言一样，Java 也有异常处理（exception-handing）机制，这使得错误处理（error handling）相对容易一些。不习惯使用异常的程序员，往往会以错误代码（error code）表示程序遇到的麻烦。你可以使用Replace Error Code with Exception 来运用这些崭新的异常特性。但有时候异常也并不是最合适的选择，你应该实施Replace Exception with Test 先测试一番。
+和许多现代编程语言一样，Java 也有异常处理（exception-handing）机制，这使得错误处理（error handling）相对容易一些。不习惯使用异常的程序员，往往会以错误代码（error code）表示程序遇到的麻烦。你可以使用<a href="{{site.baseurl}}/making-method-calls-simpler/Replace-Error-Code-with-Exception.html">Replace Error Code with Exception</a> 来运用这些崭新的异常特性。但有时候异常也并不是最合适的选择，你应该实施<a href="{{site.baseurl}}/making-method-calls-simpler/Replace-Exception-with-Test.html">Replace Exception with Test</a> 先测试一番。

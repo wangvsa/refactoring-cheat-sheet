@@ -23,7 +23,7 @@ head_en: Replace Parameter with Method
 <p>
 缩减参数列的办法之一就是，看看「参数接受端（receiver）」是否可以通过「与调用端相同的计算」来取得参数携带值。如果调用端通过「其所属对象内部的另一个函数」来计算参数，并在计算过程中「未曾引用调用端的其他参数」（译注：亦就是说没有太多与外界的相依关系），那么你就应该可以将这个计算过程转移到被调用端内，从而去除该项参数。如果你所调用的函数隶属另一对象，而该对象拥有一个reference 指向调用端所属对象，前面所说的这些也同样适用。
 <p>
-但是，如果「参数计算过程」倚赖调用端的某个参数，那么你就无法去掉被调用端的那个参数，因为每一次调用动作中，该参数值都可能不同（当然，如果你能够运用Replace Parameter with Explicit Methods 将该参数替换为一个函数，又另当别论）。另外，如果参数接受端（receiver）并没有一个reference 指向参数发送端（sender），而你也不想加上这样一个reference ，那么也无法去除参数。
+但是，如果「参数计算过程」倚赖调用端的某个参数，那么你就无法去掉被调用端的那个参数，因为每一次调用动作中，该参数值都可能不同（当然，如果你能够运用<a href="{{site.baseurl}}/making-method-calls-simpler/Replace-Parameter-with-Explicit-Methods.html">Replace Parameter with Explicit Methods</a> 将该参数替换为一个函数，又另当别论）。另外，如果参数接受端（receiver）并没有一个reference 指向参数发送端（sender），而你也不想加上这样一个reference ，那么也无法去除参数。
 <p>
 有时候，参数的存在是为了将来的弹性。这种情况下我仍然会把这种多余参数拿掉。是的，你应该只在必要关头才添加参数，预先添加的参数很可能并不是你所需要的。不过，对于这条规则，也有一个例外：如果修改接口会对整个程序造成非常痛苦的结果（例如需要很长时间来重建程序，或需要修改大量代码〕，那么可以考虑保留前人预先加入的参数。如果真是这样，你应该首先判断修改接口究竟会造成多严重的后果，然后考虑是否「降低系统各部位之间的依存程度」以减少「修改接口所造成的影响」。稳定的接口确实很好，但是被冻结在一个不良接 口上，也是有问题的。
 
@@ -32,7 +32,7 @@ head_en: Replace Parameter with Method
   <li>如果有必要，将参数的计算过程提炼到一个独立函数中。</li>
   <li>将函数本体内「对该参数的引用」替换为「对新建函数的调用」。</li>
   <li>每次替换后，修改并测试。</li>
-  <li>全部替换完成后，使用Remove Parameter 将该参数去掉。</li>
+  <li>全部替换完成后，使用<a href="{{site.baseurl}}/making-method-calls-simpler/Remove-Parameter.html">Remove Parameter</a> 将该参数去掉。</li>
 </ul>
 
 <h3>范例：（Example）</h3>
@@ -78,7 +78,7 @@ head_en: Replace Parameter with Method
   }
 {% endhighlight %}
 
-此时我就可以使用Remove Parameter 去掉discountLevel 参数了 ：
+此时我就可以使用<a href="{{site.baseurl}}/making-method-calls-simpler/Remove-Parameter.html">Remove Parameter</a> 去掉discountLevel 参数了 ：
 {% highlight java linos %}
   public double getPrice() {
       int basePrice = _quantity * _itemPrice;

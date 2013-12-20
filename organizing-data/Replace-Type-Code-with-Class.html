@@ -39,7 +39,7 @@ class 之中有一个数值型别码（ numeric type code ），但它并不影�
   </li>
   <li>对于source class 中每一个使用type code 的函数，相应建立一个函数，让新函数使用新建的class 。
     <ul>
-      <li>你需要建立「以新class 实体为自变量」的函数，用以替换原先「直接以type code 为引数」的函数。你还需要建立一个「返回新class 实体」的函数，用以替换原先「直接返回type code」的函数。建立新函数前，你可以使用Rename Method 修改原函数名称，明确指出那些函数仍然使用旧式的type code ，这往往是个明智之举。</li>
+      <li>你需要建立「以新class 实体为自变量」的函数，用以替换原先「直接以type code 为引数」的函数。你还需要建立一个「返回新class 实体」的函数，用以替换原先「直接返回type code」的函数。建立新函数前，你可以使用<a href="{{site.baseurl}}/making-method-calls-simpler/Rename-Method.html">Rename Method</a> 修改原函数名称，明确指出那些函数仍然使用旧式的type code ，这往往是个明智之举。</li>
     </ul>
   </li>
   <li>逐一修改source class 用户，让它们使用新接口。</li>
@@ -135,7 +135,7 @@ class 之中有一个数值型别码（ numeric type code ），但它并不影�
 <p>
 现在，我因为BloodGroup  class 而拥有了运行期检验能力。为了真正从这些改变中获利，我还必须修改Person 的用户，让它们以BloodGroup  对象表示type code，而不再使用整数。
 <p>
-首先，我使用Rename Method 修改type code 访问函数的名称，说明当前情况：
+首先，我使用<a href="{{site.baseurl}}/making-method-calls-simpler/Rename-Method.html">Rename Method</a> 修改type code 访问函数的名称，说明当前情况：
 {% highlight java linos %}
  class Person...
    public int getBloodGroupCode() {

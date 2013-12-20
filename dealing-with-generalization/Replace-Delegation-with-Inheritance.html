@@ -27,7 +27,7 @@ head_en: Replace Delegation with Inheritance
   
   <li>编译。</li>
   <ul>
-    <li>此时，某些函数可能会发生冲突：它们可能有相同的名称，但在返回型别（return type）、异常指定（exceptions）或可视性（visibility）方面有所差异。你可以使用Rename Method 解决此类问题。</li>
+    <li>此时，某些函数可能会发生冲突：它们可能有相同的名称，但在返回型别（return type）、异常指定（exceptions）或可视性（visibility）方面有所差异。你可以使用<a href="{{site.baseurl}}/making-method-calls-simpler/Rename-Method.html">Rename Method</a> 解决此类问题。</li>
   </ul>
   <li>将「受托值域」（delegated field）设为「该值域所处之对象自身」。</li>
   
@@ -82,7 +82,7 @@ head_en: Replace Delegation with Inheritance
 {% endhighlight %}   
     
 <p>
-此时，如果有任何函数发生冲突，编译器会提醒我。如果某几个函数的名称相同、但返回型别不同，或抛出不同的异常，它们之间就会出现冲突。所有此类问题都可以通过Rename Method 加以解决。为求简化，我没有在范例中列出这些麻烦情况。
+此时，如果有任何函数发生冲突，编译器会提醒我。如果某几个函数的名称相同、但返回型别不同，或抛出不同的异常，它们之间就会出现冲突。所有此类问题都可以通过<a href="{{site.baseurl}}/making-method-calls-simpler/Rename-Method.html">Rename Method</a> 加以解决。为求简化，我没有在范例中列出这些麻烦情况。
 <p>
 下一步要将「受托值域」（delegated field）设值为「该值域所处之对象自身」。同时，我必须先删掉所有简单的请托函数（例如getName() 和setName()）。如果留下这种函数，就会因为无限递归而引起系统的call stack 满溢（overflow）。在此范例中，我应该把Employee 的getName() 和setName() 拿掉。
 <p>

@@ -10,17 +10,17 @@ head_en: Add Parameter
 
 <h3>动机（Motivation）</h3>
 <p>
-Add Parameter 是一个很常用的重构手法，我几乎可以肯定已经用过它了。使用这项重构的动机很简单：你必须修改一个函数，而修改后的函数需要一些过去没有的信息，因此你需要给该函数添加一个参数。
+<a href="{{site.baseurl}}/making-method-calls-simpler/Add-Parameter.html">Add Parameter</a> 是一个很常用的重构手法，我几乎可以肯定已经用过它了。使用这项重构的动机很简单：你必须修改一个函数，而修改后的函数需要一些过去没有的信息，因此你需要给该函数添加一个参数。
 <p>
 实际上我比较需要说明的是：不使用本重构的时机。除了添加参数外，你常常还有其他选择。只要可能，其他选择都比本项「添加参数」要好，因为它们不会增加参数列的长度。过长的参数列是不好的味道，因为程序员很难记住那么多参数，而且长参数列往往伴随着坏味道Date Clumps。
 <p>
-请看看现有的参数，然后问自己：你能从这些参数得到所需的信息吗？如果回答是否定的，有可能通过某个函数提供所需信息吗？你究竟把这些信息用于何处？这个函数是否应该属于拥有该信息的那个对象所有？看看现有参数，考虑一下，加入新参数是否合适？也许你应该考虑使用Introduce Parameter Object。
+请看看现有的参数，然后问自己：你能从这些参数得到所需的信息吗？如果回答是否定的，有可能通过某个函数提供所需信息吗？你究竟把这些信息用于何处？这个函数是否应该属于拥有该信息的那个对象所有？看看现有参数，考虑一下，加入新参数是否合适？也许你应该考虑使用<a href="{{site.baseurl}}/making-method-calls-simpler/Introduce-Parameter-Object.html">Introduce Parameter Object</a>。
 <p>
 我并非要你绝对不要添加参数。事实上我自己经常添加参数，但是在添加参数之前你有必要了解其他选择。
 
 <h3>作法（Mechanics）</h3>
 <p>
-Add Parameter 的作法和Rename Method 非常相似。
+<a href="{{site.baseurl}}/making-method-calls-simpler/Add-Parameter.html">Add Parameter</a> 的作法和<a href="{{site.baseurl}}/making-method-calls-simpler/Rename-Method.html">Rename Method</a> 非常相似。
 <ul>
   <li>检查函数签名式（signature）是否被superclass 或subclass 实现过。如果是，则需要针对每份实现分别进行下列步骤。</li>
   <li>声明一个新函数，名称与原函数同，只是加上新添参数。将旧函数的代码拷贝到新函数中。

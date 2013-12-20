@@ -24,7 +24,7 @@ value object有一个非常重要的特性：它们应该是不可变的（immut
 <ul>
   <li>检查重构对象是否为immutable（不可变）对象，或是否可修改为不可变对象。</li>
   <ul>
-    <li>如果该对象目前还不是immutable，就使用 Remove Setting Method，直到它成为immutable为止。</li>
+    <li>如果该对象目前还不是immutable，就使用 <a href="{{site.baseurl}}/making-method-calls-simpler/Remove-Setting-Method.html">Remove Setting Method</a>，直到它成为immutable为止。</li>
     <li>如果无法将该对象修改为immutable，就放弃使用本项重构。</li>
   </ul>
   <li>建立equal()和hashCode()。</li>

@@ -16,7 +16,7 @@ head_en: Replace Subclass with Fields
 
 <h3>作法（Mechanics）</h3>
 <ul>
-  <li>对所有subclasses 使用Replace Constructor with Factory Method 。</li>
+  <li>对所有subclasses 使用<a href="{{site.baseurl}}/making-method-calls-simpler/Replace-Constructor-with-Factory-Method.html">Replace Constructor with Factory Method</a> 。</li>
   <li>如果有任何代码直接引用subclass，令它改而引用superclass 。</li>
   <li>针对每个常量函数，在superclass 中声明一个final 值域。</li>
   <li>为superclass 声明一个protected 构造函数，用以初始化这些新增值域。</li>
@@ -63,7 +63,7 @@ head_en: Replace Subclass with Fields
 <p> 
 在这里，两个subclasses 之间惟一的区别就是：它们以不同的方式实现了 Person 所声明的抽象函数getCode() ，返回不同的硬编码常量（所以getCode() 是个常量函数[Beck]）。我应该将这两个怠惰subclasses 的去掉。
 <p> 
-首先我需要使用Replace Constructor with Factory Method 。在这里，我需要为每个subclasse 建立一个factory method ：
+首先我需要使用<a href="{{site.baseurl}}/making-method-calls-simpler/Replace-Constructor-with-Factory-Method.html">Replace Constructor with Factory Method</a> 。在这里，我需要为每个subclasse 建立一个factory method ：
 {% highlight java linos %}
  class Person...
    static Person createMale(){

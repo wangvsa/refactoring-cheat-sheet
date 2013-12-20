@@ -87,7 +87,7 @@ Order class的客户代码可能像下面这样：
 <p>
 设值函数需要创建一份Customer实体，这是因为以前的字符串是个实值对象（value object），所以现在的Customer对象也应该是个实值对象。这也就意味每个Order对象都包含自己的一个Customer对象。注意这样一条规则：实值对象应该是不可修改内容的——这便可以避免一些讨厌「别名」（aliasing）错误。日后或许我会想让Customer对象成为引用对象（reference object），但那是另一项重构手法的责任。现在我可以编译并测试了。
 <p>
-我需要观察Order class中的_customer值域的操作函数，并作出一些修改，使它更好的反映出修改后的新形势。对于取值函数，我会使用 Rename Method 改变其名称，让它更清晰地表示，它所返回的是消费者名称，而不是个Customer对象。
+我需要观察Order class中的_customer值域的操作函数，并作出一些修改，使它更好的反映出修改后的新形势。对于取值函数，我会使用 <a href="{{site.baseurl}}/making-method-calls-simpler/Rename-Method.html">Rename Method</a> 改变其名称，让它更清晰地表示，它所返回的是消费者名称，而不是个Customer对象。
 {% highlight java linos %}
    public String getCustomerName() {
        return _customer.getName();

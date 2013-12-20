@@ -24,11 +24,11 @@ Extract Class 是<a href="{{site.baseurl}}/dealing-with-generalization/Extract-S
   <li>为这个新的subclass 提供构造函数。</li>
   <ul>
     <li>简单的作法是：让subclass 构造函数接受与superclass 构造函数相同的参数，并通过super 调用superclass 构造函数。</li>
-    <li>如果你希望对用户隐藏subclass 的存在，可使用Replace Constructor with Factory Method。</li>
+    <li>如果你希望对用户隐藏subclass 的存在，可使用<a href="{{site.baseurl}}/making-method-calls-simpler/Replace-Constructor-with-Factory-Method.html">Replace Constructor with Factory Method</a>。</li>
   </ul>
   <li>找出调用superclass 构造函数的所有地点。如果它们需要的是新建的subclass ， 令它们改而调用新构造函数。</li>
   <ul>
-    <li>如果subclass 构造函数需要的参数和superclass 构造函数的参数不同，可以使用Rename Method 修改其参数列。如果subclass 构造函数不需要superclass 构造函数的某些参数，可以使用Rename Method 将它们去除。</li>
+    <li>如果subclass 构造函数需要的参数和superclass 构造函数的参数不同，可以使用<a href="{{site.baseurl}}/making-method-calls-simpler/Rename-Method.html">Rename Method</a> 修改其参数列。如果subclass 构造函数不需要superclass 构造函数的某些参数，可以使用<a href="{{site.baseurl}}/making-method-calls-simpler/Rename-Method.html">Rename Method</a> 将它们去除。</li>
     <li>如果不再需要直接实体化（具现化，instantiated）superclass ，就将它声明为抽象类。</li>
   </ul>
   <li>逐一使用<a href="{{site.baseurl}}/dealing-with-generalization/Push-Down-Method.html">Push Down Method</a> 和 <a href="{{site.baseurl}}/dealing-with-generalization/Push-Down-Field.html">Push Down Field</a> 将source class 的特性移到subclass 去。</li>
@@ -115,7 +115,7 @@ Extract Class 是<a href="{{site.baseurl}}/dealing-with-generalization/Extract-S
 <p>
 此时我尚未修改变量型别，只是修改了构造函数所属的class 。之所以这样做，是因为我希望只在必要地点才使用新型别。到目前为止，subclass 还没有专属接口，因 此我还不想宣布任何改变。
 <p>
-现在正是清理构造函数参数列的好时机。我将针对每个构造函数使用Rename Method。首先处理superclass 构造函数。我要新建一个构造函数，并把旧构造函数声明为protected （不能直接声明为private ，因为subclass 还需要它）：
+现在正是清理构造函数参数列的好时机。我将针对每个构造函数使用<a href="{{site.baseurl}}/making-method-calls-simpler/Rename-Method.html">Rename Method</a>。首先处理superclass 构造函数。我要新建一个构造函数，并把旧构造函数声明为protected （不能直接声明为private ，因为subclass 还需要它）：
 {% highlight java linos %}
     class JobItem...
       protected JobItem (int unitPrice, int quantity, boolean isLabor, Employee employee) {
@@ -136,7 +136,7 @@ Extract Class 是<a href="{{site.baseurl}}/dealing-with-generalization/Extract-S
 {% endhighlight %}       
 
 <p>
-编译、测试都通过后，我再使用 Rename Method 修改subclass 构造函数：
+编译、测试都通过后，我再使用 <a href="{{site.baseurl}}/making-method-calls-simpler/Rename-Method.html">Rename Method</a> 修改subclass 构造函数：
 {% highlight java linos %}
     class LaborItem
       public LaborItem (int quantity, Employee employee) {

@@ -16,7 +16,7 @@ head_en: Change Value to Reference
 
 <h3>作法（Mechanics）</h3>
 <ul>
-  <li>使用Replace Constructor with Factory Method。</li>
+  <li>使用<a href="{{site.baseurl}}/making-method-calls-simpler/Replace-Constructor-with-Factory-Method.html">Replace Constructor with Factory Method</a>。</li>
   <li>编译，测试。</li>
   <li>决定由什么对象负责提供访问新对象的途径。</li>
     <ul>
@@ -28,7 +28,7 @@ head_en: Change Value to Reference
         <li>如果这些reference object是预先创建好的,而你必须从内存中将它们读取出来，那么就得确保它们在被需要的时候能够被及时加载。</li>
         <li>修改factory method 5 ，令它返回reference object。</li>
         <li>如果对象是预先创建好的，你就需要考虑：万一有人索求一个其实并不存在的对象，要如何处理错误？</li>
-        <li>你可能希望对factory method使用Rename Method，使其传达这样的信息：它返回的是一个既存对象。</li>
+        <li>你可能希望对factory method使用<a href="{{site.baseurl}}/making-method-calls-simpler/Rename-Method.html">Rename Method</a>，使其传达这样的信息：它返回的是一个既存对象。</li>
       </ul>
   <li>编译，测试。
 </ul>
@@ -84,7 +84,7 @@ head_en: Change Value to Reference
 到目前为止，Customer对象还是value object。就算多份定单属于同一客户，但每个Order对象还是拥有各自的Customer对象。我希望改变这一现状，使得一旦同 一客户拥有多份不同定单，代表这些定单的所有Order对象就可以共享同一个Customer对象。本例中这就意味：每一个客户名称只该对应一个Customer对象。
 
 <P>
-首先我使用 Replace Constructor with Factory Method。这样，我就可以控制Customer对象的创建过程，这在以后会是非常重要的。我在Customer class中定义这个factory method：
+首先我使用 <a href="{{site.baseurl}}/making-method-calls-simpler/Replace-Constructor-with-Factory-Method.html">Replace Constructor with Factory Method</a>。这样，我就可以控制Customer对象的创建过程，这在以后会是非常重要的。我在Customer class中定义这个factory method：
 {% highlight java linos %}
  class Customer {
    public static Customer create (String name) {
@@ -139,7 +139,7 @@ private static Dictionary _instances = new Hashtable();
 {% endhighlight %}
  
 <p>
-由于create()总是返回既有的Customer对象，所以我应该使用Rename Method 修改这个factory method的名称，以便强调（说明）这一点。
+由于create()总是返回既有的Customer对象，所以我应该使用<a href="{{site.baseurl}}/making-method-calls-simpler/Rename-Method.html">Rename Method</a> 修改这个factory method的名称，以便强调（说明）这一点。
 {%highlight java linos %}
  class Customer...
    public static Customer getNamed (String name) {

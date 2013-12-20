@@ -27,7 +27,7 @@ head_en: Extract Superclass
   <ul>
     <li>先搬移值域，通常比较简单。</li>
 
-    <li>如果相应的subclass 函数有不同的签名式（signature），但用途相同，可以先使用Rename Method 将它们的签名式改为相同，然后 再使用 <a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Method.html">Pull Up Method</a>。</li>
+    <li>如果相应的subclass 函数有不同的签名式（signature），但用途相同，可以先使用<a href="{{site.baseurl}}/making-method-calls-simpler/Rename-Method.html">Rename Method</a> 将它们的签名式改为相同，然后 再使用 <a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Method.html">Pull Up Method</a>。</li>
 
     <li>如果相应的subclass 函数有相同的签名式，但函数本体不同，可以在superclass 中把它们的共同签名式声明为抽象函数。</li>
 
@@ -145,7 +145,7 @@ head_en: Extract Superclass
 {% endhighlight %}      
 
 <p>
-Department.getTotalAnnualCost() 和 Employee.getAnnualCost() 两个函数的用途相同，因此它们应该有相同的名称。我先运用 Rename Method 把它们的名称改为相同：
+Department.getTotalAnnualCost() 和 Employee.getAnnualCost() 两个函数的用途相同，因此它们应该有相同的名称。我先运用 <a href="{{site.baseurl}}/making-method-calls-simpler/Rename-Method.html">Rename Method</a> 把它们的名称改为相同：
 
 {% highlight java linos %}
     class Department extends Party {

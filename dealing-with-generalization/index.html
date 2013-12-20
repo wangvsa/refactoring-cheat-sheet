@@ -4,7 +4,7 @@ head_en : Dealing with Generalization
 head_zh: 处理概括关系
 ---
 <p>
-有一批重构手法专门用来处理「概括关系」（generalization ；译注：这里指的是class 继承」这档事），其中主要是将函数（methods）上下移动于继承体系之中。 <a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Field.html">Pull Up Field</a> 和 <a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Method.html">Pull Up Method</a> 都用于将class 特性向继承体系的上端移动，<a href="{{site.baseurl}}/dealing-with-generalization/Push-Down-Method.html">Push Down Method</a> 和 <a href="{{site.baseurl}}/dealing-with-generalization/Push-Down-Field.html">Push Down Field</a> 则将class 特性向继承体系的下端移动。构造函数比较难以向上拉动，因此专门有一个<a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Constructor-Body.html">Pull Up Constructor Body</a> 处理它。我们不会将构造函数往下推，因为 Replace Constructor with Factory Method 通常更管用。
+有一批重构手法专门用来处理「概括关系」（generalization ；译注：这里指的是class 继承」这档事），其中主要是将函数（methods）上下移动于继承体系之中。 <a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Field.html">Pull Up Field</a> 和 <a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Method.html">Pull Up Method</a> 都用于将class 特性向继承体系的上端移动，<a href="{{site.baseurl}}/dealing-with-generalization/Push-Down-Method.html">Push Down Method</a> 和 <a href="{{site.baseurl}}/dealing-with-generalization/Push-Down-Field.html">Push Down Field</a> 则将class 特性向继承体系的下端移动。构造函数比较难以向上拉动，因此专门有一个<a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Constructor-Body.html">Pull Up Constructor Body</a> 处理它。我们不会将构造函数往下推，因为 <a href="{{site.baseurl}}/making-method-calls-simpler/Replace-Constructor-with-Factory-Method.html">Replace Constructor with Factory Method</a> 通常更管用。
 <p>
 如果有若干函数大体上相同，只在细节上有所差异，可以使用<a href="{{site.baseurl}}/dealing-with-generalization/Form-Template-Method.html">Form Template Method</a> 将它们的共同点和不同点分开。
 <p>

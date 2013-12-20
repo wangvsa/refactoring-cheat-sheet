@@ -149,4 +149,4 @@ head_en: Separate Query from Modifier
 
 <h3>并发（Concurrency）问题</h3>
 <p>
-如果你在一个多线程系统中工作，肯定知道这样一个重要的惯用手法：在同一个动作中完成检查和赋值。这是否和Separate Query from Modifier 互相矛盾呢？ 我曾经和Doug Lea 讨论过这个问题，并得出结论：两者并不矛盾，但你需要做一 些额外工作。将查询动作和修改动作分开来仍然是很有价值的。但你需要保留第三个函数来同时做这两件事。这个「查询-修改」函数将调用各自独立的查询函数和 修改函数，并被声明为synchronized 时。如果查询函数和修改函数未被声明为synchronized ，那么你还应该将它们的可见范围限制在package 级别或private 级别。这样，你就可以拥有一个安全、同步的操作，它由两个较易理解的函数组成。 这两个较低层函数也可以用于其他场合。
+如果你在一个多线程系统中工作，肯定知道这样一个重要的惯用手法：在同一个动作中完成检查和赋值。这是否和<a href="{{site.baseurl}}/making-method-calls-simpler/Separate-Query-from-Modifier.html">Separate Query from Modifier</a> 互相矛盾呢？ 我曾经和Doug Lea 讨论过这个问题，并得出结论：两者并不矛盾，但你需要做一 些额外工作。将查询动作和修改动作分开来仍然是很有价值的。但你需要保留第三个函数来同时做这两件事。这个「查询-修改」函数将调用各自独立的查询函数和 修改函数，并被声明为synchronized 时。如果查询函数和修改函数未被声明为synchronized ，那么你还应该将它们的可见范围限制在package 级别或private 级别。这样，你就可以拥有一个安全、同步的操作，它由两个较易理解的函数组成。 这两个较低层函数也可以用于其他场合。
