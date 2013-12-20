@@ -11,7 +11,7 @@ class 中的某些特性（features）只被某些（而非全部）实体（ins
 <br>
 <h3>动机（Motivation）</h3>
 <p>
-使用<a href="{{site.baseurl}}/dealing-with-generalization/Extract-Subclass.html">Extract Subclass</a> 的主要动机是：你发现class 中的某些行为只被一部分实体用到，其他实体不需要它们。有时候这种行为上的差异是通过type code 区分 的，此时你可以使用 Replace Type Code with Subclasses 或 Replace Type Code with State/Strategy。但是，并非一定要出现了type code 才表示需要考虑使用subclass 。
+使用<a href="{{site.baseurl}}/dealing-with-generalization/Extract-Subclass.html">Extract Subclass</a> 的主要动机是：你发现class 中的某些行为只被一部分实体用到，其他实体不需要它们。有时候这种行为上的差异是通过type code 区分 的，此时你可以使用 <a href="{{site.baseurl}}/organizing-data/Replace-Type-Code-with-Subclasses.html">Replace Type Code with Subclasses</a> 或 Replace Type Code with State/Strategy。但是，并非一定要出现了type code 才表示需要考虑使用subclass 。
 <p>
 Extract Class 是<a href="{{site.baseurl}}/dealing-with-generalization/Extract-Subclass.html">Extract Subclass</a> 之外的另一种选择，两者之间的抉择其实就是委托（delegation）和继承（inheritance）之间的抉择。<a href="{{site.baseurl}}/dealing-with-generalization/Extract-Subclass.html">Extract Subclass</a> 通常更容易进行，但它也有限制：一旦对象创建完成，你无法再改变「与型别相关的行为」（class-based behavior ）。但如果使用Extract Class ，你只需插入另一个不同组件（ plugging in different components）就可以改变对象的行为。此外，subclasses 只能用以表现一组变化（one set of variations）。如果你希望class 以数种不同的方式变化，就必须使用委托（delegation）。
 </p>
@@ -36,7 +36,7 @@ Extract Class 是<a href="{{site.baseurl}}/dealing-with-generalization/Extract-S
     <li>和Extract Class 不同的是，先处理函数再处理数据，通常会简单一些。</li>
     <li>当一个public 函数被下移到subclass 后，你可能需要重新定义该函数的调用端的局部变量或参数型别，让它们改调用subclass 中的新函数。如果忘记进行这一步骤，编译器会提醒你。</li>
   </ul>
-  <li>找到所有这样的值域：它们所传达的信息如今可由继承体系自身传达（这一类值域通常是boolean 变量或type code ）。以 Self Encapsulate Field 避免直接使用这些值域，然后将它们的取值函数（getter）替换为多态常量函数（polymorphic constant methods）。所有使用这些值域的地方都应该以<a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Conditional-with-Polymorphism.html">Replace Conditional with Polymorphism</a> 重构。</li>
+  <li>找到所有这样的值域：它们所传达的信息如今可由继承体系自身传达（这一类值域通常是boolean 变量或type code ）。以 <a href="{{site.baseurl}}/organizing-data/Self-Encapsulate-Field.html">Self <a href="{{site.baseurl}}/organizing-data/Encapsulate-Field.html">Encapsulate Field</a></a> 避免直接使用这些值域，然后将它们的取值函数（getter）替换为多态常量函数（polymorphic constant methods）。所有使用这些值域的地方都应该以<a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Conditional-with-Polymorphism.html">Replace Conditional with Polymorphism</a> 重构。</li>
   <ul>
     <li>任何函数如果位于source class 之外，而又使用了上述值域的访问函数（accessors），考虑以 Move Method 将它移到source class 中， 然后再使用<a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Conditional-with-Polymorphism.html">Replace Conditional with Polymorphism</a>。</li>
   </ul>
@@ -176,7 +176,7 @@ Extract Class 是<a href="{{site.baseurl}}/dealing-with-generalization/Extract-S
 {% endhighlight %}
       
 <p>
-_isLabor 值域所传达的信息，现在已经成为继承体系的内在信息，因此我可以移 除这个值域了。最好的方式是：先使用Self Encapsulate Field，然后再修改访问函数（accessors），改用多态常量函数。所谓「多态常量函数」会在不同的subclass 实现版本中返回不同的固定值：
+_isLabor 值域所传达的信息，现在已经成为继承体系的内在信息，因此我可以移 除这个值域了。最好的方式是：先使用<a href="{{site.baseurl}}/organizing-data/Self-Encapsulate-Field.html">Self <a href="{{site.baseurl}}/organizing-data/Encapsulate-Field.html">Encapsulate Field</a></a>，然后再修改访问函数（accessors），改用多态常量函数。所谓「多态常量函数」会在不同的subclass 实现版本中返回不同的固定值：
 {% highlight java linos %}
     class JobItem...
       protected boolean isLabor() {

@@ -26,18 +26,18 @@ head_en: Change Bidirectional Association to Unidirectional
     <li>考虑有无可能不通过指针取得「被引用对象」（referred object）。如 果有可能，你就可以对取值函数（getter）使用Substitute Algorithm，从而让客户在没有指针的情况下也可以使用该取值函数。</li>
     <li>对于使用该值域的所有函数，考虑将「被引用对象」（refered object）作为引数（argument）传进去。
   </ul>
-  <li>如果客户使用了取值函数（getter），先运用Self Encapsulate Field 将「待除值域」自我封装起来，然后使用Substitute Algorithm 对付取值函数，令它不再使用该（待除）值域。然后编译、测试。
+  <li>如果客户使用了取值函数（getter），先运用<a href="{{site.baseurl}}/organizing-data/Self-Encapsulate-Field.html">Self <a href="{{site.baseurl}}/organizing-data/Encapsulate-Field.html">Encapsulate Field</a></a> 将「待除值域」自我封装起来，然后使用Substitute Algorithm 对付取值函数，令它不再使用该（待除）值域。然后编译、测试。
   <li>如果客户并未使用取值函数（getter），那就直接修改「待除值域」的所有被引用点：改以其他途径获得该值域所保存的对象。每次修改后，编译并测试。
   <li>如果已经没有任何函数使用该（待除〕值域，移除所有「对该值域的更新逻辑」，然后移除该值域。
   <ul>
-    <li>如果有许多地方对此值域赋值，先运用Self Encapsulate Field 使这些地点改用同一个设值函数（setter）。编译、测试。而后将这个 设值函数的本体清空。再编译、再测试。如果这些都可行，就可以将此值域和其设值函数，连同对设值函数的所有调用，全部移除。</li>
+    <li>如果有许多地方对此值域赋值，先运用<a href="{{site.baseurl}}/organizing-data/Self-Encapsulate-Field.html">Self <a href="{{site.baseurl}}/organizing-data/Encapsulate-Field.html">Encapsulate Field</a></a> 使这些地点改用同一个设值函数（setter）。编译、测试。而后将这个 设值函数的本体清空。再编译、再测试。如果这些都可行，就可以将此值域和其设值函数，连同对设值函数的所有调用，全部移除。</li>
   </ul>
 <li>编译，测试。
 </ul>
 
 <h3>范例（Example）</h3>
 <p>
-本例从 Change Unidirectional Association to Bidirectional 留下的代码开始进行，其中Customer和Order之间有双向关联：
+本例从 <a href="{{site.baseurl}}/organizing-data/Change-Unidirectional-Association-to-Bidirectional.html">Change Unidirectional Association to Bidirectional</a> 留下的代码开始进行，其中Customer和Order之间有双向关联：
 {% highlight java linos %}
  class Order...
    Customer getCustomer() {
@@ -117,7 +117,7 @@ head_en: Change Bidirectional Association to Unidirectional
 {% endhighlight %}
 
 <p>
-这段代码比较慢，不过确实可行。而且，在数据库环境下，如果我需要使用数据库查询语句，这段代码对系统性能的影响可能并不显著。如果Order class中有些函 数使用_customer值域，我可以实施Self Encapsulate Field 令它们转而改 用上述的getCustomer() 函数。
+这段代码比较慢，不过确实可行。而且，在数据库环境下，如果我需要使用数据库查询语句，这段代码对系统性能的影响可能并不显著。如果Order class中有些函 数使用_customer值域，我可以实施<a href="{{site.baseurl}}/organizing-data/Self-Encapsulate-Field.html">Self <a href="{{site.baseurl}}/organizing-data/Encapsulate-Field.html">Encapsulate Field</a></a> 令它们转而改 用上述的getCustomer() 函数。
 <p>
 如果我要保留上述的取值函数（getter），那么Order和Customer的关联从接口上看虽然仍是双向，但实现上已经是单向关系了。虽然我移除了反向指针，但两个classes彼此之间的依存关系（inter-dependencies）仍然存在。
 <p>

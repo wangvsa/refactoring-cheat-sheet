@@ -159,7 +159,7 @@ head_en: Extract Class
 <p> 
   面对这个问题，我有下列数种选择：
 <ol>
-  <li>允许任何对象修改TelephoneNumber 对象的任何部分。这就使得TelephoneNumber 对象成为引用对象（reference object），于是我应该考虑使用 Change Value to Reference。这种情况下，Person应该是TelephoneNumber的访问点。</li>
+  <li>允许任何对象修改TelephoneNumber 对象的任何部分。这就使得TelephoneNumber 对象成为引用对象（reference object），于是我应该考虑使用 <a href="{{site.baseurl}}/organizing-data/Change-Value-to-Reference.html">Change Value to Reference</a>。这种情况下，Person应该是TelephoneNumber的访问点。</li>
   <br>
   <li>不许任何人「不通过Person对象就修改TelephoneNumber 对象」。为了达到目的，我可以将TelephoneNumber「设为不可修改的（immutable），或为它提供一个不可修改的接口（immutable interface）。</li>
   <br>

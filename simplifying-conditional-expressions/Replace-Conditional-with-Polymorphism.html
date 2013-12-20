@@ -37,7 +37,7 @@ head_en: Replace Conditional with Polymorphism
 <p>
 使用<a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Conditional-with-Polymorphism.html">Replace Conditional with Polymorphism</a>之前，你首先必须有一个继承结构。你可能已经通过先前的重构得到了这一结构。如果还没有，现在就需要建立它。
 <p>
-要建立继承结构，你有两种选择： Replace Type Code with Subclasses 和 Replace Type Code with State/Strategy。前一种作法比较简单，因此你应该尽可能使用它。但如果你需要在对象创建好之后修改type code；就不能使用subclassing 作法，只能使用State/Strategy 模式。此，如果由于其他原因你要重构的class 已经有了subclass ，那么也得使用State/Strategy 。记住，如果若干switch 语句针对的是同一个type code；你只需针对这个type code 建立一个继承结构就行 了。
+要建立继承结构，你有两种选择： <a href="{{site.baseurl}}/organizing-data/Replace-Type-Code-with-Subclasses.html">Replace Type Code with Subclasses</a> 和 Replace Type Code with State/Strategy。前一种作法比较简单，因此你应该尽可能使用它。但如果你需要在对象创建好之后修改type code；就不能使用subclassing 作法，只能使用State/Strategy 模式。此，如果由于其他原因你要重构的class 已经有了subclass ，那么也得使用State/Strategy 。记住，如果若干switch 语句针对的是同一个type code；你只需针对这个type code 建立一个继承结构就行 了。
 <p>
 现在，可以向条件式开战了。你的目标可能是switch（case）语句，也可能是if 语句。
 <ul>

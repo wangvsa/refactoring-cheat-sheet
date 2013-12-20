@@ -9,7 +9,7 @@ head_en: Replace Record with Data Class
 
 <h3>动机（Motivation）</h3>
 <p>
-Record structures （记录型结构）是许多编程环境的共同性质。有一些理由使它们被带进面向对象程序之中：你可能面对的是一个老旧程序（ legacy program ），也可能需要通过一个传统API 来与structured record 交流，或是处理从数据库读出的 records。这些时候你就有必要创建一个interfacing class ，用以处理这些外来数据。最简单的作法就是先建立一个看起来类似外部记录（external record）的class ，以便日后将某些值域和函数搬移到这个class 之中。一个不太常见但非常令人注目的情况是：数组中的每个位置上的元素都有特定含义，这种情况下你应该使用Replace Array with Object 。
+Record structures （记录型结构）是许多编程环境的共同性质。有一些理由使它们被带进面向对象程序之中：你可能面对的是一个老旧程序（ legacy program ），也可能需要通过一个传统API 来与structured record 交流，或是处理从数据库读出的 records。这些时候你就有必要创建一个interfacing class ，用以处理这些外来数据。最简单的作法就是先建立一个看起来类似外部记录（external record）的class ，以便日后将某些值域和函数搬移到这个class 之中。一个不太常见但非常令人注目的情况是：数组中的每个位置上的元素都有特定含义，这种情况下你应该使用<a href="{{site.baseurl}}/organizing-data/Replace-Array-with-Object.html">Replace Array with Object</a> 。
 
 <h3>作法（Mechanics）</h3>
 <ul>

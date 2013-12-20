@@ -30,9 +30,9 @@ head_en: Move Field
 <br> 
 <h3>作法（Mechanics）</h3>
 <ul> 
-  <li>如果field的属性是public，首先使用Encapsulate Field 将它封装起来。</li> 
+  <li>如果field的属性是public，首先使用<a href="{{site.baseurl}}/organizing-data/Encapsulate-Field.html">Encapsulate Field</a> 将它封装起来。</li> 
   <ul>
-    <li>如果你有可能移动那些频繁访问该field的函数，或如果有许多函数访问某个field，先使用Self Encapsulate Field 也许会有帮助。</li>
+    <li>如果你有可能移动那些频繁访问该field的函数，或如果有许多函数访问某个field，先使用<a href="{{site.baseurl}}/organizing-data/Self-Encapsulate-Field.html">Self <a href="{{site.baseurl}}/organizing-data/Encapsulate-Field.html">Encapsulate Field</a></a> 也许会有帮助。</li>
   </ul>
   <li>	编译，测试。</li>
   <br>
@@ -98,7 +98,7 @@ class AccountType...
 <br>
 <h3>范例：使用Self Encapsulate（自我封装）</h3>
 <p>
-如果有很多函数已经使用了_interestRate field，我应该先运用Self Encapsulate Field：
+如果有很多函数已经使用了_interestRate field，我应该先运用<a href="{{site.baseurl}}/organizing-data/Self-Encapsulate-Field.html">Self <a href="{{site.baseurl}}/organizing-data/Encapsulate-Field.html">Encapsulate Field</a></a>：
  
 {% highlight java linos %}
  class Account...
@@ -134,4 +134,4 @@ class AccountType...
    }{% endhighlight %}
  
 <p> 
-如果以后有必要，我可以修改访问函数（accessors）的用户，让它们使用新对象。 Self Encapsulate Field 使我得以保持小步前进。如果我需要对做许多处理，保持小步前进是有帮助的。特别值得一提的是：首先使用Self Encapsulate Field 使我得以更轻松使用Move Method 将函数搬移到target class中。如果待移函数引用了field的访问函数（accessors），那么那些引用点是无须修 改的。
+如果以后有必要，我可以修改访问函数（accessors）的用户，让它们使用新对象。 <a href="{{site.baseurl}}/organizing-data/Self-Encapsulate-Field.html">Self <a href="{{site.baseurl}}/organizing-data/Encapsulate-Field.html">Encapsulate Field</a></a> 使我得以保持小步前进。如果我需要对做许多处理，保持小步前进是有帮助的。特别值得一提的是：首先使用<a href="{{site.baseurl}}/organizing-data/Self-Encapsulate-Field.html">Self <a href="{{site.baseurl}}/organizing-data/Encapsulate-Field.html">Encapsulate Field</a></a> 使我得以更轻松使用Move Method 将函数搬移到target class中。如果待移函数引用了field的访问函数（accessors），那么那些引用点是无须修 改的。

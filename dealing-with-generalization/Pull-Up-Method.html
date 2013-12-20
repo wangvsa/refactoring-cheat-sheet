@@ -35,7 +35,7 @@ head_en: Pull Up Method
   <li>在superclass 中新建一个函数，将某一个「待提升函数」的代码拷贝到其中，做适当调整，然后编译。
   <ul>
     <li>如果你使用的是一种强型（strongly typed）语言，而「待提升函数」 又调用了一个「只出现于subclass 未出现于superclass」的函数，你可以在superclass 中为被调用函数声明一个抽象函数。</li>
-    <li>如果「待提升函数」使用了 subclass 的一个值域，你可以使用<a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Field.html">Pull Up Field</a> 将该值域也提升到superclass；或者也可以先使用 Self Encapsulate Field，然后在superclass 中把取值函数（getter）声明为抽象函数。</li>
+    <li>如果「待提升函数」使用了 subclass 的一个值域，你可以使用<a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Field.html">Pull Up Field</a> 将该值域也提升到superclass；或者也可以先使用 <a href="{{site.baseurl}}/organizing-data/Self-Encapsulate-Field.html">Self <a href="{{site.baseurl}}/organizing-data/Encapsulate-Field.html">Encapsulate Field</a></a>，然后在superclass 中把取值函数（getter）声明为抽象函数。</li>
   </ul>
   <li>移除一个「待提升的subclass 函数」。</li>
   <li>编译，测试。</li>

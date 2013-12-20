@@ -25,7 +25,7 @@ head_en: Duplicate Observed Data
       <li>如果尚未有domain class，就建立一个。</li>
       <li>如果没有「从presentation class到domain class的关联性（link）， 就将domain class保存于咖presentation class的一个值域中。</li>
     </ul>
-    <li>针对GUI class内的domain data，使用Self Encapsulate Field 。</li>
+    <li>针对GUI class内的domain data，使用<a href="{{site.baseurl}}/organizing-data/Self-Encapsulate-Field.html">Self <a href="{{site.baseurl}}/organizing-data/Encapsulate-Field.html">Encapsulate Field</a></a> 。</li>
     <li>编译，测试。</li>
     <li>在事件处理函数（event handler）中加上对设值函数（setter）的调用，以「直接访问方式」（译注：亦即直接调用组件提供的相关函数）更新GUI组件。</li>
       <ul>
@@ -126,7 +126,7 @@ void calculateEnd() {
 {% endhighlight %}
 
 <p>
-我的任务就是将非视觉性的计算逻辑从GUI中分离出来。基本上这就意味将calculateLength ()和calculateEnd ()移到一个独立的domain class去。为了这一目的，我需要能够在不引用（指涉，referring）窗口类的前提下取用Start、End和 length 三个文本框的值。惟一办法就是将这些数据复制到domain class中，并保持与GUI class数据同步。这就是Duplicate Observed Data 的任务。
+我的任务就是将非视觉性的计算逻辑从GUI中分离出来。基本上这就意味将calculateLength ()和calculateEnd ()移到一个独立的domain class去。为了这一目的，我需要能够在不引用（指涉，referring）窗口类的前提下取用Start、End和 length 三个文本框的值。惟一办法就是将这些数据复制到domain class中，并保持与GUI class数据同步。这就是<a href="{{site.baseurl}}/organizing-data/Duplicate-Observed-Data.html">Duplicate Observed Data</a> 的任务。
 <p>
 截至目前我还没有一个domain class，所以我着手建立一个：
 {% highlight java linos %}
@@ -158,7 +158,7 @@ IntervalWindow class需要与此崭新的domain class建立一个关联：
 
 现在我可以编译并测试了。到目前为止我还没有做出任何真正的修改。呵呵，小心驶得万年船。
 
-接下来我把注意力转移到文本框。一如往常我每次只改动一点点。为了卖弄一下我的英语能力，我从End文本框开始。第一件要做的事就是实施 Self Encapsulate Field。文本框的更新是通过getText()和setText()两函数实现的，因此我所建立的访问函数（accessors）需要调用这两个函数：
+接下来我把注意力转移到文本框。一如往常我每次只改动一点点。为了卖弄一下我的英语能力，我从End文本框开始。第一件要做的事就是实施 <a href="{{site.baseurl}}/organizing-data/Self-Encapsulate-Field.html">Self <a href="{{site.baseurl}}/organizing-data/Encapsulate-Field.html">Encapsulate Field</a></a>。文本框的更新是通过getText()和setText()两函数实现的，因此我所建立的访问函数（accessors）需要调用这两个函数：
 {% highlight java linos %}
    //译注：class IntervalWindow...
    String getEnd() {
@@ -201,7 +201,7 @@ void calculateLength(){
     }
 {% endhighlight %}
 
-这是Self Encapsulate Field 的标准过程。然而当你处理GUI class 时，情况还更复杂些：用户可以直接（通过GUI ）修改文本框内容，不必调用setEnd() 。 因此我需要在GUI class 的事件处理函数中加上对setEnd() 的调用。这个动作把文本框设定为其当前值。当然，这没带来什么影响，但是通过这样的方式，我 们可以确保用户的输入的确是通过设值函数（setter）进行的：
+这是<a href="{{site.baseurl}}/organizing-data/Self-Encapsulate-Field.html">Self <a href="{{site.baseurl}}/organizing-data/Encapsulate-Field.html">Encapsulate Field</a></a> 的标准过程。然而当你处理GUI class 时，情况还更复杂些：用户可以直接（通过GUI ）修改文本框内容，不必调用setEnd() 。 因此我需要在GUI class 的事件处理函数中加上对setEnd() 的调用。这个动作把文本框设定为其当前值。当然，这没带来什么影响，但是通过这样的方式，我 们可以确保用户的输入的确是通过设值函数（setter）进行的：
 {% highlight java linos %}
    void EndField_FocusLost(java.awt.event.FocusEvent event) {
        setEnd(_endField.getText());        //译注：注意对以下对此行的讨论
@@ -274,4 +274,4 @@ void calculateLength(){
 <p>
 使用事件监昕器（Event Listeners）
 <p>
-如果你使用事件监听器（event Listener）而不是Observer/Observable模式，仍然可以实施Duplicate Observed Data。这种情况下，你需要在domain model中建立一个listener class和一个event class (如果你不在意依存关系的话，也可以使用AWT class）。然后，你需要对domain object注册listeners，就像前例对observable对象注册observes一样。每当domain object发生变化（类似上例的update()函数被调用），就向listeners发送一个事件（event）。IntervalWindow class可以利用一个inner class （内嵌类）来实现监听器接口（listener interface），并在适 当时候调用适当的update()函数。
+如果你使用事件监听器（event Listener）而不是Observer/Observable模式，仍然可以实施<a href="{{site.baseurl}}/organizing-data/Duplicate-Observed-Data.html">Duplicate Observed Data</a>。这种情况下，你需要在domain model中建立一个listener class和一个event class (如果你不在意依存关系的话，也可以使用AWT class）。然后，你需要对domain object注册listeners，就像前例对observable对象注册observes一样。每当domain object发生变化（类似上例的update()函数被调用），就向listeners发送一个事件（event）。IntervalWindow class可以利用一个inner class （内嵌类）来实现监听器接口（listener interface），并在适 当时候调用适当的update()函数。

@@ -24,7 +24,7 @@ static Employee create(int type) {
 <p>
 使用<a href="{{site.baseurl}}/making-method-calls-simpler/Replace-Constructor-with-Factory-Method.html">Replace Constructor with Factory Method</a> 的最显而易见的动机就是在subclassing 过程中以factory method 以取代type code。你可能常常需要根据type code 创建相应的对象，现在，创建名单中还得加上subclasses，那些subclasses 也是根据type code 来创建。然而由于构造函数只能返回「被索求之对象」，因此你需要将构造函数替换为Factory Method [Gang of Four]。
 <p>
-此外，如果构造函数的功能不能满足你的需要，也可以使用factory method 来代替它。Factory method 也是Change Value to Reference 的基础。你也可以令你的factory method 根据参数的个数和型别，选择不同的创建行为。
+此外，如果构造函数的功能不能满足你的需要，也可以使用factory method 来代替它。Factory method 也是<a href="{{site.baseurl}}/organizing-data/Change-Value-to-Reference.html">Change Value to Reference</a> 的基础。你也可以令你的factory method 根据参数的个数和型别，选择不同的创建行为。
 
 <h3>作法（Mechanics）</h3>
 <ul>
@@ -73,7 +73,7 @@ class Employee...
 <h3>范例：根据字符串（String）创建subclass 对象</h3>
 
 <p>
-迄今为止，我还没有获得什么实质收获。目前的好处在于：我把「对象创建之调用 动作的接收者」和「被创建之对象所属的class 」分开了。如果我随后使用Replace Type Code with Subclasses 把type code 转换为Employee 的subclass ，我就可以运用factory method ，将这些subclass 对用户隐藏起来：
+迄今为止，我还没有获得什么实质收获。目前的好处在于：我把「对象创建之调用 动作的接收者」和「被创建之对象所属的class 」分开了。如果我随后使用<a href="{{site.baseurl}}/organizing-data/Replace-Type-Code-with-Subclasses.html">Replace Type Code with Subclasses</a> 把type code 转换为Employee 的subclass ，我就可以运用factory method ，将这些subclass 对用户隐藏起来：
 {% highlight java linos %}
   static Employee create(int type) {
       switch (type) {

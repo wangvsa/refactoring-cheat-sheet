@@ -47,7 +47,7 @@ links_10 = [
 ]
 basedir_10 = '{{site.baseurl}}/' + 'making-method-calls-simpler/'
 
-links = [
+links_9 = [
 'Decompose Conditional',
 'Consolidate Conditional Expression',
 'Consolidate Duplicate Conditional Fragments',
@@ -57,7 +57,27 @@ links = [
 'Introduce Null ObjectNull',
 'Introduce Assertion'
 ]
-basedir = '{{site.baseurl}}/' + 'simplifying-conditional-expressions/'
+basedir_9 = '{{site.baseurl}}/' + 'simplifying-conditional-expressions/'
+
+links = [
+'Self Encapsulate Field',
+'Replace Data Value with Object',
+'Change Value to Reference',
+'Change Reference to Value',
+'Replace Array with Object',
+'Duplicate Observed Data',
+'Change Unidirectional Association to Bidirectional',
+'Change Bidirectional Association to Unidirectional',
+'Replace Magic Number with Symbolic Constant',
+'Encapsulate Field',
+'Encapsulate Collection',
+'Replace Record with Data Class',
+'Replace Type Code with Class',
+'Replace Type Code with Subclasses',
+#'Replace Type Code with State/Strategy',
+'Replace Subclass with Fields'
+]
+basedir = '{{site.baseurl}}/' + 'organizing-data/'
 
 targetDirs = [
 'bad-smells-in-code/',

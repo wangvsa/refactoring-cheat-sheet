@@ -22,7 +22,7 @@ head_en: Replace Data Value with Object
   <li>如果source class构造函数中提及这个「待替换值域」（多半是赋值动作），我们就修改构造函数，令它改用新的构造函数来对值域进行赋值动作。</li>
   <li>修改source class中「待替换值域」的设值函数（setter），令它为新class创建一个实体。</li>
   <li>编译，测试。</li>
-  <li>现在，你有可能需要对新class使用 Change Value to Reference。</li>
+  <li>现在，你有可能需要对新class使用 <a href="{{site.baseurl}}/organizing-data/Change-Value-to-Reference.html">Change Value to Reference</a>。</li>
 </ul>
 
 <h3>范例（Example）</h3>
@@ -106,4 +106,4 @@ Order class的客户代码可能像下面这样：
 <p>
 后续的其他重构也许会让我添加新的、「接受既有Customer对象作为参数」的构造函数和设值函数。
 <p>
-本次重构到此为止。但是这个案例和其他很多案例一样，还需要一个后续步骤。如果想在Customer对象中加入信用等级、地址之类的其他信息，现在还做不到，因为目前的Customer还是被作为实值对象（value object）来对待，每个Order对象都拥有自己的Customer对象。为了给Customer class加上信用等级、地址之类的属性，我必须运用 Change Value to Reference，这样一来属于同一客户的所有Order对象就可以共享同一个Customer对象。马上你就可以看到这个例子了。
+本次重构到此为止。但是这个案例和其他很多案例一样，还需要一个后续步骤。如果想在Customer对象中加入信用等级、地址之类的其他信息，现在还做不到，因为目前的Customer还是被作为实值对象（value object）来对待，每个Order对象都拥有自己的Customer对象。为了给Customer class加上信用等级、地址之类的属性，我必须运用 <a href="{{site.baseurl}}/organizing-data/Change-Value-to-Reference.html">Change Value to Reference</a>，这样一来属于同一客户的所有Order对象就可以共享同一个Customer对象。马上你就可以看到这个例子了。

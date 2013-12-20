@@ -10,7 +10,7 @@ head_en: Replace Type Code with State or Strategy
 
 <h3>动机（Motivation）</h3>
 <p>
-本项重构和Replace Type Code with Subclasses 很相似，但如果「type code 的值在对象生命期中发生变化」或「其他原因使得宿主类不能被subclassing 」，你也可以使用本重构。本重构使用State 模式或Stategy 模式[Gang of Four]。
+本项重构和<a href="{{site.baseurl}}/organizing-data/Replace-Type-Code-with-Subclasses.html">Replace Type Code with Subclasses</a> 很相似，但如果「type code 的值在对象生命期中发生变化」或「其他原因使得宿主类不能被subclassing 」，你也可以使用本重构。本重构使用State 模式或Stategy 模式[Gang of Four]。
 <p>
 State 模式和Stategy 模式非常相似，因此无论你选择其中哪一个，重构过程都是相同的。「选择哪一个模式」并非问题关键所在，你只需要选择更适合特定情境的模式就行了。如果你打算在完成本项重构之后再以 <a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Conditional-with-Polymorphism.html">Replace Conditional with Polymorphism</a> 简化一个算法，那么选择Stategy 模式比较合适；如果你打算搬移与状态相关（state-specific）的数据，而且你把新建对象视为一种变迁状态 （changing state），就应该选择使用State 模式。
 
@@ -65,7 +65,7 @@ State 模式和Stategy 模式非常相似，因此无论你选择其中哪一个
 {% endhighlight %}
  
 <p>
-假设这是一家激情四溢、积极进取的公司，他们可以将表现出色的工程师擢升为经理。因此，对象的type code 是可变的，所以我不能使用subclassing 方式来处理type code 。和以前一样，我的第一步还是使用Self Encapsulate Field 将表示type code 的值域自我封装起来：
+假设这是一家激情四溢、积极进取的公司，他们可以将表现出色的工程师擢升为经理。因此，对象的type code 是可变的，所以我不能使用subclassing 方式来处理type code 。和以前一样，我的第一步还是使用<a href="{{site.baseurl}}/organizing-data/Self-Encapsulate-Field.html">Self <a href="{{site.baseurl}}/organizing-data/Encapsulate-Field.html">Encapsulate Field</a></a> 将表示type code 的值域自我封装起来：
 {% highlight java linos %}
    Employee (int type) {
        setType (type);

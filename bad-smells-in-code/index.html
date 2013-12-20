@@ -97,7 +97,7 @@ title: Bad Smells in Code
         <p>
         和「拥有太多instance变量」一样，一个class如果拥有太多代码，往往也适合使用Extract Class和<a href="{{site.baseurl}}/dealing-with-generalization/Extract-Subclass.html">Extract Subclass</a>。这里有个有用技巧：先确定客户端如何使用它们，然后运用<a href="{{site.baseurl}}/dealing-with-generalization/Extract-Interface.html">Extract Interface</a>为每一种使用方式提炼出一个接口。这或许可以帮助你看清楚如何分解这个class。 
         <p>
-        如果你的Large class是个GUI class，你可能需要把数据和行为移到一个独立的领域对象（domain objec）去。你可能需要两边各保留一些重复数据，并令这些数据同步（sync.）。Duplicate Observed Data告诉你该怎么做。这种情况下，特别是如果你使用旧式Abstract Windows Toolkit (AWT)组件，你可以采用这种方式去掉GUI class并代以Swing组件。 
+        如果你的Large class是个GUI class，你可能需要把数据和行为移到一个独立的领域对象（domain objec）去。你可能需要两边各保留一些重复数据，并令这些数据同步（sync.）。<a href="{{site.baseurl}}/organizing-data/Duplicate-Observed-Data.html">Duplicate Observed Data</a>告诉你该怎么做。这种情况下，特别是如果你使用旧式Abstract Windows Toolkit (AWT)组件，你可以采用这种方式去掉GUI class并代以Swing组件。 
       <h2 class="content-subhead"><a name="long-parameter-list"/>Long Parameter List（过长参数列）</h2>
         <p>
         刚开始学习编程的时候，老师教我们：把函数所需的所有东西都以参数传递进去。这可以理解，因为除此之外就只能选择全局数据，而全局数据是邪恶的东西。对象 技术改变了这一情况，因为如果你手上没有你所需要的东西，总可以叫另一个对象给你。因此，有了对象，你就不必把函数需要的所有东西都以参数传递给它了，你只需传给它足够的东西、让函数能从中获得自己需要的所有东西就行了。函数需要的东西多半可以在函数的宿主类（host class）中找到。面向对象程序中的函数，其参数列通常比在传统程序中短得多。 
@@ -139,14 +139,14 @@ title: Bad Smells in Code
         <p>
         对象的一个极具价值的东西是：它们模糊（甚至打破）了横亘于基本数据和体积较大的classes之间的界限。你可以轻松编写出一些与语言内置（基本〕型别无异的小型classes。例如Java就以基本型别表示数值，而以class表示字符串和日期――这 两个型别在其他许多编程环境中都以基本型别表现。 
         <p>
-        对象技术的新手通常不愿意在小任务上运用小对象――像是结合数值和币别的 money classes 、含一个起始值和一个结束值的range classes、电话号码或邮政编码（ZIP） 等等的特殊strings。你可以运用Replace Data Value with Object 将原本单独存在的数据值替换为对象，从而走出传统的洞窟，进入炙手可热的对象世界。如果欲替换之数据值是 type code（型别码），而它并不影响行为，你可以运用 Replace Type Code with Class 将它换掉。如果你有相依于此 type code的条件式，可运用 Replace Type Code with Subclasses 或 Replace Type Code with State/Strategy 加以处理。 
+        对象技术的新手通常不愿意在小任务上运用小对象――像是结合数值和币别的 money classes 、含一个起始值和一个结束值的range classes、电话号码或邮政编码（ZIP） 等等的特殊strings。你可以运用<a href="{{site.baseurl}}/organizing-data/Replace-Data-Value-with-Object.html">Replace Data Value with Object</a> 将原本单独存在的数据值替换为对象，从而走出传统的洞窟，进入炙手可热的对象世界。如果欲替换之数据值是 type code（型别码），而它并不影响行为，你可以运用 <a href="{{site.baseurl}}/organizing-data/Replace-Type-Code-with-Class.html">Replace Type Code with Class</a> 将它换掉。如果你有相依于此 type code的条件式，可运用 <a href="{{site.baseurl}}/organizing-data/Replace-Type-Code-with-Subclasses.html">Replace Type Code with Subclasses</a> 或 Replace Type Code with State/Strategy 加以处理。 
         <p>
-        如果你有一组应该总是被放在一起的值域（fields），可运用Extract Class。 如果你在参数列中看到基本型数据，不妨试试<a href="{{site.baseurl}}/making-method-calls-simpler/Introduce-Parameter-Object.html">Introduce Parameter Object</a>。 如果你发现自己正从array中挑选数据，可运用Replace Array with Object。
+        如果你有一组应该总是被放在一起的值域（fields），可运用Extract Class。 如果你在参数列中看到基本型数据，不妨试试<a href="{{site.baseurl}}/making-method-calls-simpler/Introduce-Parameter-Object.html">Introduce Parameter Object</a>。 如果你发现自己正从array中挑选数据，可运用<a href="{{site.baseurl}}/organizing-data/Replace-Array-with-Object.html">Replace Array with Object</a>。
       <h2 class="content-subhead"><a name="switch-statements"/>Switch Statements（switch惊悚现身）</h2>
         <p>
         面向对象程序的一个最明显特征就是：少用switch (或case）语句。从本质上说， switch语句的问题在于重复（duplication）。你常会发现同样的switch语句散布 于不同地点。如果要为它添加一个新的子句，你必须找到所有switch语句 并修改它们。面向对象中的多态（polymorphism ）概念可为此带来优雅的解决办法。 
         <p>
-        大多数时候，一看到switch语句你就应该考虑以「多态」来替换它。问题是态 该出现在哪儿？switch语句常常根据 type code（型别码）进行选择，你要的是「与 该 type code相关的函数或class」。所以你应该使用Extract Method 将switch语句提炼到一个独立函数中，再以Move Method 将它搬移到需要多态性的那个class里头。此时你必须决定是否使用 Replace Type Code with Subclasses 或 Replace Type Code with State/Strategy。一旦这样完成继承结构之后， 你就可以运用<a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Conditional-with-Polymorphism.html">Replace Conditional with Polymorphism</a>了。 
+        大多数时候，一看到switch语句你就应该考虑以「多态」来替换它。问题是态 该出现在哪儿？switch语句常常根据 type code（型别码）进行选择，你要的是「与 该 type code相关的函数或class」。所以你应该使用Extract Method 将switch语句提炼到一个独立函数中，再以Move Method 将它搬移到需要多态性的那个class里头。此时你必须决定是否使用 <a href="{{site.baseurl}}/organizing-data/Replace-Type-Code-with-Subclasses.html">Replace Type Code with Subclasses</a> 或 Replace Type Code with State/Strategy。一旦这样完成继承结构之后， 你就可以运用<a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Conditional-with-Polymorphism.html">Replace Conditional with Polymorphism</a>了。 
         <p>
         如果你只是在单一函数中有些选择事例，而你并不想改动它们，那么「多态」就有 点杀鸡用牛刀了。这种情况下<a href="{{site.baseurl}}/making-method-calls-simpler/Replace-Parameter-with-Explicit-Methods.html">Replace Parameter with Explicit Methods</a>是个不错的选择。如果你的选择条件之一是null，可以试试Introduce Null Object。)
       <h2 class="content-subhead"><a name="parallel-inheritance-hierarchies"/>Parallel Inheritance Hierarchies（平行继承体系）</h2>
@@ -188,7 +188,7 @@ title: Bad Smells in Code
         <p>
         有时你会看到两个classes过于亲密，花费太多时间去探究彼此的private成分。如果这发生在两个「人」之间，我们不必做卫道之士；但对于classes，我们希望它们严守清规。 
         <p>
-        就像古代恋人一样，过份狎昵的classes必须拆散。你可以采用 Move Method 和 Move Field 帮它们划清界线，从而减少狎昵行径。你也可以看看是否运用 Change Bidirectional Association to Unidirectional 让其中一个class对另一个斩断情丝。如果两个实在是情投意合，可以运用Extract Class 把两者共同点提炼到一个安全地点，让它们坦荡地使用这个新class。或者也可以尝试运用 Hide Delegate 让另一个class来为它们传递相思情。 
+        就像古代恋人一样，过份狎昵的classes必须拆散。你可以采用 Move Method 和 Move Field 帮它们划清界线，从而减少狎昵行径。你也可以看看是否运用 <a href="{{site.baseurl}}/organizing-data/Change-Bidirectional-Association-to-Unidirectional.html">Change Bidirectional Association to Unidirectional</a> 让其中一个class对另一个斩断情丝。如果两个实在是情投意合，可以运用Extract Class 把两者共同点提炼到一个安全地点，让它们坦荡地使用这个新class。或者也可以尝试运用 Hide Delegate 让另一个class来为它们传递相思情。 
         <p>
         继承（inheritance）往往造成过度亲密，因为subclass对superclass的了解总是超过superclass的主观愿望。如果你觉得该让这个孩子独自生活了，请运用<a href="{{site.baseurl}}/dealing-with-generalization/Replace-Delegation-with-Inheritance.html">Replace Delegation with Inheritance</a> 让它离开继承体系。 
       <h2 class="content-subhead"><a name="alternative-classes-with-different-interfaces"/>Alternative Classes with Different Interfaces（异曲同工的类）</h2>
@@ -203,7 +203,7 @@ title: Bad Smells in Code
         幸好我们有两个专门应付这种情况的工具。如果你只想修改library classes内的一两 个函数，可以运用 Introduce Foreign Method；如果想要添加一大堆额外行为，就得运用Introduce Local Extension。 
       <h2 class="content-subhead"><a name="data-class"/>Data Class（纯稚的数据类）</h2>
         <p>
-        所谓Data Class是指：它们拥有一些值域（fields），以及用于访问（读写〕这些值域的函数，除此之外一无长物。这样的classes只是一种「不会说话的数据容器」，它们几乎一定被其他classes过份细琐地操控着。这些classes早期可能拥有public值域，果真如此你应该在别人注意到它们之前，立刻运用Encapsulate Field 将它们封装起来。如果这些classes内含容器类的值域（collection fields），你应该 检査它们是不是得到了恰当的封装；如果没有，就运用 Encapsulate Collection 把它们封装起来。对于那些不该被其他classes修改的值域，请运用 <a href="{{site.baseurl}}/making-method-calls-simpler/Remove-Setting-Method.html">Remove Setting Method</a>。
+        所谓Data Class是指：它们拥有一些值域（fields），以及用于访问（读写〕这些值域的函数，除此之外一无长物。这样的classes只是一种「不会说话的数据容器」，它们几乎一定被其他classes过份细琐地操控着。这些classes早期可能拥有public值域，果真如此你应该在别人注意到它们之前，立刻运用<a href="{{site.baseurl}}/organizing-data/Encapsulate-Field.html">Encapsulate Field</a> 将它们封装起来。如果这些classes内含容器类的值域（collection fields），你应该 检査它们是不是得到了恰当的封装；如果没有，就运用 <a href="{{site.baseurl}}/organizing-data/Encapsulate-Collection.html">Encapsulate Collection</a> 把它们封装起来。对于那些不该被其他classes修改的值域，请运用 <a href="{{site.baseurl}}/making-method-calls-simpler/Remove-Setting-Method.html">Remove Setting Method</a>。
         <p>
         然后，找出这些「取值/设值」函数（getting and setting methods）被其他classes运用的地点。尝试以Move Method 把那些调用行为搬移到Data Class来。如果无法搬移整个函数，就运用 Extract Method 产生一个可被搬移的函数。不久之后你就可以运用<a href="{{site.baseurl}}/making-method-calls-simpler/Hide-Method.html">Hide Method</a> 把这些「取值/设值」函数隐藏起来了。
         <p>
