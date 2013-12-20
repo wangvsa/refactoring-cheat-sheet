@@ -7,7 +7,7 @@ http://wangchen.info/refactoring-cheat-sheet/
 ###关于：
 拜读《重构》一书后受益匪浅，网络上有pdf、chm版本，但是对于代码的高亮以及各个章节的跳转不是十分方便，
 于是我基于《重构》一书的6～12章制作了这个网站，目的在于迅速的浏览重构方法，也可用于新手的入门。
-目录使用purecss框架设计，方便移动设备浏览。
+目录使用[purecss](http://purecss.io)框架设计，方便移动设备浏览。
 
 ###贡献：
 如果您有什么意见建议或者发现了bug，欢迎在[issues](https://github.com/wangvsa/refactoring-cheat-sheet/issues)提出 
