@@ -16,6 +16,7 @@ http://wangchen.info/refactoring-cheat-sheet/
 如果您觉得这个项目有用并且希望参与完善项目，欢迎您*Pull Request*
 
 ###TO DO LIST：
+- 设计主界面
 - 设计超链接css
 - 设计code block的css
 - 设计quote block的css
