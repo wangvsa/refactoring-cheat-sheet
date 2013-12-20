@@ -38,7 +38,7 @@ class常常会使用群集（collection，可能是array、list、set或vector�
     </ul>
   </li>
   <li>编译，测试。</li>
-  <li>找出取值函数（getter）的所有用户，从中找出应该存在于「群集之宿主对象（host object）内的代码。运用 Extract Method 和 Move Method 将这些代码移到宿主对象去。</li>
+  <li>找出取值函数（getter）的所有用户，从中找出应该存在于「群集之宿主对象（host object）内的代码。运用 Extract Method 和 <a href="{{site.baseurl}}/moving-features-between-objects/Move-Method.html">Move Method</a> 将这些代码移到宿主对象去。</li>
 </ul>
 
 <p>
@@ -230,7 +230,7 @@ Java 2拥有一组全新群集（collections）——并非仅仅加入一些新
 {% endhighlight %}
 
 <p>
-然后使用Move Method 将这个函数搬移到Person中：
+然后使用<a href="{{site.baseurl}}/moving-features-between-objects/Move-Method.html">Move Method</a> 将这个函数搬移到Person中：
 {% highlight java linos %}
  class Person...
    int numberOfAdvancedCourses() {

@@ -59,7 +59,7 @@ links_9 = [
 ]
 basedir_9 = '{{site.baseurl}}/' + 'simplifying-conditional-expressions/'
 
-links = [
+links_8 = [
 'Self Encapsulate Field',
 'Replace Data Value with Object',
 'Change Value to Reference',
@@ -77,7 +77,20 @@ links = [
 #'Replace Type Code with State/Strategy',
 'Replace Subclass with Fields'
 ]
-basedir = '{{site.baseurl}}/' + 'organizing-data/'
+basedir_8 = '{{site.baseurl}}/' + 'organizing-data/'
+
+links = [
+'Move Method',
+'Move Field',
+'Extract Class',
+'Inline Class',
+'Hide Delegate',
+'Remove Middle Man',
+'Introduce Foreign Method',
+'Introduce Local Extension'
+]
+basedir = '{{site.baseurl}}/' + 'moving-features-between-objects/'
+
 
 targetDirs = [
 'bad-smells-in-code/',

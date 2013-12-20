@@ -30,7 +30,7 @@ head_en: Introduce Foreign Method
 <p> 
 如果client class只使用这项功能一次，那么额外编码工作没什么大不了，甚至可能根本不需要原本提供服务的那个class。然而如果你需要多次使用这个函数，你就得不断重复这些代码。还记得吗，重复的代码是软件万恶之源。这些重复性代码应该被抽出来放进同一个函数中。进行本项重构时，如果你以外加函数实现一项功能， 那就是一个明确信号：这个函数原本应该在提供服务的（server）class中加以实现。
 <p> 
-如果你发现自己为一个server class建立了大量外加函数，或如果你发现有许多classes都需要同样的外加函数，你就不应该再使用本项重构，而应该使用 Introduce Local Extension。
+如果你发现自己为一个server class建立了大量外加函数，或如果你发现有许多classes都需要同样的外加函数，你就不应该再使用本项重构，而应该使用 <a href="{{site.baseurl}}/moving-features-between-objects/Introduce-Local-Extension.html">Introduce Local Extension</a>。
 <p> 
 但是不要忘记：外加函数终归是权宜之计。如果有可能，你仍然应该将这些函数搬移到它们的理想家园。如果代码拥有权（code ownership）是个需要考量的问题， 就把外加函数交给server class的拥有者，请他帮你在此server class中实现这个函数。
 </p>

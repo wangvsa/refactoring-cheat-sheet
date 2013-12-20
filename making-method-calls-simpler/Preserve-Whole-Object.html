@@ -27,7 +27,7 @@ head_en: Preserve Whole Object
 <p>
 我还听过另一种不使用<a href="{{site.baseurl}}/making-method-calls-simpler/Preserve-Whole-Object.html">Preserve Whole Object</a> 的理由：如果被调用函数只需要「参数对象」的其中一项数值，那么只传递那个数值会更好。我并不认同这种观点，因为传递一项数值和传递一个对象，至少在代码清晰度上是等价的〔当然对于pass by value（传值）参数来说，性能上可能有所差异）。更重要的考量应该放在「对象之间的依存关系」上。
 <p>
-如果被调用函数使用了 [来自另一个对象的很多项数据」，这可能意味该函数实际上应该被定义在「那些数据所属的对象」中。所以，考虑<a href="{{site.baseurl}}/making-method-calls-simpler/Preserve-Whole-Object.html">Preserve Whole Object</a> 的同时，你也应该考虑Move Method。
+如果被调用函数使用了 [来自另一个对象的很多项数据」，这可能意味该函数实际上应该被定义在「那些数据所属的对象」中。所以，考虑<a href="{{site.baseurl}}/making-method-calls-simpler/Preserve-Whole-Object.html">Preserve Whole Object</a> 的同时，你也应该考虑<a href="{{site.baseurl}}/moving-features-between-objects/Move-Method.html">Move Method</a>。
 <p>
 运用本项重构之前，你可能还没有定义一个完整对象。那么你就应该先使用<a href="{{site.baseurl}}/making-method-calls-simpler/Introduce-Parameter-Object.html">Introduce Parameter Object</a>。
 <p>

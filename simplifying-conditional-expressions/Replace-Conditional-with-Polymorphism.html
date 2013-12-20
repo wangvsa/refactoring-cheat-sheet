@@ -42,7 +42,7 @@ head_en: Replace Conditional with Polymorphism
 现在，可以向条件式开战了。你的目标可能是switch（case）语句，也可能是if 语句。
 <ul>
   <li>如果要处理的条件式是一个更大函数中的一部分，首先对条件式进行分析，然后使用Extract Method 将它提炼到一个独立函数去。</li>
-  <li>如果有必要，使用Move Method 将条件式放置到继承结构的顶端。</li>
+  <li>如果有必要，使用<a href="{{site.baseurl}}/moving-features-between-objects/Move-Method.html">Move Method</a> 将条件式放置到继承结构的顶端。</li>
   <li>任选一个subclass ，在其中建立一个函数，使之覆写superclass 中容纳条件式的那个函数。将「与subclass 相关的条件式分支」拷贝到新建函数中，并对它进行适当调整。
     <ul>
       <li>为了顺利进行这一步骤，你可能需要将superclass 中的某些private 值域声明为protected 。</li>

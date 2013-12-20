@@ -34,7 +34,7 @@ head_en: Convert Procedural Design to Objects
   <ul>
     <li>你可以把提炼所得的class 做成一个Singleton（单件；为了方便重新初始化），或是把提炼所得的函数声明为static。</li>
   </ul>
-  <li>针对每一个长长的程序（procedure），实施Extract Method 及其他相关重构，将它分解。再以Move Method 将分解后的函数分别移到它所相关的哑数据类（dump data class）中。</li>
+  <li>针对每一个长长的程序（procedure），实施Extract Method 及其他相关重构，将它分解。再以<a href="{{site.baseurl}}/moving-features-between-objects/Move-Method.html">Move Method</a> 将分解后的函数分别移到它所相关的哑数据类（dump data class）中。</li>
   <li>重复上述步骤，直到原始中的所有函数都被移除。如果原始是一个完全过程化（purely procedural〕的class ，将它拿掉将大快人心。</li>
 </ul>
 

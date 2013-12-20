@@ -22,7 +22,7 @@ head_en: Encapsulate Field
 <p>
 public 数据被看做是一种不好的作法，因为这样会降低程序的模块化程度（modularity）。如果数据和使用该数据的行为被集中在一起，一旦情况发生变化，代码的修改就会比较简单，因为需要修改的代码都集中于同一块地方，而不是星罗棋布地散落在整个程序中。
 <p>
-<a href="{{site.baseurl}}/organizing-data/Encapsulate-Field.html">Encapsulate Field</a>是封装过程的第一步。通过这项重构手法，你可以将数据隐藏起来，并提供相应的访问函数（accessors）。但它毕竟只是第一步。如果一个class除了访问函数（accessors）外不能提供其他行为，它终究只是一个dumb class (哑类〕。这样的class并不能获得对象技术的优势，而你知道，浪费任何一个对象都是很不好的。实施<a href="{{site.baseurl}}/organizing-data/Encapsulate-Field.html">Encapsulate Field</a>之后，我会尝试寻找那些使用「新建 访问函数」的函数，看看是否可以通过简单的Move Method 轻快地将它们移到新对象去。
+<a href="{{site.baseurl}}/organizing-data/Encapsulate-Field.html">Encapsulate Field</a>是封装过程的第一步。通过这项重构手法，你可以将数据隐藏起来，并提供相应的访问函数（accessors）。但它毕竟只是第一步。如果一个class除了访问函数（accessors）外不能提供其他行为，它终究只是一个dumb class (哑类〕。这样的class并不能获得对象技术的优势，而你知道，浪费任何一个对象都是很不好的。实施<a href="{{site.baseurl}}/organizing-data/Encapsulate-Field.html">Encapsulate Field</a>之后，我会尝试寻找那些使用「新建 访问函数」的函数，看看是否可以通过简单的<a href="{{site.baseurl}}/moving-features-between-objects/Move-Method.html">Move Method</a> 轻快地将它们移到新对象去。
 
 <h3>作法（Mechanics）</h3>
 <ul>

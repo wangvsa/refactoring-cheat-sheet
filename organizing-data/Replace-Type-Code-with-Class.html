@@ -17,7 +17,7 @@ class 之中有一个数值型别码（ numeric type code ），但它并不影�
 <p>
 但是，在使用<a href="{{site.baseurl}}/organizing-data/Replace-Type-Code-with-Class.html">Replace Type Code with Class</a> 之前，你应该先考虑type code 的其他替换方式。只有当type code 是纯粹数据时（也就是type code 不会在switch 语句中引起行为变化时），你才能以class 来取代它。Java 只能以整数作为switch 语句的「转辙」依据，不能使用任意class ，因此那种情况下不能够以class 替换type code 。更重要的是：任何switch 语句都应该运用 <a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Conditional-with-Polymorphism.html">Replace Conditional with Polymorphism</a> 去掉。为了进行那样的重构，你首先必须运用 <a href="{{site.baseurl}}/organizing-data/Replace-Type-Code-with-Subclasses.html">Replace Type Code with Subclasses</a> 或Replace Type Code with State/Strategy 把type code处理掉。
 <p>
-即使一个type code 不会因其数值的不同而引起行为上的差异，宿主类中的某些行为还是有可能更适合置放于type code class 中，因此你还应该留意是否有必要使用Move Method 将一两个函数搬过去。
+即使一个type code 不会因其数值的不同而引起行为上的差异，宿主类中的某些行为还是有可能更适合置放于type code class 中，因此你还应该留意是否有必要使用<a href="{{site.baseurl}}/moving-features-between-objects/Move-Method.html">Move Method</a> 将一两个函数搬过去。
 
 
 <h3>作法（Mechanics）</h3>

@@ -13,7 +13,7 @@ head_en: Inline Class
 <br>
 <h3>动机（Motivation）</h3>
 <p> 
-Inline Class正好与Extract Class 相反。如果一个class不再承担足够 责任、不再有单独存在的理由〔这通常是因为此前的重构动作移走了这个class的 责任），我就会挑选这一「萎缩class」的最频繁用户（也是个class），以Inline Class手法将「妻缩class」塞进去。
+<a href="{{site.baseurl}}/moving-features-between-objects/Inline-Class.html">Inline Class</a>正好与<a href="{{site.baseurl}}/moving-features-between-objects/Extract-Class.html">Extract Class</a> 相反。如果一个class不再承担足够 责任、不再有单独存在的理由〔这通常是因为此前的重构动作移走了这个class的 责任），我就会挑选这一「萎缩class」的最频繁用户（也是个class），以<a href="{{site.baseurl}}/moving-features-between-objects/Inline-Class.html">Inline Class</a>手法将「妻缩class」塞进去。
 </p>
 <br>
 <h3>作法（Mechanics）</h3>
@@ -29,7 +29,7 @@ Inline Class正好与Extract Class 相反。如果一个class不再承担足够 
   </ul> 
   <li>编译，测试。</li>
   <br>
-  <li>运用Move Method 和 Move Field ，将source class的特性全部搬移至absorbing class。</li>
+  <li>运用<a href="{{site.baseurl}}/moving-features-between-objects/Move-Method.html">Move Method</a> 和 <a href="{{site.baseurl}}/moving-features-between-objects/Move-Field.html">Move Field</a> ，将source class的特性全部搬移至absorbing class。</li>
   <br>
   <li>为source class举行一个简单的丧礼。</li>
 </ul>
@@ -108,5 +108,5 @@ Inline Class正好与Extract Class 相反。如果一个class不再承担足够 
 {% endhighlight %}
 
 <p>
-现在，我可以持续使用Move Method 和 Move Field ，直到TelephoneNumber不复存在。
+现在，我可以持续使用<a href="{{site.baseurl}}/moving-features-between-objects/Move-Method.html">Move Method</a> 和 <a href="{{site.baseurl}}/moving-features-between-objects/Move-Field.html">Move Field</a> ，直到TelephoneNumber不复存在。
  

@@ -13,9 +13,9 @@ head_en: Remove Middle Man
 <br>
 <h3>动机（Motivation）</h3>
 <p> 
-在Hide Delegate的「动机」栏，我谈到了「封装 delegated object（受托对 象）」的好处。但是这层封装也是要付出代价的，它的代价就是：每当客户要使用 delegate（受托类）的新特性时，你就必须在server 端添加一个简单委托函数。随着delegate的特性（功能）愈来愈多，这一过程会让你痛苦不己。server 完全变成了一 个「中间人」，此时你就应该让客户直接调用delegate。
+在<a href="{{site.baseurl}}/moving-features-between-objects/Hide-Delegate.html">Hide Delegate</a>的「动机」栏，我谈到了「封装 delegated object（受托对 象）」的好处。但是这层封装也是要付出代价的，它的代价就是：每当客户要使用 delegate（受托类）的新特性时，你就必须在server 端添加一个简单委托函数。随着delegate的特性（功能）愈来愈多，这一过程会让你痛苦不己。server 完全变成了一 个「中间人」，此时你就应该让客户直接调用delegate。
 <p> 
-很难说什么程度的隐藏才是合适的。还好，有了Hide Delegate和Remove Middle Man，你大可不必操心这个问题，因为你可以在系统运行过程中不断进行调整。随着系统的变化，「合适的隐藏程度」这个尺度也相应改变。六个月 前恰如其分的封装，现今可能就显得笨拙。重构的意义就在于：你永远不必说对不起——只要把出问题的地方修补好就行了。
+很难说什么程度的隐藏才是合适的。还好，有了<a href="{{site.baseurl}}/moving-features-between-objects/Hide-Delegate.html">Hide Delegate</a>和<a href="{{site.baseurl}}/moving-features-between-objects/Remove-Middle-Man.html">Remove Middle Man</a>，你大可不必操心这个问题，因为你可以在系统运行过程中不断进行调整。随着系统的变化，「合适的隐藏程度」这个尺度也相应改变。六个月 前恰如其分的封装，现今可能就显得笨拙。重构的意义就在于：你永远不必说对不起——只要把出问题的地方修补好就行了。
 </p>
 
 <br>

@@ -27,9 +27,9 @@ head_en: Tease Apart Inheritance
 <ul>
   <li>首先识别出继承体系所承担的不同责任，然后建立一个二维表格（或者三维乃至四维表格，如果你的继承体系够混乱而你的绘图工具够酷的话），并以坐标轴标示出不同的任务。我们将重复运用本重构，处理两个或两个以上的维度〔当然，每次只处理一个维度〉。</li>
   <li>判断哪一项责任更重要些，并准备将它留在当前的继承体系中。准备将另一项责任移到另一个继承体系中。</li>
-  <li>使用Extract Class 从当前的superclass 提炼出一个新class ，用以表示重要性稍低的责任，并在原superclass 中添加一个instance 变量（不是static 变量〕，用以保存新建class 的实体。</li>
+  <li>使用<a href="{{site.baseurl}}/moving-features-between-objects/Extract-Class.html">Extract Class</a> 从当前的superclass 提炼出一个新class ，用以表示重要性稍低的责任，并在原superclass 中添加一个instance 变量（不是static 变量〕，用以保存新建class 的实体。</li>
   <li>对应于原继承体系中的每个subclass ，创建上述新class 的一个个subclasses 。在原继承体系的subclasses 中，将前一步骤所添加的instance 变量初始化为新建subclass 的实体。</li>
-  <li>针对原继承体系中每个subclass ，使用Move Method 将其中的行为搬移到与之对应的新建subclass 中。</li>
+  <li>针对原继承体系中每个subclass ，使用<a href="{{site.baseurl}}/moving-features-between-objects/Move-Method.html">Move Method</a> 将其中的行为搬移到与之对应的新建subclass 中。</li>
   <li>当原继承体系中的某个subclass 不再有任何代码时，就将它去除。</li>
   <li>重复以上步骤，直到原继承体系中的所有subclass 都被处理过为止。观察新继承体系，看看是否有可能对它实施其他重构手法，例如<a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Method.html">Pull Up Method</a> 或 <a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Field.html">Pull Up Field</a> 。</li>
 </ul>
@@ -67,7 +67,7 @@ head_en: Tease Apart Inheritance
 <p>
 下一步要判断哪一项职责更重要。很明显「交易种类」比「显示风格」重要，因此我们把「交易种类」留在原地，把「显示风格」提炼到另一个继承体系中。不过，实际工作中，我们可能需要将「代码较多」的职责留在原地，这样一来需要搬移的 代码数量会比较少。
 <p>
-然后，我们应该使用Extract Class 提炼出一个单独的PresentationStyle class 用以表示「显示风格」（如图12.2）。
+然后，我们应该使用<a href="{{site.baseurl}}/moving-features-between-objects/Extract-Class.html">Extract Class</a> 提炼出一个单独的PresentationStyle class 用以表示「显示风格」（如图12.2）。
 </p>
 
 <p class="p-img"><img alt="" src="/refactoring-cheat-sheet/images/12fig03.gif"/></p>
@@ -87,7 +87,7 @@ head_en: Tease Apart Inheritance
 <p>
 你可能会说：『这不是比原先的classes 数量还多了吗？难道这还能让我的生活更舒服？』生活往往如此：以退为进，走得更远。对一个纠结成团的继承体系来说，被提炼出来的另一个继承体系几乎总是可以再戏剧性地大量简化。不过，比较安全的态度是一次一小步，不要过于躁进。
 <p>
-现在，我们要使用 Move Method 和 Move Field，将Deal subclass 中[与显示逻辑相关」的函数和变量搬移到PresentationStyle 相应的subclasses 去。我们想不出什么好办法来模拟这个过程，只好请你自己想像。总之，这个步骤完成后，TabularActiveDeal 和 TabularPassiveDeal不再有任何代码，因此我们将它们移除（如图12.4）。
+现在，我们要使用 <a href="{{site.baseurl}}/moving-features-between-objects/Move-Method.html">Move Method</a> 和 <a href="{{site.baseurl}}/moving-features-between-objects/Move-Field.html">Move Field</a>，将Deal subclass 中[与显示逻辑相关」的函数和变量搬移到PresentationStyle 相应的subclasses 去。我们想不出什么好办法来模拟这个过程，只好请你自己想像。总之，这个步骤完成后，TabularActiveDeal 和 TabularPassiveDeal不再有任何代码，因此我们将它们移除（如图12.4）。
 </p>
 
 <p class="p-img"><img alt="" src="/refactoring-cheat-sheet/images/12fig05.gif"/></p>

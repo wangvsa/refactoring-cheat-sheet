@@ -31,11 +31,11 @@ head_en: Extract Class
   <ul>
     <li>也许你有可能需要一个双向连接。但是在真正需要它之前，不要建立 「从新class通往旧class」的连接。</li>
   </ul>
-  <li>对于你想搬移的每一个值域，运用Move Field 搬移之。</li>
+  <li>对于你想搬移的每一个值域，运用<a href="{{site.baseurl}}/moving-features-between-objects/Move-Field.html">Move Field</a> 搬移之。</li>
   <br>
   <li>每次搬移后，编译、测试。</li>
   <br>
-  <li>使用Move Method 将必要函数搬移到新class。先搬移较低层函数（也就是「被其他函数调用」多于「调用其他函数」者），再搬移较高层函数。</li> 
+  <li>使用<a href="{{site.baseurl}}/moving-features-between-objects/Move-Method.html">Move Method</a> 将必要函数搬移到新class。先搬移较低层函数（也就是「被其他函数调用」多于「调用其他函数」者），再搬移较高层函数。</li> 
   <br>
   <li>每次搬移之后，编译、测试。</li> 
   <br>
@@ -92,7 +92,7 @@ head_en: Extract Class
  {% endhighlight %}
 
 <p> 
-现在，我运用Move Field 移动一个值域：
+现在，我运用<a href="{{site.baseurl}}/moving-features-between-objects/Move-Field.html">Move Field</a> 移动一个值域：
 
 {% highlight java linos %} 
  class TelephoneNumber {
@@ -117,7 +117,7 @@ head_en: Extract Class
    {% endhighlight %}
 
 <p> 
-  然后我可以移动其他值域，并运用Move Method 将相关函数移动到TelephoneNumber class中：
+  然后我可以移动其他值域，并运用<a href="{{site.baseurl}}/moving-features-between-objects/Move-Method.html">Move Method</a> 将相关函数移动到TelephoneNumber class中：
 {% highlight java linos %}
  class Person...
    public String getName() {
@@ -166,7 +166,7 @@ head_en: Extract Class
   <li>另一个办法是：先复制一个TelephoneNumber 对象，然后将复制得到的新对象传递给用户。但这可能会造成一定程度的迷惑，因为人们会认为他们可以修改TelephoneNumber对象值。此外，如果同一个TelephoneNumber 对象 被传递给多个用户，也可能在用户之间造成别名（aliasing）问题。</li>
 </ol>
 <p> 
-Extract Class 是改善并发（concurrent）程序的一种常用技术，因为它使你可以为提炼后的两个classes分别加锁（locks）。如果你不需要同时锁定两个对象， 你就不必这样做。这方面的更多信息请看Lea[Lea]， 3.3节。
+<a href="{{site.baseurl}}/moving-features-between-objects/Extract-Class.html">Extract Class</a> 是改善并发（concurrent）程序的一种常用技术，因为它使你可以为提炼后的两个classes分别加锁（locks）。如果你不需要同时锁定两个对象， 你就不必这样做。这方面的更多信息请看Lea[Lea]， 3.3节。
 <p> 
 这里也存在危险性。如果需要确保两个对象被同时锁定，你就面临事务（transaction）问题，需要使用其他类型的共享锁〔shared locks〕。正如Lea[Lea] 8.1节所讨论， 这是一个复杂领域，比起一般情况需要更繁重的机制。事务（transaction）很有实用性，但是编写事务管理程序（transaction manager）则超出了大多数程序员的职责范围。
  

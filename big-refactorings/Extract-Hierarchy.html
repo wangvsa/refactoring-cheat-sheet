@@ -15,7 +15,7 @@ head_en: Extract Hierarchy
 <p>
 在渐进式设计过程中，常常会有这样的情况：一开始设计者只想「以一个class 实 现一个概念」；但随着设计方案的演化，最后却可能「一个class 实现了两个、三 个乃至十个不同的概念」。一开始，你建立了这个简单的class ；数天或数周之后， 你可能发现：只要加入一个标记（flag）和一两个测试，就可以在另一个环境下使用这个class ；一个月之后你又发现了另一个这样的机会；一年之后，这个class 就完全一团糟了：标记变量和条件式遍布各处。
 <p>
-当你遇到这种「瑞士小刀般」的class ，不但能够开瓶开罐、砍小树枝、在演示文稿会上打出激光强调重点……（简直无所不能），你就需要一个好策略（亦即本项重构、将它的各个功能梳理并分开。不过，请注意，只有当条件逻辑（conditional logic）在对象的整个生命期间保持不变，本重构所导入的策略才适用。否则你可能必须在分离各种状况之前先使用Extract Class。
+当你遇到这种「瑞士小刀般」的class ，不但能够开瓶开罐、砍小树枝、在演示文稿会上打出激光强调重点……（简直无所不能），你就需要一个好策略（亦即本项重构、将它的各个功能梳理并分开。不过，请注意，只有当条件逻辑（conditional logic）在对象的整个生命期间保持不变，本重构所导入的策略才适用。否则你可能必须在分离各种状况之前先使用<a href="{{site.baseurl}}/moving-features-between-objects/Extract-Class.html">Extract Class</a>。
 <p>
 <a href="{{site.baseurl}}/big-refactorings/Extract-Hierarchy.html">Extract Hierarchy</a> 是一项大型重构，如果你一天之内不足以完成它，不要因此失去勇气。将一个极度混乱的设计方案梳理出来，可能需要数周甚至数月的时间。 你可以先进行本重构中的一些简易步骤，稍微休息一下，再花数天编写一些明显有生产力的代码。当你领悟到更多东西，再回来继续本项重构的其他步骤——这些步骤将因为你的领悟而显得更加简单明了。
 </p>
@@ -28,7 +28,7 @@ head_en: Extract Hierarchy
 <ul>
   <li>鉴别出一种变异（variation）。</li>
   <ul>
-    <li>如果这种变异可能在对象生命期内发生变化，就运用Extract Class 将它提炼为一个独立的class 。</li>
+    <li>如果这种变异可能在对象生命期内发生变化，就运用<a href="{{site.baseurl}}/moving-features-between-objects/Extract-Class.html">Extract Class</a> 将它提炼为一个独立的class 。</li>
   </ul>
   <li>针对这种变异，新建一个subclass ，并对原始class 实施<a href="{{site.baseurl}}/making-method-calls-simpler/Replace-Constructor-with-Factory-Method.html">Replace Constructor with Factory Method</a>。再修改factory method，令它返回适当的（相应的）subclass 实体。</li>
   <li>将含有条件逻辑的函数，一次一个，遂一拷贝到subclass ，然后在明确情况下 （注：对subclass 明确，对superclass 不明确！），简化这些函数。</li>
