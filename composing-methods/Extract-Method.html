@@ -31,7 +31,7 @@ head_en: Extract Method
 <h3>动机（Motivation）</h3>
 
 <p>
-Extract Method是我最常用的重构手法之一。当我看见一个过长的函数或者一段需要注释才能让人理解用途的代码，我就会将这段代码放进一个独立函数中。 
+<a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a>是我最常用的重构手法之一。当我看见一个过长的函数或者一段需要注释才能让人理解用途的代码，我就会将这段代码放进一个独立函数中。 
 <p>
 有数个原因造成我喜欢简短而有良好命名的函数。首先，如果每个函数的粒度都很小（finely grained），那么函数之间彼此复用的机会就更大；其次，这会使高层函数码读起来就像一系列注释；再者，如果函数都是细粒度，那么函数的覆写（overridden）也会更容易些。 
 <p>
@@ -51,7 +51,7 @@ Extract Method是我最常用的重构手法之一。当我看见一个过长的
 
 	<li>检查是否有「仅用于被提炼码」的临时变量（temporary variables ）。如果有，在目标函数中将它们声明为临时变量。 </li>
 
-	<li>检查被提炼码，看看是否有任何局部变量（local-scope variables ）的值被它改变。如果一个临时变量值被修改了，看看是否可以将被提炼码处理为一个查询（query），并将结果赋值给相关变量。如果很难这样做，或如果被修改的 变量不止一个，你就不能仅仅将这段代码原封不动地离炼出来。你可能需要先使用 Split Temporary Variable，然后再尝试提炼。也可以使用Replace Temp with Query 将临时变量消灭掉（请看「范例」中的讨论）。</li> 
+	<li>检查被提炼码，看看是否有任何局部变量（local-scope variables ）的值被它改变。如果一个临时变量值被修改了，看看是否可以将被提炼码处理为一个查询（query），并将结果赋值给相关变量。如果很难这样做，或如果被修改的 变量不止一个，你就不能仅仅将这段代码原封不动地离炼出来。你可能需要先使用 <a href="{{site.baseurl}}/composing-methods/Split-Temporary-Variable.html">Split Temporary Variable</a>，然后再尝试提炼。也可以使用<a href="{{site.baseurl}}/composing-methods/Replace-Temp-with-Query.html">Replace Temp with Query</a> 将临时变量消灭掉（请看「范例」中的讨论）。</li> 
 
 	<li>将被提炼码中需要读取的局部变量，当作参数传给目标函数。</li>
 
@@ -68,7 +68,7 @@ Extract Method是我最常用的重构手法之一。当我看见一个过长的
 <br>
 <h3>范例（examples）：无局部变量（No Local Variables）</h3>
 <p>
-在最简单的情况下，Extract Method 易如反掌。请看下列函数：
+在最简单的情况下，<a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a> 易如反掌。请看下列函数：
   {% highlight java linenos %}
   void printOwing() {
       Enumeration e = _orders.elements();
@@ -120,7 +120,7 @@ Extract Method是我最常用的重构手法之一。当我看见一个过长的
 <h3>范例（Examples）：有局部变量（Using Local Variables）</h3>
 
 <p>
-果真这么简单，这个重构手法的困难点在哪里？是的，就在局部变量，包括传进源函数的参数和源函数所声明的临时变量。局部变量的作用域仅限于源函数，所以当我使用Extract Method 时，必须花费额外功夫去处理这些变量。某些时候它们甚至可能妨碍我，使我根本无法进行这项重构。 
+果真这么简单，这个重构手法的困难点在哪里？是的，就在局部变量，包括传进源函数的参数和源函数所声明的临时变量。局部变量的作用域仅限于源函数，所以当我使用<a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a> 时，必须花费额外功夫去处理这些变量。某些时候它们甚至可能妨碍我，使我根本无法进行这项重构。 
 <p>
 局部变量最简单的情况是：被提炼码只是读取这些变量的值，并不修改它们。这种情况下我可以简单地将它们当作参数传给目标函数。所以如果我面对下列函数： 
   {% highlight java linenos %}
@@ -172,7 +172,7 @@ Extract Method是我最常用的重构手法之一。当我看见一个过长的
 <br>
 <h3>范例（Examples）：对局部变量再赋值（Reassigning a Local Variable）</h3>
 <p>
-如果被提炼码对局部变量赋值，问题就变得复杂了。这里我们只讨论临时变量的问题。如果你发现源函数的参数被赋值，应该马上使用Remove Assignments to Parameters。 
+如果被提炼码对局部变量赋值，问题就变得复杂了。这里我们只讨论临时变量的问题。如果你发现源函数的参数被赋值，应该马上使用<a href="{{site.baseurl}}/composing-methods/Remove-Assignments-to-Parameters.html">Remove Assignments to Parameters</a>。 
 <p>
 被赋值的临时变量也分两种情况。较简单的情况是：这个变量只在被提炼码区段中使用。果真如此，你可以将这个临时变量的声明式移到被提炼码中，然后一起提炼出去。另一种情况是：被提炼码之外的代码也使用了这个变量。这又分为两种情况： 如果这个变量在被提炼码之后未再被使用，你只需直接在目标函数中修改它就可以了；如果被提炼码之后的代码还使用了这个变量，你就需要让目标函数返回该变量改变后的值。我以下列代码说明这几种不同情况： 
   {% highlight java linenos %}
@@ -277,4 +277,4 @@ Enumeration变量 e只在被提炼码中用到，所以我可以将它整个搬�
 <p>
 你有数种选择。最好的选择通常是：挑选另一块代码来提炼。我比较喜欢让每个函 数都只返回一个值，所以我会安排多个函数，用以返回多个值。如果你使用的语言支持「输出式参数」（output parameters），你可以使用它们带回多个回传值。但我还是尽可能选择单一返回值。 
 <p>
-临时变量往往为数众多，甚至会使提炼工作举步维艰。这种情况下，我会尝试先运用 Replace Temp with Query 减少临时变量。如果即使这么做了提炼依旧困难重重，我就会动用 Replace Method with Method Object，这个重构手法不在乎代码中有多少临时变量，也不在乎你如何使用它们。 
+临时变量往往为数众多，甚至会使提炼工作举步维艰。这种情况下，我会尝试先运用 <a href="{{site.baseurl}}/composing-methods/Replace-Temp-with-Query.html">Replace Temp with Query</a> 减少临时变量。如果即使这么做了提炼依旧困难重重，我就会动用 <a href="{{site.baseurl}}/composing-methods/Replace-Method-with-Method-Object.html">Replace Method with Method Object</a>，这个重构手法不在乎代码中有多少临时变量，也不在乎你如何使用它们。 

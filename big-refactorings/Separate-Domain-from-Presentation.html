@@ -30,7 +30,7 @@ Java 是一个真正意义上的面向对象环境，因此你可以创建内含
 <li>为每个窗口（window）建立一个domain class。</li>
 <li>如果窗口内有一张表格（grid），新建一个class 来表示其中的行（row），再以窗口所对应之domain class 中的一个群集（collection）来容纳所有的row domain objects。</li>
 <li>检查窗口中的数据。如果数据只被用于UI，就把它留着；如果数据被domain logic使用，而且不显示于窗口上，我们就以Mocve Field 将它搬移到domain class 中；如果数据同时被UI 和domain logic 使用，就对它实施<a href="{{site.baseurl}}/organizing-data/Duplicate-Observed-Data.html">Duplicate Observed Data</a>，使它同时存在于两处，并保持两处之间的同步。</li>
-<li> 检査presentation class 中的逻辑。实施 Extract Method 将presentation logic 从domain logic 中分开。一旦隔离了domain logic。再运用 <a href="{{site.baseurl}}/moving-features-between-objects/Move-Method.html">Move Method</a> 将它移到domain class。</li>
+<li> 检査presentation class 中的逻辑。实施 <a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a> 将presentation logic 从domain logic 中分开。一旦隔离了domain logic。再运用 <a href="{{site.baseurl}}/moving-features-between-objects/Move-Method.html">Move Method</a> 将它移到domain class。</li>
 <li>以上步骤完成后，你就拥有了两组彼此分离的classes：presentation classes 用以处理GUI，domain logic 内含所有业务逻辑（business logic）。此时的domain classes 组织可能还不够严谨，更进一步的重构将解决这些问题。</li>
 </ul>
 
@@ -64,7 +64,7 @@ Java 是一个真正意义上的面向对象环境，因此你可以创建内含
 <p>
 对于其他值域，我们就没有这么幸运了，因为它们内含AWT 组件，既显示于窗口， 也被domain object 使用。面对这些值域，我们需要使用<a href="{{site.baseurl}}/organizing-data/Duplicate-Observed-Data.html">Duplicate Observed Data</a>，把一个domain field 放进Order class，又把一个相应的AWT field 放进OrderWindow class。
 <p>
-这是一个缓慢的过程，但最终我们还是可以把所有domain logic field 都搬到domain class。进行这一步骤时，你可以试着把所有SQL calls 都移到domain class，这样你就是同时移动了database logic 和domain data。最后，你可以在OrderWindow 中移除import java.sql 之类的语句，这就表示我们的重构告一段落了。在此阶段中 你可能需要大量运用 Extract Method 和 <a href="{{site.baseurl}}/moving-features-between-objects/Move-Method.html">Move Method</a>。
+这是一个缓慢的过程，但最终我们还是可以把所有domain logic field 都搬到domain class。进行这一步骤时，你可以试着把所有SQL calls 都移到domain class，这样你就是同时移动了database logic 和domain data。最后，你可以在OrderWindow 中移除import java.sql 之类的语句，这就表示我们的重构告一段落了。在此阶段中 你可能需要大量运用 <a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a> 和 <a href="{{site.baseurl}}/moving-features-between-objects/Move-Method.html">Move Method</a>。
 <p>
 现在，我们拥有的三个classes，如图12.10所示，它们离「组织良好」还有很大的距离。不过这个模型的确已经很好地分离了presentation logic 和domain logic （business logic）。本项重构的进行过程中，你必须时刻留心你的风险来自何方。 如果「presentation logic 和domain logic 混淆」是最大风险，那么就先把它们完全分开，然后才做其他工作；如果其他方面的事情（例如产品定价策略〉更重要，那么就先把那一部分的logic 从窗口提炼出来，并围绕着这个高风险部分进行重构，为它建立合适的结构。反正domain logic 早晚都必须从窗口移出，如果你在处理高风险部分的重构时会遗留某些logic 于窗口之中，没关系，就放手去做吧。
 </p>

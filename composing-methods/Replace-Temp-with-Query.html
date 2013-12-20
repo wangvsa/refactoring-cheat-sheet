@@ -41,10 +41,10 @@ head_en: Replace Temp with Query
 临时变量的问题在于：它们是暂时的，而且只能在所属函数内使用。由于临时变量只有在所属函数内才可见，所以它们会驱使你写出更长的函数，因为只有这样你才能访问到想要访问的临时变量。如果把临时变量替换为一个查询式（query method），那么同一个class中的所有函数都将可以获得这份信息。这将带给你极大帮助，使你能够为这个编写更清晰的代码。
  
 <p>
-Replace Temp with Query往往是你运用Extract Method 之前必不可少的一个步骤。局部变量会使代码难以被提炼，所以你应该尽可能把它们替换为查询式。
+<a href="{{site.baseurl}}/composing-methods/Replace-Temp-with-Query.html">Replace Temp with Query</a>往往是你运用<a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a> 之前必不可少的一个步骤。局部变量会使代码难以被提炼，所以你应该尽可能把它们替换为查询式。
  
 <p>
-这个重构手法较为直率的情况就是：临时变量只被赋值一次，或者赋值给临时变量的表达式不受其他条件影响。其他情况比较棘手，但也有可能发生。你可能需要先运用 Split Temporary Variable 或<a href="{{site.baseurl}}/making-method-calls-simpler/Separate-Query-from-Modifier.html">Separate Query from Modifier</a> 使情况变得简单一些，然后再替换临时变量。如果你想替换的临时变量是用来收集结果的（例如循环中的累加值），你就需要将某些程序逻辑（例如循环）拷贝到查询式（query method）去。</p>
+这个重构手法较为直率的情况就是：临时变量只被赋值一次，或者赋值给临时变量的表达式不受其他条件影响。其他情况比较棘手，但也有可能发生。你可能需要先运用 <a href="{{site.baseurl}}/composing-methods/Split-Temporary-Variable.html">Split Temporary Variable</a> 或<a href="{{site.baseurl}}/making-method-calls-simpler/Separate-Query-from-Modifier.html">Separate Query from Modifier</a> 使情况变得简单一些，然后再替换临时变量。如果你想替换的临时变量是用来收集结果的（例如循环中的累加值），你就需要将某些程序逻辑（例如循环）拷贝到查询式（query method）去。</p>
 
 <br> 
 <h3>作法（Mechanics）</h3>
@@ -53,7 +53,7 @@ Replace Temp with Query往往是你运用Extract Method 之前必不可少的一
 首先是简单情况：
 <ul>
   <li>找出只被赋值一次的临时变量。</li>
-  <ul><li>如果某个临时变量被赋值超过一次，考虑使用Split Temporary Variable 将它分割成多个变量。</li></ul>
+  <ul><li>如果某个临时变量被赋值超过一次，考虑使用<a href="{{site.baseurl}}/composing-methods/Split-Temporary-Variable.html">Split Temporary Variable</a> 将它分割成多个变量。</li></ul>
   <li>将该临时变量声明为final。</li>
   <li>编译。</li>
   <ul><li>这可确保该临时变量的确只被赋值一次。</li></ul>
@@ -63,7 +63,7 @@ Replace Temp with Query往往是你运用Extract Method 之前必不可少的一
     <li>确保提炼出来的函数无任何连带影响（副作用），也就是说该函数并不修改任何对象内容。如果它有连带影响，就对它进行<a href="{{site.baseurl}}/making-method-calls-simpler/Separate-Query-from-Modifier.html">Separate Query from Modifier</a>。</li>
   </ul>
   <li>编译，测试。</li>
-  <li>在该临时变量身上实施Replace Temp with Query。</li>
+  <li>在该临时变量身上实施<a href="{{site.baseurl}}/composing-methods/Replace-Temp-with-Query.html">Replace Temp with Query</a>。</li>
 </ul>
 
 <p>
@@ -123,7 +123,7 @@ Replace Temp with Query往往是你运用Extract Method 之前必不可少的一
 {% endhighlight %}
 
 <p>
-编译并测试，然后开始使用Replace Temp with Query。首先把临时变量basePrice的第一个引用点替换掉：
+编译并测试，然后开始使用<a href="{{site.baseurl}}/composing-methods/Replace-Temp-with-Query.html">Replace Temp with Query</a>。首先把临时变量basePrice的第一个引用点替换掉：
  
 {% highlight java linos %}
    double getPrice() {

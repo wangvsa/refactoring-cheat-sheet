@@ -152,7 +152,7 @@ head_en: Form Template Method
 <p>
 搬移之后，我还对这两个函数的名称做了一些修改，使它们更好地适应Strategy 模式的要求。我之所以为它们取相同名称，因为两者之间的差异不在于函数，而在于函数所属的class 。如果你想试着编译这段代码，还必须在Customer class 中添加一个getRentals() 函数，并放宽getTotalCharge() 函数和getTotalFrequentRenterPoints() 函数的可视性（visibility ）。
 <p>
-面对两个subclass 中的相似函数，我可以开始实施<a href="{{site.baseurl}}/dealing-with-generalization/Form-Template-Method.html">Form Template Method</a> 了。本重构的关键在于：运用 Extract Method 将两个函数的不同部分提炼出 来，从而将相像的代码（similar code）和变动的代码（ varying code ）分开。每次提炼后，我就建立一个签名式（signature）相同但本体（bodies）不同的函数。
+面对两个subclass 中的相似函数，我可以开始实施<a href="{{site.baseurl}}/dealing-with-generalization/Form-Template-Method.html">Form Template Method</a> 了。本重构的关键在于：运用 <a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a> 将两个函数的不同部分提炼出 来，从而将相像的代码（similar code）和变动的代码（ varying code ）分开。每次提炼后，我就建立一个签名式（signature）相同但本体（bodies）不同的函数。
 <p>
 第一个例子就是打印报表表头（headers）。上述两个函数都通过Customer 对象获取信息，但对运算结果（字符串）的格式化方式不同。我可以将「对字符串的格式化动作」提炼到独立函数中，并将提炼所得命以相同的签名式（signature）：
 

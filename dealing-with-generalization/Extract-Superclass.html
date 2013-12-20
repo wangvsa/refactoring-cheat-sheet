@@ -31,11 +31,11 @@ head_en: Extract Superclass
 
     <li>如果相应的subclass 函数有相同的签名式，但函数本体不同，可以在superclass 中把它们的共同签名式声明为抽象函数。</li>
 
-    <li>如果相应的subclass 函数有不同的函数本体，但用途相同，可试着使用 Substitute Algorithm 把其中一个函数的函数本体拷贝到另一个函数中。如果运转正常，你就可以使用 <a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Method.html">Pull Up Method</a>。</li>
+    <li>如果相应的subclass 函数有不同的函数本体，但用途相同，可试着使用 <a href="{{site.baseurl}}/composing-methods/Substitute-Algorithm.html">Substitute Algorithm</a> 把其中一个函数的函数本体拷贝到另一个函数中。如果运转正常，你就可以使用 <a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Method.html">Pull Up Method</a>。</li>
   </ul>
   <li>每次上移后，编译并测试。</li>
   
-  <li>检查留在subclass 中的函数，看它们是否还有共通成分。如果有，可以使用Extract Method 将共通部分再提炼出来，然后使用 <a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Method.html">Pull Up Method</a> 将提炼出的函数上移到superclass 。如果各个subclass 中某个函数的整体流程很相似，你也许可以使用<a href="{{site.baseurl}}/dealing-with-generalization/Form-Template-Method.html">Form Template Method</a>。</li>
+  <li>检查留在subclass 中的函数，看它们是否还有共通成分。如果有，可以使用<a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a> 将共通部分再提炼出来，然后使用 <a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Method.html">Pull Up Method</a> 将提炼出的函数上移到superclass 。如果各个subclass 中某个函数的整体流程很相似，你也许可以使用<a href="{{site.baseurl}}/dealing-with-generalization/Form-Template-Method.html">Form Template Method</a>。</li>
   
   <li>将所有共通元素都上移到superclass 之后，检查subclass 的所有用户。如果它们只使用共同接口，你就可以把它们所索求的对象型别改为superclass 。</li>
 </ul>
@@ -184,4 +184,4 @@ Department.getTotalAnnualCost() 和 Employee.getAnnualCost() 两个函数的用�
 {% endhighlight %}     
       
 <p>
-这一行为暗示一种新的可能性：我可以用Composite 模式[Gang of Four] 来对待Department 和Employee ，这样就可以让一个Department 对象包容另—个Department 对象。这是一项新功能，所以这项修改严格来说不属于重构范围。如果用户恰好需要Composite 模式，我可以修改_staff 值域名字，使其更好地表现这一模式。这一修改还会带来其他相应修改：修改addStaff() 函数名称，并将该函数的参数型别改为Party class 。最后还需要把headCount() 函数变成一个递归调用。我的作法是在Employee 中建立一个headCount() 函数，让它返回1；再使用Substitute Algorithm 修改Department 的headCount() 函数，让它总和（add）各部门的headCount() 调用结果。
+这一行为暗示一种新的可能性：我可以用Composite 模式[Gang of Four] 来对待Department 和Employee ，这样就可以让一个Department 对象包容另—个Department 对象。这是一项新功能，所以这项修改严格来说不属于重构范围。如果用户恰好需要Composite 模式，我可以修改_staff 值域名字，使其更好地表现这一模式。这一修改还会带来其他相应修改：修改addStaff() 函数名称，并将该函数的参数型别改为Party class 。最后还需要把headCount() 函数变成一个递归调用。我的作法是在Employee 中建立一个headCount() 函数，让它返回1；再使用<a href="{{site.baseurl}}/composing-methods/Substitute-Algorithm.html">Substitute Algorithm</a> 修改Department 的headCount() 函数，让它总和（add）各部门的headCount() 调用结果。

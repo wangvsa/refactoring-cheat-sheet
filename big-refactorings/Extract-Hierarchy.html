@@ -33,7 +33,7 @@ head_en: Extract Hierarchy
   <li>针对这种变异，新建一个subclass ，并对原始class 实施<a href="{{site.baseurl}}/making-method-calls-simpler/Replace-Constructor-with-Factory-Method.html">Replace Constructor with Factory Method</a>。再修改factory method，令它返回适当的（相应的）subclass 实体。</li>
   <li>将含有条件逻辑的函数，一次一个，遂一拷贝到subclass ，然后在明确情况下 （注：对subclass 明确，对superclass 不明确！），简化这些函数。</li>
   <ul>
-    <li>如有必要隔离函数中的「条件逻辑」和「非条件逻辑」，可对superclass 实施Extract Method。</li>
+    <li>如有必要隔离函数中的「条件逻辑」和「非条件逻辑」，可对superclass 实施<a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a>。</li>
   </ul>
   <li>重复上述过程，将所有变异（variations；特殊情况）都分离出来，直到可以将superclass 声明为抽象类（abstract class）为止。</li>
   <li>删除superclass 中的那些「被所有subclasses 覆写」的函数（的本体），并将 它声明为抽象函数（abstract class）。</li>
@@ -48,7 +48,7 @@ head_en: Extract Hierarchy
   <ul>
     <li>如果原始class 中的各种变异是以type code 标示，先使用 <a href="{{site.baseurl}}/organizing-data/Replace-Type-Code-with-Subclasses.html">Replace Type Code with Subclasses</a> ；如果那些变异在对象生命期间会改变， 请使用Replace Type Code with State/Strategy。</li>
   </ul>
-    <li>针对带有条件逻辑的函数，实施 <a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Conditional-with-Polymorphism.html">Replace Conditional with Polymorphism</a>。如果并非整个函数的行为有所变化，而只是函数一部分有所变化，请先运用 Extract Method 将变化部分和不变部分隔开来。</li>
+    <li>针对带有条件逻辑的函数，实施 <a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Conditional-with-Polymorphism.html">Replace Conditional with Polymorphism</a>。如果并非整个函数的行为有所变化，而只是函数一部分有所变化，请先运用 <a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a> 将变化部分和不变部分隔开来。</li>
 </ul>
 
 <br>
@@ -89,6 +89,6 @@ BillingScheme 使用大量条件逻辑来计算不同情况（变异）下的费
 <p>
 如果规定在「残障人士用电」和「企业用电」之间只能择一，那么我们的方案就可以避免在BusinessBillingScheme 中出现任何条件代码。
 <p>
-实施本项重构时，我们希望将「可能变化」和「始终不变」的部分分开，为此我们可以使用 Extract Method 和<a href="{{site.baseurl}}/simplifying-conditional-expressions/Decompose-Conditional.html">Decompose Conditional</a>。本例将对BillingScheme 各函数实施这两项重构，直到「是否为残障人士」的所有判断都得到了适当处理。然后我们再以相同过程处理他种变异（例如「社会救济用电」）。
+实施本项重构时，我们希望将「可能变化」和「始终不变」的部分分开，为此我们可以使用 <a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a> 和<a href="{{site.baseurl}}/simplifying-conditional-expressions/Decompose-Conditional.html">Decompose Conditional</a>。本例将对BillingScheme 各函数实施这两项重构，直到「是否为残障人士」的所有判断都得到了适当处理。然后我们再以相同过程处理他种变异（例如「社会救济用电」）。
 <p>
 然而，当我们处理第二种变异时，我们应该观察「社会救济用电」与「残障人士用 电」有何不同。我们希望能够为不同的变异（特殊情况）建立起这般函数：有着相同意图，但针对不同的变异性（特殊情况）釆取不同的实际作为（译注：这就是Template Method）。例如上述两种变异情况下的税额计算可能不同。我们希望确保两个subclasses 中的相应函数有相同的签名式（signature）。这可能意味我们必须修改DisablityBillingScheme，使得以将subclasses 整理一番。通常我们发现，面对更多变异时，这种「相仿之中略带变化」的函数（similar and varying methods patterns）会使整个系统结构趋于稳定，使我们更容易添加后续更多变异。

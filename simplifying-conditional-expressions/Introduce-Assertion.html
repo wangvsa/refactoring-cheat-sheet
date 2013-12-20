@@ -55,7 +55,7 @@ Assertions 可以作为交流与调试的辅助。在交流（沟通〕的角度
 <p>
 你应该常常问自己：如果assertions 所指示的约束条件不能满足，代码是否仍能正常运行？如果可以，就把assertions 拿掉。
 <p>
-另外，还需要注意assertions 中的重复代码。它们和其他任何地方的重复代码一样不好闻。你可以大胆使用Extract Method 去掉那些重复代码。
+另外，还需要注意assertions 中的重复代码。它们和其他任何地方的重复代码一样不好闻。你可以大胆使用<a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a> 去掉那些重复代码。
 
 <h3>范例：（Example）</h3>
 <p>
@@ -90,7 +90,7 @@ Assertions 可以作为交流与调试的辅助。在交流（沟通〕的角度
 这条assertion 不会改变程序的任何行为。另一方面，如果assertion中的条件不为真，我就会收到一个运行期异常：也许是在withinLimit() 函数中抛出一个空指针（null pointer）异常，也许是在Assert.isTrue() 函数中抛出一个运行期异常。有时assertion 可以帮助程序员找到臭虫，因为它离出错地点很近。但是，更多时候，assertion 的价值在于：帮助程序员理解代码正确运行的必要条件。
 
 <p>
-我常对assertion 中的条件式使用Extract Method ，也许是为了将若干地方的重复码提炼到同一个函数中，也许只是为了更清楚说明条件式的用途。
+我常对assertion 中的条件式使用<a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a> ，也许是为了将若干地方的重复码提炼到同一个函数中，也许只是为了更清楚说明条件式的用途。
 
 <p>
 在Java 中使用assertions 有点麻烦：没有一种简单机制可以协助我们插入这东西8。 assertions 可被轻松拿掉，所以它们不可能影响最终成品的性能。编写一个辅助类（例如Assert class）当然有所帮助，可惜的是assertions 参数中的任何表达式不论什么情况都一定会被执行一遍。阻止它的惟一办法就是使用类似下面的手法：

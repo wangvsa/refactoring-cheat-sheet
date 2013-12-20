@@ -27,7 +27,7 @@ head_en: Introduce Parameter Object
   <li>每去除一个参数，编译并测试。</li>
   <li>将原先的参数全部去除之后，观察有无适当函数可以运用<a href="{{site.baseurl}}/moving-features-between-objects/Move-Method.html">Move Method</a> 搬移到参数对象之中。
     <ul>
-      <li>被搬移的可能是整个函数，也可能是函数中的一个段落。如果是后者， 首先使用Extract Method 将该段落提炼为一个独立函数，再搬移这一新建函数。</li>
+      <li>被搬移的可能是整个函数，也可能是函数中的一个段落。如果是后者， 首先使用<a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a> 将该段落提炼为一个独立函数，再搬移这一新建函数。</li>
     </ul>
   </li>
 </ul>
@@ -170,7 +170,7 @@ head_en: Introduce Parameter Object
 {% endhighlight %}
 
 <p>
-现在，我已经引入了「参数对象」。我还可以将适当的行为从其他函数移到这个新建对象中，进一步从本项重构获得更大利益。这里，我选定条件式中的代码，实施Extract Method 和<a href="{{site.baseurl}}/moving-features-between-objects/Move-Method.html">Move Method</a>，最后得到如下代码：
+现在，我已经引入了「参数对象」。我还可以将适当的行为从其他函数移到这个新建对象中，进一步从本项重构获得更大利益。这里，我选定条件式中的代码，实施<a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a> 和<a href="{{site.baseurl}}/moving-features-between-objects/Move-Method.html">Move Method</a>，最后得到如下代码：
 {% highlight java linos %}
  class Account...
    double getFlowBetween (DateRange range) {

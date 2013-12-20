@@ -63,9 +63,9 @@ title: Bad Smells in Code
         <p>
         臭味行列中首当其冲的就是Duplicated Code。如果你在一个以上的地点看到相同的程序结构，那么当可肯定：设法将它们合而为一，程序会变得更好。
         <p>
-        最单纯的Duplicated Code就是「同一个class内的两个函数含有相同表达式（expression）」。这时候你需要做的就是采用Extract Method提炼出重复的代码，然后让这两个地点都调用被提炼出来的那一段代码。 
+        最单纯的Duplicated Code就是「同一个class内的两个函数含有相同表达式（expression）」。这时候你需要做的就是采用<a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a>提炼出重复的代码，然后让这两个地点都调用被提炼出来的那一段代码。 
         <p>
-        另一种常见情况就是「两个互为兄弟〔sibling）的subclasses内含相同表达式」。要避免这种情况，只需对两个classes都使用Extract Method，然后再对被提炼出来的代码使用 <a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Field.html">Pull Up Field</a>，将它推入superclass内。如果代码之 间只是类似，并非完全相同，那么就得运用Extract Method将相似部分和差异部分割开，构成单独一个函数。然后你可能发现或许可以运用<a href="{{site.baseurl}}/dealing-with-generalization/Form-Template-Method.html">Form Template Method</a>获得一个Template Method设计模式。如果有些函数以不同的算法做相同的事，你可以择定其中较清晰的一个，并使用Substitute Algorithm将其他函数的算法替换掉。 
+        另一种常见情况就是「两个互为兄弟〔sibling）的subclasses内含相同表达式」。要避免这种情况，只需对两个classes都使用<a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a>，然后再对被提炼出来的代码使用 <a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Field.html">Pull Up Field</a>，将它推入superclass内。如果代码之 间只是类似，并非完全相同，那么就得运用<a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a>将相似部分和差异部分割开，构成单独一个函数。然后你可能发现或许可以运用<a href="{{site.baseurl}}/dealing-with-generalization/Form-Template-Method.html">Form Template Method</a>获得一个Template Method设计模式。如果有些函数以不同的算法做相同的事，你可以择定其中较清晰的一个，并使用<a href="{{site.baseurl}}/composing-methods/Substitute-Algorithm.html">Substitute Algorithm</a>将其他函数的算法替换掉。 
         <p>
         如果两个毫不相关的classes内出现Duplicated Code，你应该考虑对其中一个使用<a href="{{site.baseurl}}/moving-features-between-objects/Extract-Class.html">Extract Class</a>，将重复代码提炼到一个独立class中，然后在另一个class内 使用这个新class。但是，重复代码所在的函数也可能的确只应该属于某个class， 另一个class只能调用它，抑或这个函数可能属于第三个class，而另两个classes应该引用这第三个class。你必须决定这个函数放在哪儿最合适，并确保它被安置后就不会再在其他任何地方出现。
       <h2 class="content-subhead"><a name="long-method"/>Long Method（过长函数）</h2>
@@ -76,11 +76,11 @@ title: Bad Smells in Code
         <p>
         最终的效果是：你应该更积极进取地分解函数。我们遵循这样一条原则：每当感觉需要以注释来说明点什么的时候，我们就把需要说明的东西写进一个独立函数中，并以其用途（而非实现手法）命名。我们可以对一组或甚至短短一行代码做这件事。哪怕替换后的函数调用动作比函数自身还长，只要函数名称能够解释其用途，我们也该毫不犹豫地那么做。关键不在于函数的长度，而在于函数「做什么」和「如何做」之间的语义距离。 
         <p>
-        百分之九十九的场合里，要把函数变小，只需使用Extract Method。找到函数中适合集在一起的部分，将它们提炼出来形成一个新函数。
+        百分之九十九的场合里，要把函数变小，只需使用<a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a>。找到函数中适合集在一起的部分，将它们提炼出来形成一个新函数。
         <p>
-        如果函数内有大量的参数和临时变量，它们会对你的函数提炼形成阻碍。如果你尝试运用Extract Method，最终就会把许多这些参数和临时变量当作参数，传递给被提炼出来的新函数，导致可读性几乎没有任何提升。啊是的，你可以经常运用Replace Temp with Query 来消除这些暂时元素。<a href="{{site.baseurl}}/making-method-calls-simpler/Introduce-Parameter-Object.html">Introduce Parameter Object</a> 和<a href="{{site.baseurl}}/making-method-calls-simpler/Preserve-Whole-Object.html">Preserve Whole Object</a> 则可以将过长的参数列变得更简洁一些。 
+        如果函数内有大量的参数和临时变量，它们会对你的函数提炼形成阻碍。如果你尝试运用<a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a>，最终就会把许多这些参数和临时变量当作参数，传递给被提炼出来的新函数，导致可读性几乎没有任何提升。啊是的，你可以经常运用<a href="{{site.baseurl}}/composing-methods/Replace-Temp-with-Query.html">Replace Temp with Query</a> 来消除这些暂时元素。<a href="{{site.baseurl}}/making-method-calls-simpler/Introduce-Parameter-Object.html">Introduce Parameter Object</a> 和<a href="{{site.baseurl}}/making-method-calls-simpler/Preserve-Whole-Object.html">Preserve Whole Object</a> 则可以将过长的参数列变得更简洁一些。 
         <p>
-        如果你已经这么做了，仍然有太多临时变量和参数，那就应该使出我们的杀手锏： Replace Method with Method Object。
+        如果你已经这么做了，仍然有太多临时变量和参数，那就应该使出我们的杀手锏： <a href="{{site.baseurl}}/composing-methods/Replace-Method-with-Method-Object.html">Replace Method with Method Object</a>。
         <p>
         如何确定该提炼哪一段代码昵？ 一个很好的技巧是：寻找注释。它们通常是指出「代码用途和实现手法间的语义距离」的信号。如果代码前方有一行注释，就是在提醒 你：可以将这段代码替换成一个函数，而且可以在注释的基础上给这个函数命名。就算只有一行代码，如果它需要以注释来说明，那也值得将它提炼到独立函数去。 
         <p>
@@ -121,9 +121,9 @@ title: Bad Smells in Code
         Divergent Change是指「一个class受多种变化的影响」，Shotgun Surgery则是指「一种变化引发多个classes相应修改」。这两种情况下你都会希望整理代码，取得「外界变化」与「待改类」呈现一对一关系的理想境地。
       <h2 class="content-subhead"><a name="feature-envy"/>Feature Envy（依恋情结）</h2>
         <p>
-        对象技术的全部要点在于：这是一种「将数据和加诸其上的操作行为包装在一起」 的技术。有一种经典气味是：函数对某个class的兴趣高过对自己所处之host class的兴趣。这种孺慕之情最通常的焦点便是数据。无数次经验里，我们看到某个函数 为了计算某值，从另一个对象那儿调用几乎半打的取值函数（getting method）。疗法显而易见：把这个函数移至另一个地点。你应该使用<a href="{{site.baseurl}}/moving-features-between-objects/Move-Method.html">Move Method</a> 把它 移到它该去的地方。有时候函数中只有一部分受这种依恋之苦，这时候你应该使用 Extract Method 把这一部分提炼到独立函数中，再使用<a href="{{site.baseurl}}/moving-features-between-objects/Move-Method.html">Move Method</a> 带它去它的梦中家园。 
+        对象技术的全部要点在于：这是一种「将数据和加诸其上的操作行为包装在一起」 的技术。有一种经典气味是：函数对某个class的兴趣高过对自己所处之host class的兴趣。这种孺慕之情最通常的焦点便是数据。无数次经验里，我们看到某个函数 为了计算某值，从另一个对象那儿调用几乎半打的取值函数（getting method）。疗法显而易见：把这个函数移至另一个地点。你应该使用<a href="{{site.baseurl}}/moving-features-between-objects/Move-Method.html">Move Method</a> 把它 移到它该去的地方。有时候函数中只有一部分受这种依恋之苦，这时候你应该使用 <a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a> 把这一部分提炼到独立函数中，再使用<a href="{{site.baseurl}}/moving-features-between-objects/Move-Method.html">Move Method</a> 带它去它的梦中家园。 
         <p>
-        当然，并非所有情况都这么简单。一个函数往往会用上数个特性，那么它究竟该被置于何处呢？我们的原则是：判断哪个class拥有最多「被此函数使用」的数据，然后就把这个函数和那些数据摆在一起。如果先以Extract Method 将这个函数分解为数个较小函数并分别置放于不同地点，上述步骤也就比较容易完成了。 
+        当然，并非所有情况都这么简单。一个函数往往会用上数个特性，那么它究竟该被置于何处呢？我们的原则是：判断哪个class拥有最多「被此函数使用」的数据，然后就把这个函数和那些数据摆在一起。如果先以<a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a> 将这个函数分解为数个较小函数并分别置放于不同地点，上述步骤也就比较容易完成了。 
         <p>
         有数个复杂精巧的模式(patterns)破坏了这个规则。说起这个话题，「四巨头」[Gang of Four]的Strategy 和Visitor立刻跳入我的脑海，Kent Beck 的 Self Delegation [Beck]也在此列。使用这些模式是为了对抗坏味道Divergent Change。最根本的原则是：将总是一起变化的东西放在一块儿。「数据」和「引用这些数据」的行为总是一起变化的，但也有例外。如果例外出现，我们就搬移那些行为，保持「变化只在一地发生」。Strategy 和Visitor『使你得以轻松修改函数行为，因为它们将少量需被覆写〔overridden）的行为隔离开来――当然也付出了「多一层间接性」的 代价。
       <h2 class="content-subhead"><a name="data-clumps"/>Data Clumps（数据泥团）</h2>
@@ -146,7 +146,7 @@ title: Bad Smells in Code
         <p>
         面向对象程序的一个最明显特征就是：少用switch (或case）语句。从本质上说， switch语句的问题在于重复（duplication）。你常会发现同样的switch语句散布 于不同地点。如果要为它添加一个新的子句，你必须找到所有switch语句 并修改它们。面向对象中的多态（polymorphism ）概念可为此带来优雅的解决办法。 
         <p>
-        大多数时候，一看到switch语句你就应该考虑以「多态」来替换它。问题是态 该出现在哪儿？switch语句常常根据 type code（型别码）进行选择，你要的是「与 该 type code相关的函数或class」。所以你应该使用Extract Method 将switch语句提炼到一个独立函数中，再以<a href="{{site.baseurl}}/moving-features-between-objects/Move-Method.html">Move Method</a> 将它搬移到需要多态性的那个class里头。此时你必须决定是否使用 <a href="{{site.baseurl}}/organizing-data/Replace-Type-Code-with-Subclasses.html">Replace Type Code with Subclasses</a> 或 Replace Type Code with State/Strategy。一旦这样完成继承结构之后， 你就可以运用<a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Conditional-with-Polymorphism.html">Replace Conditional with Polymorphism</a>了。 
+        大多数时候，一看到switch语句你就应该考虑以「多态」来替换它。问题是态 该出现在哪儿？switch语句常常根据 type code（型别码）进行选择，你要的是「与 该 type code相关的函数或class」。所以你应该使用<a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a> 将switch语句提炼到一个独立函数中，再以<a href="{{site.baseurl}}/moving-features-between-objects/Move-Method.html">Move Method</a> 将它搬移到需要多态性的那个class里头。此时你必须决定是否使用 <a href="{{site.baseurl}}/organizing-data/Replace-Type-Code-with-Subclasses.html">Replace Type Code with Subclasses</a> 或 Replace Type Code with State/Strategy。一旦这样完成继承结构之后， 你就可以运用<a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Conditional-with-Polymorphism.html">Replace Conditional with Polymorphism</a>了。 
         <p>
         如果你只是在单一函数中有些选择事例，而你并不想改动它们，那么「多态」就有 点杀鸡用牛刀了。这种情况下<a href="{{site.baseurl}}/making-method-calls-simpler/Replace-Parameter-with-Explicit-Methods.html">Replace Parameter with Explicit Methods</a>是个不错的选择。如果你的选择条件之一是null，可以试试Introduce Null Object。)
       <h2 class="content-subhead"><a name="parallel-inheritance-hierarchies"/>Parallel Inheritance Hierarchies（平行继承体系）</h2>
@@ -176,14 +176,14 @@ title: Bad Smells in Code
         <p>
         如果你看到用户向一个对象索求（request）另一个对象，然后再向后者索求另一个对象，然后再索求另一个对象……这就是Message Chains。实际代码中你看到的可 能是一长串getThis()或一长串临时变量。采取这种方式，意味客户将与查找过程中的航行结构（structure of the navigation）紧密耦合。一旦对象间的关系发生任何变化，客户端就不得不做出相应修改。 
         <p>
-        这时候你应该使用<a href="{{site.baseurl}}/moving-features-between-objects/Hide-Delegate.html">Hide Delegate</a>。你可以在Message Chains的不同位置进行这种重构手法。理论上你可以重构Message Chains上的任何一个对象，但这么做往往会把所有中介对象（intermediate object ）都变成Middle Man。通常更好的选择是：先观察Message Chains最终得到的对象是用来干什么的，看看能否以 Extract Method 把使用该对象的代码提炼到一个独立函数中，再运用<a href="{{site.baseurl}}/moving-features-between-objects/Move-Method.html">Move Method</a> 把这个函数推入Message Chains。如果这条链上的某个对象有多位客户打算航行此航线的剩余部分，就加一个函数来做这件事。 
+        这时候你应该使用<a href="{{site.baseurl}}/moving-features-between-objects/Hide-Delegate.html">Hide Delegate</a>。你可以在Message Chains的不同位置进行这种重构手法。理论上你可以重构Message Chains上的任何一个对象，但这么做往往会把所有中介对象（intermediate object ）都变成Middle Man。通常更好的选择是：先观察Message Chains最终得到的对象是用来干什么的，看看能否以 <a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a> 把使用该对象的代码提炼到一个独立函数中，再运用<a href="{{site.baseurl}}/moving-features-between-objects/Move-Method.html">Move Method</a> 把这个函数推入Message Chains。如果这条链上的某个对象有多位客户打算航行此航线的剩余部分，就加一个函数来做这件事。 
         <p>
         有些人把任何函数链（method chain。译注：就是Message Chains；面向对象领域中所谓「发送消息」就是「调用函数」）都视为坏东西，我们不这样想。呵呵，我们的冷静镇定是出了名的，起码在这件事情上是这样。
       <h2 class="content-subhead"><a name="middle-man"/>Middle Man（中间转手人）</h2>
         <p>
         对象的基本特征之一就是封装（encapsulation）――对外部世界隐藏其内部细节。封装往往伴随delegation （委托）。比如说你问主管是否有时间参加一个会议，他就把这个消息委托给他的记事簿，然后才能回答你。很好，你没必要知道这位主管到底使用传统记事簿或电子记事簿抑或秘书来记录自己的约会。 
         <p>
-        但是人们可能过度运用delegation。你也许会看到某个class接口有一半的函数都委托给其他class，这样就是过度运用。这时你应该使用<a href="{{site.baseurl}}/moving-features-between-objects/Remove-Middle-Man.html">Remove Middle Man</a>，直接和实责对象打交道。如果这样「不干实事」的函数只有少数几个，可以运用 Inline Method 把它们" Inlining"，放进调用端。如果这些Middle Man还有其他行 为，你可以运用 <a href="{{site.baseurl}}/dealing-with-generalization/Replace-Delegation-with-Inheritance.html">Replace Delegation with Inheritance</a> 把它变成实责对象的subclass，这样你既可以扩展原对象的行为，又不必负担那么多的委托动作。 
+        但是人们可能过度运用delegation。你也许会看到某个class接口有一半的函数都委托给其他class，这样就是过度运用。这时你应该使用<a href="{{site.baseurl}}/moving-features-between-objects/Remove-Middle-Man.html">Remove Middle Man</a>，直接和实责对象打交道。如果这样「不干实事」的函数只有少数几个，可以运用 <a href="{{site.baseurl}}/composing-methods/Inline-Method.html">Inline Method</a> 把它们" Inlining"，放进调用端。如果这些Middle Man还有其他行 为，你可以运用 <a href="{{site.baseurl}}/dealing-with-generalization/Replace-Delegation-with-Inheritance.html">Replace Delegation with Inheritance</a> 把它变成实责对象的subclass，这样你既可以扩展原对象的行为，又不必负担那么多的委托动作。 
       <h2 class="content-subhead"><a name="inappropriate-intimacy"/>Inappropriate Intimacy（狎昵关系）</h2>
         <p>
         有时你会看到两个classes过于亲密，花费太多时间去探究彼此的private成分。如果这发生在两个「人」之间，我们不必做卫道之士；但对于classes，我们希望它们严守清规。 
@@ -205,7 +205,7 @@ title: Bad Smells in Code
         <p>
         所谓Data Class是指：它们拥有一些值域（fields），以及用于访问（读写〕这些值域的函数，除此之外一无长物。这样的classes只是一种「不会说话的数据容器」，它们几乎一定被其他classes过份细琐地操控着。这些classes早期可能拥有public值域，果真如此你应该在别人注意到它们之前，立刻运用<a href="{{site.baseurl}}/organizing-data/Encapsulate-Field.html">Encapsulate Field</a> 将它们封装起来。如果这些classes内含容器类的值域（collection fields），你应该 检査它们是不是得到了恰当的封装；如果没有，就运用 <a href="{{site.baseurl}}/organizing-data/Encapsulate-Collection.html">Encapsulate Collection</a> 把它们封装起来。对于那些不该被其他classes修改的值域，请运用 <a href="{{site.baseurl}}/making-method-calls-simpler/Remove-Setting-Method.html">Remove Setting Method</a>。
         <p>
-        然后，找出这些「取值/设值」函数（getting and setting methods）被其他classes运用的地点。尝试以<a href="{{site.baseurl}}/moving-features-between-objects/Move-Method.html">Move Method</a> 把那些调用行为搬移到Data Class来。如果无法搬移整个函数，就运用 Extract Method 产生一个可被搬移的函数。不久之后你就可以运用<a href="{{site.baseurl}}/making-method-calls-simpler/Hide-Method.html">Hide Method</a> 把这些「取值/设值」函数隐藏起来了。
+        然后，找出这些「取值/设值」函数（getting and setting methods）被其他classes运用的地点。尝试以<a href="{{site.baseurl}}/moving-features-between-objects/Move-Method.html">Move Method</a> 把那些调用行为搬移到Data Class来。如果无法搬移整个函数，就运用 <a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a> 产生一个可被搬移的函数。不久之后你就可以运用<a href="{{site.baseurl}}/making-method-calls-simpler/Hide-Method.html">Hide Method</a> 把这些「取值/设值」函数隐藏起来了。
         <p>
         Data Class就像小孩子。作为一个起点很好，但若要让它们像「成年（成熟）」的对象那样参与整个系统的工作，它们就必须承担一定责任。
       <h2 class="content-subhead"><a name="refused-bequest"/>Refused Bequest（被拒绝的遗赠）</h2>
@@ -223,7 +223,7 @@ title: Bad Smells in Code
         <p>
         Comments可以带我们找到本章先前提到的各种坏味道。找到坏味道后，我们首先应该以各种重构手法把坏味道去除。完成之后我们常常会发现：注释已经变得多余了，因为代码已经清楚说明了一切。
         <p>
-        如果你需要注释来解释一块代码做了什么，试试 Extract Method；如果method已经提炼出来，但还是需要注释来解释其行为，试试<a href="{{site.baseurl}}/making-method-calls-simpler/Rename-Method.html">Rename Method</a>；如果你需要注释说明某些系统的需求规格，试试 <a href="{{site.baseurl}}/simplifying-conditional-expressions/Introduce-Assertion.html">Introduce Assertion</a>。
+        如果你需要注释来解释一块代码做了什么，试试 <a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a>；如果method已经提炼出来，但还是需要注释来解释其行为，试试<a href="{{site.baseurl}}/making-method-calls-simpler/Rename-Method.html">Rename Method</a>；如果你需要注释说明某些系统的需求规格，试试 <a href="{{site.baseurl}}/simplifying-conditional-expressions/Introduce-Assertion.html">Introduce Assertion</a>。
         <p>
         TIP：当你感觉需要撰写注释，请先尝试重构，试着让所有注释都变得多余。        
         <p>

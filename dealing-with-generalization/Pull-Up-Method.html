@@ -29,7 +29,7 @@ head_en: Pull Up Method
 <ul>
   <li>检查「待提升函数」，确定它们是完全一致的（identical）。</li>
   <ul>
-    <li>如果这些函数看上去做了相同的事，但并不完全一致，可使用Substitute Algorithm 让它们变得完全一致。</li>
+    <li>如果这些函数看上去做了相同的事，但并不完全一致，可使用<a href="{{site.baseurl}}/composing-methods/Substitute-Algorithm.html">Substitute Algorithm</a> 让它们变得完全一致。</li>
   </ul>
   <li>如果「待提升函数」的签名式（signature）不同，将那些签名式都修改为你想要在superclass 中使用的签名式。</li>
   <li>在superclass 中新建一个函数，将某一个「待提升函数」的代码拷贝到其中，做适当调整，然后编译。

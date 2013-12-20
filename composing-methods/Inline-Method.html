@@ -27,9 +27,9 @@ int getRating() {
 <p>
 本书经常以简短的函数表现动作意图，这样会使代码更清晰易读。但有时候你会遇到某些函数，其内部代码和函数名称同样清晰易读。也可能你重构了该函数，使得其内容和其名称变得同样清晰。果真如此，你就应该去掉这个函数，直接使用其中的代码。间接性可能带来帮助，但非必要的间接性总是让人不舒服。
 <p>
-另一种需要使用Inline Method 的情况是：你手上有一群组织不甚合理的函数。你可以将它们都inline到一个大型函数中，再从中提炼出组织合理的小型函数。Kent Beck发现，实施 Replace Method with Method Object 之前先这么做，往往可以获得不错的效果。你可以把你所要的函数（有着你要的行为）的所有调用对象的函数内容都inline到method object（函数对象）中。比起既要移动一个函数，又要移动它所调用的其他所有函数，「将大型函数作为单一整体来移动」会比较简单。
+另一种需要使用<a href="{{site.baseurl}}/composing-methods/Inline-Method.html">Inline Method</a> 的情况是：你手上有一群组织不甚合理的函数。你可以将它们都inline到一个大型函数中，再从中提炼出组织合理的小型函数。Kent Beck发现，实施 <a href="{{site.baseurl}}/composing-methods/Replace-Method-with-Method-Object.html">Replace Method with Method Object</a> 之前先这么做，往往可以获得不错的效果。你可以把你所要的函数（有着你要的行为）的所有调用对象的函数内容都inline到method object（函数对象）中。比起既要移动一个函数，又要移动它所调用的其他所有函数，「将大型函数作为单一整体来移动」会比较简单。
 <p>
-如果别人使用了太多间接层，使得系统中的所有函数都似乎只是对另一个函数的简单委托（delegation），造成我在这些委托动作之间晕头转向，那么我通常都会使用Inline Method。当然，间接层有其价值，但不是所有间接层都有价值。试着使用inlining，我可以找出那些有用的间接层，同时将那些无用的间接层去除。</p>
+如果别人使用了太多间接层，使得系统中的所有函数都似乎只是对另一个函数的简单委托（delegation），造成我在这些委托动作之间晕头转向，那么我通常都会使用<a href="{{site.baseurl}}/composing-methods/Inline-Method.html">Inline Method</a>。当然，间接层有其价值，但不是所有间接层都有价值。试着使用inlining，我可以找出那些有用的间接层，同时将那些无用的间接层去除。</p>
 
 <br>
 <h3>作法（Mechanics）</h3>
@@ -47,5 +47,5 @@ int getRating() {
 
 
 <p>
-被我这样一写，Inline Method 似乎很简单。但情况往往并非如此。对于递归调用、多返回点、inlining至另一个对象中而该对象并无提供访问函数（accessors）……，每一种情况我都可以写上好几页。我之所以不写这些特殊情况， 原因很简单：如果你遇到了这样的复杂情况，那么就不应该使用这个重构手法。
+被我这样一写，<a href="{{site.baseurl}}/composing-methods/Inline-Method.html">Inline Method</a> 似乎很简单。但情况往往并非如此。对于递归调用、多返回点、inlining至另一个对象中而该对象并无提供访问函数（accessors）……，每一种情况我都可以写上好几页。我之所以不写这些特殊情况， 原因很简单：如果你遇到了这样的复杂情况，那么就不应该使用这个重构手法。
 

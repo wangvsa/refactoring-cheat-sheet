@@ -20,7 +20,7 @@ return (anOrder.basePrice() > 1000)
 <h3>动机（Motivation）</h3>
 
 <p>
-Inline Temp多半是作为Replace Temp with Query 的一部分来使用，所以真正的动机出现在后者那儿。惟一单独使用Inline Temp的情况是：你发现某个临时变量被赋予某个函数调用的返回值。一般来说，这样的临时变量不会有任何危害，你可以放心地把它留在那儿。但如果这个临时变量妨碍了其他的重构 手法——例如Extract Method，你就应该将它inline化。</p>
+<a href="{{site.baseurl}}/composing-methods/Inline-Temp.html">Inline Temp</a>多半是作为<a href="{{site.baseurl}}/composing-methods/Replace-Temp-with-Query.html">Replace Temp with Query</a> 的一部分来使用，所以真正的动机出现在后者那儿。惟一单独使用<a href="{{site.baseurl}}/composing-methods/Inline-Temp.html">Inline Temp</a>的情况是：你发现某个临时变量被赋予某个函数调用的返回值。一般来说，这样的临时变量不会有任何危害，你可以放心地把它留在那儿。但如果这个临时变量妨碍了其他的重构 手法——例如<a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a>，你就应该将它inline化。</p>
 
 <br>
 <h3>作法（Mechanics）</h3>

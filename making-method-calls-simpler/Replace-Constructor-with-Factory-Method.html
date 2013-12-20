@@ -139,7 +139,7 @@ Employee.create("Engineer")
 <p>
 现在，当我需要添加新的Employee subclasses，就不再需要更新create() 函数了。 但我却因此失去了编译期检验，使得一个小小的拼写错误就可能造成运行期错误。如果有必要防止运行期错误，我会使用明确函数来创建对象（见本页下）。但这样一来，每添加一个新的subclass ，我就必须添加一个新函数。这就是为了型别安全而牺牲掉的灵活性。还好，即使我做了错误选择，也可以使用<a href="{{site.baseurl}}/making-method-calls-simpler/Parameterize-Method.html">Parameterize Method</a> 或 <a href="{{site.baseurl}}/making-method-calls-simpler/Replace-Parameter-with-Explicit-Methods.html">Replace Parameter with Explicit Methods</a> 撤销决定。
 <p>
-另一个「必须谨慎使用（Class.forName() 」的原因是：它向用户暴露了subclass 名称。不过这并不是太糟糕，因为你可以使用其他字符串，并在factory method 中执行其他行为。这也是「不使用Inline Method 去除factory method 的一个好理由。
+另一个「必须谨慎使用（Class.forName() 」的原因是：它向用户暴露了subclass 名称。不过这并不是太糟糕，因为你可以使用其他字符串，并在factory method 中执行其他行为。这也是「不使用<a href="{{site.baseurl}}/composing-methods/Inline-Method.html">Inline Method</a> 去除factory method 的一个好理由。
 
 <h3>范例：以明确函数（Explicit Methods）创建subclass</h3>
 <p>

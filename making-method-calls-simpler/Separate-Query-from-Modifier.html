@@ -139,7 +139,7 @@ head_en: Separate Query from Modifier
 {% endhighlight %}
 
 <p>
-当然，这种情况下，我得到了大量重复代码，因为修改函数之中使用了与查询函数相同的代码。现在我可以对修改函数实施Substitute Algorithm ，设法让它再简洁一些：
+当然，这种情况下，我得到了大量重复代码，因为修改函数之中使用了与查询函数相同的代码。现在我可以对修改函数实施<a href="{{site.baseurl}}/composing-methods/Substitute-Algorithm.html">Substitute Algorithm</a> ，设法让它再简洁一些：
 {% highlight java linos %}
   void sendAlert(String[] people){
       if (! foundPerson(people).equals(""))

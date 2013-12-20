@@ -117,7 +117,7 @@ private static Dictionary _instances = new Hashtable();
 {% endhighlight %}
  
 <p>
-然后我得决定：应该在接到请求时创建新的Customer对象，还是应该预先将它们创建好。这里我选择后者。在应用程序的启动代码（start-up code）中，我先把需要使用的Customer对象加载妥当。这些对象可能来自数据库，也可能来自文件。为求简单起见，我在代码中明确生成这些对象。反正以后我总是可以使用 Substitute Algorithm 来改变它们的创建方式。
+然后我得决定：应该在接到请求时创建新的Customer对象，还是应该预先将它们创建好。这里我选择后者。在应用程序的启动代码（start-up code）中，我先把需要使用的Customer对象加载妥当。这些对象可能来自数据库，也可能来自文件。为求简单起见，我在代码中明确生成这些对象。反正以后我总是可以使用 <a href="{{site.baseurl}}/composing-methods/Substitute-Algorithm.html">Substitute Algorithm</a> 来改变它们的创建方式。
 {%highlight java linos %}
  class Customer...
    static void loadCustomers() {

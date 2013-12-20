@@ -79,7 +79,7 @@ links_8 = [
 ]
 basedir_8 = '{{site.baseurl}}/' + 'organizing-data/'
 
-links = [
+links_7 = [
 'Move Method',
 'Move Field',
 'Extract Class',
@@ -89,7 +89,20 @@ links = [
 'Introduce Foreign Method',
 'Introduce Local Extension'
 ]
-basedir = '{{site.baseurl}}/' + 'moving-features-between-objects/'
+basedir_7 = '{{site.baseurl}}/' + 'moving-features-between-objects/'
+
+links = [
+'Extract Method',
+'Inline Method',
+'Inline Temp',
+'Replace Temp with Query',
+'Introduce Explaining Variable',
+'Split Temporary Variable',
+'Remove Assignments to Parameters',
+'Replace Method with Method Object',
+'Substitute Algorithm'
+]
+basedir = '{{site.baseurl}}/' + 'composing-methods/'
 
 
 targetDirs = [

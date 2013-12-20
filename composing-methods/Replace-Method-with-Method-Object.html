@@ -3,7 +3,7 @@ layout: composing-methods
 head_en: Replace Method with Method Object
 ---
 <p>
-你有一个大型函数，其中对局部变量的使用，使你无法釆用 Extract Method。
+你有一个大型函数，其中对局部变量的使用，使你无法釆用 <a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a>。
 <p> 
 <b>将这个函数放进一个单独对象中，如此一来局部变量就成了对象内的值域（field） 然后你可以在同一个对象中将这个大型函数分解为数个小型函数。</b>
  
@@ -25,9 +25,9 @@ head_en: Replace Method with Method Object
 <p> 
 我在本书中不断向读者强调小型函数的优美动人。只要将相对独立的代码从大型函数中提炼出来，就可以大大提高代码的可读性。
 <p> 
-但是，局部变量的存在会增加函数分解难度。如果一个函数之中局部变量泛滥成灾, 那么想分解这个函数是非常困难的。Replace Temp with Query 可以助你减轻这一负担，但有时候你会发现根本无法拆解一个需要拆解的函数。这种情况下，你应该把手深深地伸入你的工具箱（好酒沉瓮底呢），祭出函数对象（method object ）[Beck]这件法宝。
+但是，局部变量的存在会增加函数分解难度。如果一个函数之中局部变量泛滥成灾, 那么想分解这个函数是非常困难的。<a href="{{site.baseurl}}/composing-methods/Replace-Temp-with-Query.html">Replace Temp with Query</a> 可以助你减轻这一负担，但有时候你会发现根本无法拆解一个需要拆解的函数。这种情况下，你应该把手深深地伸入你的工具箱（好酒沉瓮底呢），祭出函数对象（method object ）[Beck]这件法宝。
 <p> 
-Replace Method with Method Object 会将所有局部变量都变成函数对象（method object）的值域（field）。然后你就可以对这个新对象使用 Extract Method 创造出新函数，从而将原本的大型函数拆解变短。</p>
+<a href="{{site.baseurl}}/composing-methods/Replace-Method-with-Method-Object.html">Replace Method with Method Object</a> 会将所有局部变量都变成函数对象（method object）的值域（field）。然后你就可以对这个新对象使用 <a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a> 创造出新函数，从而将原本的大型函数拆解变短。</p>
 
 <br> 
 <h3>作法（Mechanics）</h3>
@@ -113,7 +113,7 @@ Replace Method with Method Object 会将所有局部变量都变成函数对象�
    }
 {% endhighlight %}
 <p> 
-这就是本项重构的基本原则。它带来的好处是：现在我可以轻松地对compute()函数采取 Extract Method，不必担心引数（argument）传递。
+这就是本项重构的基本原则。它带来的好处是：现在我可以轻松地对compute()函数采取 <a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a>，不必担心引数（argument）传递。
 
 {% highlight java linos %}  
   int compute () {

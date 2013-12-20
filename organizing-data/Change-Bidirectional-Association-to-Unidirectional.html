@@ -23,10 +23,10 @@ head_en: Change Bidirectional Association to Unidirectional
   <li>找出『你想去除的指针」的保存值域，检查它的每一个用户，判断是否可以去除该指针。
   <ul>
     <li>不但要检查「直接读取点」，也要检查「直接读取点」的调用函数。</li>
-    <li>考虑有无可能不通过指针取得「被引用对象」（referred object）。如 果有可能，你就可以对取值函数（getter）使用Substitute Algorithm，从而让客户在没有指针的情况下也可以使用该取值函数。</li>
+    <li>考虑有无可能不通过指针取得「被引用对象」（referred object）。如 果有可能，你就可以对取值函数（getter）使用<a href="{{site.baseurl}}/composing-methods/Substitute-Algorithm.html">Substitute Algorithm</a>，从而让客户在没有指针的情况下也可以使用该取值函数。</li>
     <li>对于使用该值域的所有函数，考虑将「被引用对象」（refered object）作为引数（argument）传进去。
   </ul>
-  <li>如果客户使用了取值函数（getter），先运用<a href="{{site.baseurl}}/organizing-data/Self-Encapsulate-Field.html">Self <a href="{{site.baseurl}}/organizing-data/Encapsulate-Field.html">Encapsulate Field</a></a> 将「待除值域」自我封装起来，然后使用Substitute Algorithm 对付取值函数，令它不再使用该（待除）值域。然后编译、测试。
+  <li>如果客户使用了取值函数（getter），先运用<a href="{{site.baseurl}}/organizing-data/Self-Encapsulate-Field.html">Self <a href="{{site.baseurl}}/organizing-data/Encapsulate-Field.html">Encapsulate Field</a></a> 将「待除值域」自我封装起来，然后使用<a href="{{site.baseurl}}/composing-methods/Substitute-Algorithm.html">Substitute Algorithm</a> 对付取值函数，令它不再使用该（待除）值域。然后编译、测试。
   <li>如果客户并未使用取值函数（getter），那就直接修改「待除值域」的所有被引用点：改以其他途径获得该值域所保存的对象。每次修改后，编译并测试。
   <li>如果已经没有任何函数使用该（待除〕值域，移除所有「对该值域的更新逻辑」，然后移除该值域。
   <ul>
@@ -104,7 +104,7 @@ head_en: Change Bidirectional Association to Unidirectional
 {% endhighlight %}
 
 <p>
-另一种作法就是修改取值函数（getter），使其在不使用_customer 值域的前提下返回一个Customer对象。如果这行得通，我就可以使用Substitute Algorithm 修改Order.getCustomer()函数算法。我有可能这样修改代码：
+另一种作法就是修改取值函数（getter），使其在不使用_customer 值域的前提下返回一个Customer对象。如果这行得通，我就可以使用<a href="{{site.baseurl}}/composing-methods/Substitute-Algorithm.html">Substitute Algorithm</a> 修改Order.getCustomer()函数算法。我有可能这样修改代码：
 {% highlight java linos %}
    Customer getCustomer() {
        Iterator iter = Customer.getInstances().iterator();

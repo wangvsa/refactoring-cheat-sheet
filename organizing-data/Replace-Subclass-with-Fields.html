@@ -24,7 +24,7 @@ head_en: Replace Subclass with Fields
   <li>编译，测试。</li>
   <li>在superclass 中实现所有常量函数，令它们返回相应值域值，然后将该函数从subclass 中删掉。</li>
   <li>每删除一个常量函数，编译并测试。</li>
-  <li>subclass 中所有的常量函数都被删除后，使用Inline Method 将subclass 构造函数内联（inlining）到superclass 的factory method 中。</li>
+  <li>subclass 中所有的常量函数都被删除后，使用<a href="{{site.baseurl}}/composing-methods/Inline-Method.html">Inline Method</a> 将subclass 构造函数内联（inlining）到superclass 的factory method 中。</li>
   <li>编译，测试。</li>
   <li>将subclass 删掉。</li>
   <li>编译，测试。</li>
@@ -135,7 +135,7 @@ head_en: Replace Subclass with Fields
 <p> 
 我可以逐一对每个值域、每个subclass 进行这一步骤的修改；如果我相信自己的运气，也可以采取一次性全部修改的手段。
 <p> 
-所有值域都处理完毕后，所有subclasses 也都空空如也了，于是我可以删除Person 中那个抽象函数的abstract 修饰符（使它不再成为抽象函数），并以Inline Method 将subclass 构造函数内联（inlining）到superclass 的factory method 中：
+所有值域都处理完毕后，所有subclasses 也都空空如也了，于是我可以删除Person 中那个抽象函数的abstract 修饰符（使它不再成为抽象函数），并以<a href="{{site.baseurl}}/composing-methods/Inline-Method.html">Inline Method</a> 将subclass 构造函数内联（inlining）到superclass 的factory method 中：
 {% highlight java linos %}
  class Person
    static Person createMale(){

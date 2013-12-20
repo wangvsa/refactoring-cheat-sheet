@@ -32,7 +32,7 @@ head_en: Remove Control Flag
 <p>
 在未能提供break 和continue 语句的编程语言中，我们可以使用另一种办法：
 <ul>
-  <li>运用Extract Method，将整段逻辑提炼到一个独立函数中。</li>
+  <li>运用<a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a>，将整段逻辑提炼到一个独立函数中。</li>
   <li>找出「让你得以跳出这段逻辑」的那些控制标记值。</li>
   <li>找出「将可跳出条件式之值赋予标记变量」的那个语句，代以恰当的return 语句。</li>
   <li>每次替换后，编译并测试。</li>

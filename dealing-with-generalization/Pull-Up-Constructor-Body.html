@@ -50,7 +50,7 @@ head_en: Pull Up Constructor Body
   </ul>
   <li>编译，测试。</li>
   <ul>
-    <li>如果日后subclass 构造函数再出现共同代码，你可以首先使用 Extract Method 将那一部分提炼到一个独立函数，然后使用<a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Method.html">Pull Up Method</a> 将该函数上移到superclass。</li>
+    <li>如果日后subclass 构造函数再出现共同代码，你可以首先使用 <a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a> 将那一部分提炼到一个独立函数，然后使用<a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Method.html">Pull Up Method</a> 将该函数上移到superclass。</li>
   </ul>
 </ul>
 
@@ -110,7 +110,7 @@ Employee 的值域应该在Employee 构造函数中被设妥初值。因此我�
 {% endhighlight %}   
 
 <p>
-我不能把调用assignCar() 的行为移到superclass 构造函数中，因为惟有把合适的值赋给_grade 值域后才能执行assignCar() 。此时我需要Extract Method 和 <a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Method.html">Pull Up Method</a>。
+我不能把调用assignCar() 的行为移到superclass 构造函数中，因为惟有把合适的值赋给_grade 值域后才能执行assignCar() 。此时我需要<a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a> 和 <a href="{{site.baseurl}}/dealing-with-generalization/Pull-Up-Method.html">Pull Up Method</a>。
 {% highlight java linos %}
     class Employee...
       void initialize() {
