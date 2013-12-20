@@ -155,7 +155,7 @@ class Salesman extends EmployeeType {
 <p>
 这意味我将在这里拥有一个switch 语句。完成重构之后，这将是代码中惟一的switch 语句,并且只在对象型别发生改变时才会被执行。我也可以运用<a href="{{site.baseurl}}/making-method-calls-simpler/Replace-Constructor-with-Factory-Method.html">Replace Constructor with Factory Method</a> 针对不同的case 子句建立相应的factory method 。我还可以立刻再使用<a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Conditional-with-Polymorphism.html">Replace Conditional with Polymorphism</a>，从而将其他的case 子句完全消除。
 <p>
-最后，我喜欢将所有关于type code 和subclass 的知识都移到新的class ，并以此结束Replace Type Code with State/Strategy 首先我把type code 的定义拷贝到EmployeeType class 去，在其中建立一个factory method 以生成适当的 EmployeeType 对象，并调整Employee class 中为type code 赋值的函数：
+最后，我喜欢将所有关于type code 和subclass 的知识都移到新的class ，并以此结束<a href="{{site.baseurl}}/organizing-data/Replace-Type-Code-with-State-or-Strategy.html">Replace Type Code with State/Strategy</a> 首先我把type code 的定义拷贝到EmployeeType class 去，在其中建立一个factory method 以生成适当的 EmployeeType 对象，并调整Employee class 中为type code 赋值的函数：
 {% highlight java linos %}
  class Employee...
    void setType(int arg) {

@@ -46,7 +46,7 @@ head_en: Extract Hierarchy
   <li>针对原始class 的每一种变异（variation）建立一个subclass 。</li>
   <li>使用<a href="{{site.baseurl}}/making-method-calls-simpler/Replace-Constructor-with-Factory-Method.html">Replace Constructor with Factory Method</a> 将原始过class 的构造函数转变成factory method ，并令它针对每一种变异返回适当的subclass 实体。</li>
   <ul>
-    <li>如果原始class 中的各种变异是以type code 标示，先使用 <a href="{{site.baseurl}}/organizing-data/Replace-Type-Code-with-Subclasses.html">Replace Type Code with Subclasses</a> ；如果那些变异在对象生命期间会改变， 请使用Replace Type Code with State/Strategy。</li>
+    <li>如果原始class 中的各种变异是以type code 标示，先使用 <a href="{{site.baseurl}}/organizing-data/Replace-Type-Code-with-Subclasses.html">Replace Type Code with Subclasses</a> ；如果那些变异在对象生命期间会改变， 请使用<a href="{{site.baseurl}}/organizing-data/Replace-Type-Code-with-State-or-Strategy.html">Replace Type Code with State/Strategy</a>。</li>
   </ul>
     <li>针对带有条件逻辑的函数，实施 <a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Conditional-with-Polymorphism.html">Replace Conditional with Polymorphism</a>。如果并非整个函数的行为有所变化，而只是函数一部分有所变化，请先运用 <a href="{{site.baseurl}}/composing-methods/Extract-Method.html">Extract Method</a> 将变化部分和不变部分隔开来。</li>
 </ul>
@@ -54,7 +54,7 @@ head_en: Extract Hierarchy
 <br>
 <h3>范例：（Example）</h3>
 <p>
-这里所举的例子是「变异并不明朗」的情况。你可以在 <a href="{{site.baseurl}}/organizing-data/Replace-Type-Code-with-Subclasses.html">Replace Type Code with Subclasses</a>、Replace Type Code with State/Strategy 和 <a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Conditional-with-Polymorphism.html">Replace Conditional with Polymorphism</a> 等重构结果之上，验证「变异已经明朗」的情况下如何使用本项重构。
+这里所举的例子是「变异并不明朗」的情况。你可以在 <a href="{{site.baseurl}}/organizing-data/Replace-Type-Code-with-Subclasses.html">Replace Type Code with Subclasses</a>、<a href="{{site.baseurl}}/organizing-data/Replace-Type-Code-with-State-or-Strategy.html">Replace Type Code with State/Strategy</a> 和 <a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Conditional-with-Polymorphism.html">Replace Conditional with Polymorphism</a> 等重构结果之上，验证「变异已经明朗」的情况下如何使用本项重构。
 <p>
 我们以一个电费计算程序为例。这个程序有两个classes ：表示「消费者」的Customer 和表示「计费方案」的BillingScheme，如图12.11。
 </p>

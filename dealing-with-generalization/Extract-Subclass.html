@@ -11,7 +11,7 @@ class 中的某些特性（features）只被某些（而非全部）实体（ins
 <br>
 <h3>动机（Motivation）</h3>
 <p>
-使用<a href="{{site.baseurl}}/dealing-with-generalization/Extract-Subclass.html">Extract Subclass</a> 的主要动机是：你发现class 中的某些行为只被一部分实体用到，其他实体不需要它们。有时候这种行为上的差异是通过type code 区分 的，此时你可以使用 <a href="{{site.baseurl}}/organizing-data/Replace-Type-Code-with-Subclasses.html">Replace Type Code with Subclasses</a> 或 Replace Type Code with State/Strategy。但是，并非一定要出现了type code 才表示需要考虑使用subclass 。
+使用<a href="{{site.baseurl}}/dealing-with-generalization/Extract-Subclass.html">Extract Subclass</a> 的主要动机是：你发现class 中的某些行为只被一部分实体用到，其他实体不需要它们。有时候这种行为上的差异是通过type code 区分 的，此时你可以使用 <a href="{{site.baseurl}}/organizing-data/Replace-Type-Code-with-Subclasses.html">Replace Type Code with Subclasses</a> 或 <a href="{{site.baseurl}}/organizing-data/Replace-Type-Code-with-State-or-Strategy.html">Replace Type Code with State/Strategy</a>。但是，并非一定要出现了type code 才表示需要考虑使用subclass 。
 <p>
 <a href="{{site.baseurl}}/moving-features-between-objects/Extract-Class.html">Extract Class</a> 是<a href="{{site.baseurl}}/dealing-with-generalization/Extract-Subclass.html">Extract Subclass</a> 之外的另一种选择，两者之间的抉择其实就是委托（delegation）和继承（inheritance）之间的抉择。<a href="{{site.baseurl}}/dealing-with-generalization/Extract-Subclass.html">Extract Subclass</a> 通常更容易进行，但它也有限制：一旦对象创建完成，你无法再改变「与型别相关的行为」（class-based behavior ）。但如果使用<a href="{{site.baseurl}}/moving-features-between-objects/Extract-Class.html">Extract Class</a> ，你只需插入另一个不同组件（ plugging in different components）就可以改变对象的行为。此外，subclasses 只能用以表现一组变化（one set of variations）。如果你希望class 以数种不同的方式变化，就必须使用委托（delegation）。
 </p>

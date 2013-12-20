@@ -91,7 +91,7 @@ links_7 = [
 ]
 basedir_7 = '{{site.baseurl}}/' + 'moving-features-between-objects/'
 
-links = [
+links_6 = [
 'Extract Method',
 'Inline Method',
 'Inline Temp',
@@ -102,8 +102,12 @@ links = [
 'Replace Method with Method Object',
 'Substitute Algorithm'
 ]
-basedir = '{{site.baseurl}}/' + 'composing-methods/'
+basedir_6 = '{{site.baseurl}}/' + 'composing-methods/'
 
+links = [
+'Replace Type Code with State/Strategy'
+]
+basedir = '{{site.baseurl}}/' + 'organizing-data/'
 
 targetDirs = [
 'bad-smells-in-code/',
@@ -124,7 +128,8 @@ def buildFile(fileStr):
     return newFileStr
 
 def formLink(key):
-    link = key.replace(' ', '-') + '.html'
+#    link = key.replace(' ', '-') + '.html'
+    link = 'Replace-Type-Code-with-State-or-Strategy.html'
     link = '<a href=\"' + basedir + link + '\">' + key + '</a>'
     return link
 
