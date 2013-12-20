@@ -10,7 +10,7 @@ http://wangchen.info/refactoring-cheat-sheet/
 目录使用purecss框架设计，方便移动设备浏览。
 
 ###贡献：
-如果您有什么意见建议或者发现了bug，欢迎在[issues](http://wangchen.info/refactoring-cheat-sheet/issues)提出 
+如果您有什么意见建议或者发现了bug，欢迎在[issues](https://github.com/wangvsa/refactoring-cheat-sheet/issues)提出 
 
 如果您觉得这个项目有用并且希望参与完善项目，欢迎您*Pull Request*
 
