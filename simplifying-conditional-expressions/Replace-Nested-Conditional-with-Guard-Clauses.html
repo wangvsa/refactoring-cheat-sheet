@@ -38,9 +38,9 @@ head_en: Replace Nested Conditional with Guard Clauses
 <p>
 这两类条件式有不同的用途，这一点应该通过代码表现出来。如果两条分支都是正常行为，就应该使用形如「if…then…」的条件式；如果某个条件极其罕见，就应该单独检查该条件，并在该条件为真时立刻从函数中返回。这样的单独检查常常被称为「卫语句（guard clauses）」[Beck]。
 <p>
-Replace Nested Conditional with Guard Clauses 的精髓就是：给某一条分支以特别的重视。如果使用if-then-else 结构，你对if 分支和else 分支的重视是同等的。 这样的代码结构传递给阅读者的消息就是：各个分支有同样的重要性。卫语句（guard clauses）就不同了，它告诉阅读者：『这种情况很罕见，如果它真的发生了，请做 一些必要的整理工作，然后退出。』
+<a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Nested-Conditional-with-Guard-Clauses.html">Replace Nested Conditional with Guard Clauses</a> 的精髓就是：给某一条分支以特别的重视。如果使用if-then-else 结构，你对if 分支和else 分支的重视是同等的。 这样的代码结构传递给阅读者的消息就是：各个分支有同样的重要性。卫语句（guard clauses）就不同了，它告诉阅读者：『这种情况很罕见，如果它真的发生了，请做 一些必要的整理工作，然后退出。』
 <p>
-「每个函数只能有一个入口和一个出口」的观念，根深蒂固于某些程序员的脑海里。 我发现，当我处理他们编写的代码时，我经常需要使用Replace Nested Conditional with Guard Clauses。现今的编程语言都会强制保证每个函数只有一个入口， 至于「单一出口」规则，其实不是那么有用。在我看来，保持代码清晰才是最关键的：如果「单一出口」能使这个函数更清楚易读，那么就使用单一出口；否则就不必这么做。
+「每个函数只能有一个入口和一个出口」的观念，根深蒂固于某些程序员的脑海里。 我发现，当我处理他们编写的代码时，我经常需要使用<a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Nested-Conditional-with-Guard-Clauses.html">Replace Nested Conditional with Guard Clauses</a>。现今的编程语言都会强制保证每个函数只有一个入口， 至于「单一出口」规则，其实不是那么有用。在我看来，保持代码清晰才是最关键的：如果「单一出口」能使这个函数更清楚易读，那么就使用单一出口；否则就不必这么做。
 
 <h3>作法（Mechanics）</h3>
 <ul>
@@ -51,7 +51,7 @@ Replace Nested Conditional with Guard Clauses 的精髓就是：给某一条分�
   </li>
   <li>每次将「条件检查」替换成「卫语句」后，编译并测试。
     <ul>
-      <li>如果所有卫语句都导致相同结果，请使用Consolidate Conditional Expressions。</li>
+      <li>如果所有卫语句都导致相同结果，请使用<a href="{{site.baseurl}}/simplifying-conditional-expressions/Consolidate-Conditional-Expression.html">Consolidate Conditional Expression</a>s。</li>
     </ul>
   </li>
 </ul>
@@ -133,7 +133,7 @@ Replace Nested Conditional with Guard Clauses 的精髓就是：给某一条分�
 
 <h3>范例：将条件逆反（Reversing the Conditions）</h3>
 <p>
-审阅本书初稿时，Joshua Kerievsky 指出：你常常可以将条件表达式逆反，从而实现Replace Nested Conditional with Guard Clauses。为了拯救我可怜的想像力，他还好心帮我想了个例子：
+审阅本书初稿时，Joshua Kerievsky 指出：你常常可以将条件表达式逆反，从而实现<a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Nested-Conditional-with-Guard-Clauses.html">Replace Nested Conditional with Guard Clauses</a>。为了拯救我可怜的想像力，他还好心帮我想了个例子：
 {%highlight java linos %}
   public double getAdjustedCapital() {
     double result = 0.0;

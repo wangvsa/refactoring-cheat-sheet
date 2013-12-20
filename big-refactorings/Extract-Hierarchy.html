@@ -48,13 +48,13 @@ head_en: Extract Hierarchy
   <ul>
     <li>如果原始class 中的各种变异是以type code 标示，先使用 Replace Type Code with Subclasses ；如果那些变异在对象生命期间会改变， 请使用Replace Type Code with State/Strategy。</li>
   </ul>
-    <li>针对带有条件逻辑的函数，实施 Replace Conditional with Polymorphism。如果并非整个函数的行为有所变化，而只是函数一部分有所变化，请先运用 Extract Method 将变化部分和不变部分隔开来。</li>
+    <li>针对带有条件逻辑的函数，实施 <a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Conditional-with-Polymorphism.html">Replace Conditional with Polymorphism</a>。如果并非整个函数的行为有所变化，而只是函数一部分有所变化，请先运用 Extract Method 将变化部分和不变部分隔开来。</li>
 </ul>
 
 <br>
 <h3>范例：（Example）</h3>
 <p>
-这里所举的例子是「变异并不明朗」的情况。你可以在 Replace Type Code with Subclasses、Replace Type Code with State/Strategy 和 Replace Conditional with Polymorphism 等重构结果之上，验证「变异已经明朗」的情况下如何使用本项重构。
+这里所举的例子是「变异并不明朗」的情况。你可以在 Replace Type Code with Subclasses、Replace Type Code with State/Strategy 和 <a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Conditional-with-Polymorphism.html">Replace Conditional with Polymorphism</a> 等重构结果之上，验证「变异已经明朗」的情况下如何使用本项重构。
 <p>
 我们以一个电费计算程序为例。这个程序有两个classes ：表示「消费者」的Customer 和表示「计费方案」的BillingScheme，如图12.11。
 </p>
@@ -89,6 +89,6 @@ BillingScheme 使用大量条件逻辑来计算不同情况（变异）下的费
 <p>
 如果规定在「残障人士用电」和「企业用电」之间只能择一，那么我们的方案就可以避免在BusinessBillingScheme 中出现任何条件代码。
 <p>
-实施本项重构时，我们希望将「可能变化」和「始终不变」的部分分开，为此我们可以使用 Extract Method 和Decompose Conditional。本例将对BillingScheme 各函数实施这两项重构，直到「是否为残障人士」的所有判断都得到了适当处理。然后我们再以相同过程处理他种变异（例如「社会救济用电」）。
+实施本项重构时，我们希望将「可能变化」和「始终不变」的部分分开，为此我们可以使用 Extract Method 和<a href="{{site.baseurl}}/simplifying-conditional-expressions/Decompose-Conditional.html">Decompose Conditional</a>。本例将对BillingScheme 各函数实施这两项重构，直到「是否为残障人士」的所有判断都得到了适当处理。然后我们再以相同过程处理他种变异（例如「社会救济用电」）。
 <p>
 然而，当我们处理第二种变异时，我们应该观察「社会救济用电」与「残障人士用 电」有何不同。我们希望能够为不同的变异（特殊情况）建立起这般函数：有着相同意图，但针对不同的变异性（特殊情况）釆取不同的实际作为（译注：这就是Template Method）。例如上述两种变异情况下的税额计算可能不同。我们希望确保两个subclasses 中的相应函数有相同的签名式（signature）。这可能意味我们必须修改DisablityBillingScheme，使得以将subclasses 整理一番。通常我们发现，面对更多变异时，这种「相仿之中略带变化」的函数（similar and varying methods patterns）会使整个系统结构趋于稳定，使我们更容易添加后续更多变异。

@@ -28,7 +28,7 @@ links_11 = [
 ]
 basedir_11 = '{{site.baseurl}}/' + 'dealing-with-generalization/'
 
-links = [
+links_10 = [
 'Rename Method',
 'Add Parameter',
 'Remove Parameter',
@@ -45,7 +45,19 @@ links = [
 'Replace Error Code with Exception',
 'Replace Exception with Test'
 ]
-basedir = '{{site.baseurl}}/' + 'making-method-calls-simpler/'
+basedir_10 = '{{site.baseurl}}/' + 'making-method-calls-simpler/'
+
+links = [
+'Decompose Conditional',
+'Consolidate Conditional Expression',
+'Consolidate Duplicate Conditional Fragments',
+'Remove Control Flag',
+'Replace Nested Conditional with Guard Clauses',
+'Replace Conditional with Polymorphism',
+'Introduce Null ObjectNull',
+'Introduce Assertion'
+]
+basedir = '{{site.baseurl}}/' + 'simplifying-conditional-expressions/'
 
 targetDirs = [
 'bad-smells-in-code/',

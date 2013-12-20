@@ -84,7 +84,7 @@ title: Bad Smells in Code
         <p>
         如何确定该提炼哪一段代码昵？ 一个很好的技巧是：寻找注释。它们通常是指出「代码用途和实现手法间的语义距离」的信号。如果代码前方有一行注释，就是在提醒 你：可以将这段代码替换成一个函数，而且可以在注释的基础上给这个函数命名。就算只有一行代码，如果它需要以注释来说明，那也值得将它提炼到独立函数去。 
         <p>
-        条件式和循环常常也是提炼的信号。你可以使用Decompose Conditional 处理条件式。至于循环，你应该将循环和其内的代码提炼到一个独立函数中。]
+        条件式和循环常常也是提炼的信号。你可以使用<a href="{{site.baseurl}}/simplifying-conditional-expressions/Decompose-Conditional.html">Decompose Conditional</a> 处理条件式。至于循环，你应该将循环和其内的代码提炼到一个独立函数中。]
       <h2 class="content-subhead"><a name="large-class"/>Large Class（过大类）</h2>
         <p>
         如果想利用单一class做太多事情，其内往往就会出现太多instance变量。一旦如此，Duplicated Code也就接踵而至了。 
@@ -146,7 +146,7 @@ title: Bad Smells in Code
         <p>
         面向对象程序的一个最明显特征就是：少用switch (或case）语句。从本质上说， switch语句的问题在于重复（duplication）。你常会发现同样的switch语句散布 于不同地点。如果要为它添加一个新的子句，你必须找到所有switch语句 并修改它们。面向对象中的多态（polymorphism ）概念可为此带来优雅的解决办法。 
         <p>
-        大多数时候，一看到switch语句你就应该考虑以「多态」来替换它。问题是态 该出现在哪儿？switch语句常常根据 type code（型别码）进行选择，你要的是「与 该 type code相关的函数或class」。所以你应该使用Extract Method 将switch语句提炼到一个独立函数中，再以Move Method 将它搬移到需要多态性的那个class里头。此时你必须决定是否使用 Replace Type Code with Subclasses 或 Replace Type Code with State/Strategy。一旦这样完成继承结构之后， 你就可以运用Replace Conditional with Polymorphism了。 
+        大多数时候，一看到switch语句你就应该考虑以「多态」来替换它。问题是态 该出现在哪儿？switch语句常常根据 type code（型别码）进行选择，你要的是「与 该 type code相关的函数或class」。所以你应该使用Extract Method 将switch语句提炼到一个独立函数中，再以Move Method 将它搬移到需要多态性的那个class里头。此时你必须决定是否使用 Replace Type Code with Subclasses 或 Replace Type Code with State/Strategy。一旦这样完成继承结构之后， 你就可以运用<a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Conditional-with-Polymorphism.html">Replace Conditional with Polymorphism</a>了。 
         <p>
         如果你只是在单一函数中有些选择事例，而你并不想改动它们，那么「多态」就有 点杀鸡用牛刀了。这种情况下<a href="{{site.baseurl}}/making-method-calls-simpler/Replace-Parameter-with-Explicit-Methods.html">Replace Parameter with Explicit Methods</a>是个不错的选择。如果你的选择条件之一是null，可以试试Introduce Null Object。)
       <h2 class="content-subhead"><a name="parallel-inheritance-hierarchies"/>Parallel Inheritance Hierarchies（平行继承体系）</h2>
@@ -223,7 +223,7 @@ title: Bad Smells in Code
         <p>
         Comments可以带我们找到本章先前提到的各种坏味道。找到坏味道后，我们首先应该以各种重构手法把坏味道去除。完成之后我们常常会发现：注释已经变得多余了，因为代码已经清楚说明了一切。
         <p>
-        如果你需要注释来解释一块代码做了什么，试试 Extract Method；如果method已经提炼出来，但还是需要注释来解释其行为，试试<a href="{{site.baseurl}}/making-method-calls-simpler/Rename-Method.html">Rename Method</a>；如果你需要注释说明某些系统的需求规格，试试 Introduce Assertion。
+        如果你需要注释来解释一块代码做了什么，试试 Extract Method；如果method已经提炼出来，但还是需要注释来解释其行为，试试<a href="{{site.baseurl}}/making-method-calls-simpler/Rename-Method.html">Rename Method</a>；如果你需要注释说明某些系统的需求规格，试试 <a href="{{site.baseurl}}/simplifying-conditional-expressions/Introduce-Assertion.html">Introduce Assertion</a>。
         <p>
         TIP：当你感觉需要撰写注释，请先尝试重构，试着让所有注释都变得多余。        
         <p>

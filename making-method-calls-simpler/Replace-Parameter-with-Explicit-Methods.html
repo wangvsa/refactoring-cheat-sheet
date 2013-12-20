@@ -34,7 +34,7 @@ head_en: Replace Parameter with Explicit Methods
 <p>
 就算不考虑「编译期检验」的好处，只是为了获得一个清晰的接口，也值得你执行本项重构。哪怕只是给一个内部的布尔（boolean）变量赋值，相较之下Switch.beOn() 也比Switch.setState(true) 要清楚得-多。
 <p>
-但是，如果参数值不会对函数行为有太多影响，你就不应该使用<a href="{{site.baseurl}}/making-method-calls-simpler/Replace-Parameter-with-Explicit-Methods.html">Replace Parameter with Explicit Methods</a>。如果情况真是这样，而你也只需要通过参数为一个值域赋值，那么直接使用设值函数（setter）就行了。如果你的确需要「条件判断」 式的行为，可考虑使用Replace Conditional with Polymorphism。
+但是，如果参数值不会对函数行为有太多影响，你就不应该使用<a href="{{site.baseurl}}/making-method-calls-simpler/Replace-Parameter-with-Explicit-Methods.html">Replace Parameter with Explicit Methods</a>。如果情况真是这样，而你也只需要通过参数为一个值域赋值，那么直接使用设值函数（setter）就行了。如果你的确需要「条件判断」 式的行为，可考虑使用<a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Conditional-with-Polymorphism.html">Replace Conditional with Polymorphism</a>。
 
 <h3>作法（Mechanics）</h3>
 <ul>
@@ -68,7 +68,7 @@ head_en: Replace Parameter with Explicit Methods
   }
 {% endhighlight %}
 
-由于这是一个factory method，我不能实施Replace Conditional with Polymorphism ，因为使用该函数时我根本尚未创建出对象。我并不期待太多新的subclasses，所以一个明确的接口是合理的（译注：不甚理解作者文意）。首先，我要根据参数值建立相应的新函数：
+由于这是一个factory method，我不能实施<a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Conditional-with-Polymorphism.html">Replace Conditional with Polymorphism</a> ，因为使用该函数时我根本尚未创建出对象。我并不期待太多新的subclasses，所以一个明确的接口是合理的（译注：不甚理解作者文意）。首先，我要根据参数值建立相应的新函数：
 {% highlight java linos %}
   static Employee createEngineer() {
       return new Engineer();

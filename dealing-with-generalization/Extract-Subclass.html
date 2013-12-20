@@ -36,9 +36,9 @@ Extract Class 是<a href="{{site.baseurl}}/dealing-with-generalization/Extract-S
     <li>和Extract Class 不同的是，先处理函数再处理数据，通常会简单一些。</li>
     <li>当一个public 函数被下移到subclass 后，你可能需要重新定义该函数的调用端的局部变量或参数型别，让它们改调用subclass 中的新函数。如果忘记进行这一步骤，编译器会提醒你。</li>
   </ul>
-  <li>找到所有这样的值域：它们所传达的信息如今可由继承体系自身传达（这一类值域通常是boolean 变量或type code ）。以 Self Encapsulate Field 避免直接使用这些值域，然后将它们的取值函数（getter）替换为多态常量函数（polymorphic constant methods）。所有使用这些值域的地方都应该以Replace Conditional with Polymorphism 重构。</li>
+  <li>找到所有这样的值域：它们所传达的信息如今可由继承体系自身传达（这一类值域通常是boolean 变量或type code ）。以 Self Encapsulate Field 避免直接使用这些值域，然后将它们的取值函数（getter）替换为多态常量函数（polymorphic constant methods）。所有使用这些值域的地方都应该以<a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Conditional-with-Polymorphism.html">Replace Conditional with Polymorphism</a> 重构。</li>
   <ul>
-    <li>任何函数如果位于source class 之外，而又使用了上述值域的访问函数（accessors），考虑以 Move Method 将它移到source class 中， 然后再使用Replace Conditional with Polymorphism。</li>
+    <li>任何函数如果位于source class 之外，而又使用了上述值域的访问函数（accessors），考虑以 Move Method 将它移到source class 中， 然后再使用<a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Conditional-with-Polymorphism.html">Replace Conditional with Polymorphism</a>。</li>
   </ul>
   <li>每次下移之后，编译并测试。</li>
 </ul>  
@@ -191,7 +191,7 @@ _isLabor 值域所传达的信息，现在已经成为继承体系的内在信�
 <p>
 然后，我就可以摆脱_isLabor 值域了。
 <p>
-现在，我可以观察isLabor() 函数的用户，并运用Replace Conditional with Polymorphism 重构它们。我找到了下列这样的函数：
+现在，我可以观察isLabor() 函数的用户，并运用<a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Conditional-with-Polymorphism.html">Replace Conditional with Polymorphism</a> 重构它们。我找到了下列这样的函数：
 {% highlight java linos %}
     class JobItem...
       public int getUnitPrice(){
@@ -215,6 +215,6 @@ _isLabor 值域所传达的信息，现在已经成为继承体系的内在信�
 {% endhighlight %}
 
 <p>
-当使用某项值域的函数全被下移至subclass 后，我就可以使用 <a href="{{site.baseurl}}/dealing-with-generalization/Push-Down-Field.html">Push Down Field</a> 将值域也下移。如果尚还无法移动值域，那就表示，我需要对函数做更多处理，可能需要实施<a href="{{site.baseurl}}/dealing-with-generalization/Push-Down-Method.html">Push Down Method</a> 或 Replace Conditional with Polymorphism。
+当使用某项值域的函数全被下移至subclass 后，我就可以使用 <a href="{{site.baseurl}}/dealing-with-generalization/Push-Down-Field.html">Push Down Field</a> 将值域也下移。如果尚还无法移动值域，那就表示，我需要对函数做更多处理，可能需要实施<a href="{{site.baseurl}}/dealing-with-generalization/Push-Down-Method.html">Push Down Method</a> 或 <a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Conditional-with-Polymorphism.html">Replace Conditional with Polymorphism</a>。
 <p>
 由于_unitPrice 值域只被LaborItem 以外的对象（也就是parts job items）所用， 所以我可以再次运用<a href="{{site.baseurl}}/dealing-with-generalization/Extract-Subclass.html">Extract Subclass</a> 对JobItem 提炼出一个subclass ：PartsItem 。完成后，我可以将JobItem 声明为抽象类。

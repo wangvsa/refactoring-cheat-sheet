@@ -4,16 +4,16 @@ head_en: Simplifying Conditional Expressions
 head_zh: 简化条件表达式
 ---
 <p>
-条件逻辑（conditional logic）有可能十分复杂，因此本章提供一些重构手法，专门用来简化它们。其中一项核心重构就是 Decompose Conditional ，可将一个复杂的条件逻辑分成若干小块。这项重构很重要，因为它使得「转辙逻辑」（switching logic ）和「操作细节」（details）分离。
+条件逻辑（conditional logic）有可能十分复杂，因此本章提供一些重构手法，专门用来简化它们。其中一项核心重构就是 <a href="{{site.baseurl}}/simplifying-conditional-expressions/Decompose-Conditional.html">Decompose Conditional</a> ，可将一个复杂的条件逻辑分成若干小块。这项重构很重要，因为它使得「转辙逻辑」（switching logic ）和「操作细节」（details）分离。
  
 <p>
-本章的其余重构手法可用以处理另一些重要问题：如果你发现代码中的多处测试有相同结果，应该实施Consolidate Conditional Expression；如果条件代码中有任何重复，可以运用Consolidate Duplicate Conditional Fragments 将重复成分去掉。
+本章的其余重构手法可用以处理另一些重要问题：如果你发现代码中的多处测试有相同结果，应该实施<a href="{{site.baseurl}}/simplifying-conditional-expressions/Consolidate-Conditional-Expression.html">Consolidate Conditional Expression</a>；如果条件代码中有任何重复，可以运用<a href="{{site.baseurl}}/simplifying-conditional-expressions/Consolidate-Duplicate-Conditional-Fragments.html">Consolidate Duplicate Conditional Fragments</a> 将重复成分去掉。
  
 <p>
-如果程序开发者坚持「单一出口（one exit point ）」原则，那么为让条件式也遵循这 一原则，他往往会在其中加入控制标记（control flags ）。我并不特别在意「一个函数一个出口」原则，所以我使用 Replace Nested Conditional with Guard Clauses 标示出那些特殊情况，并使用Remove Control Flag 去除那些讨厌的控制标记。
+如果程序开发者坚持「单一出口（one exit point ）」原则，那么为让条件式也遵循这 一原则，他往往会在其中加入控制标记（control flags ）。我并不特别在意「一个函数一个出口」原则，所以我使用 <a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Nested-Conditional-with-Guard-Clauses.html">Replace Nested Conditional with Guard Clauses</a> 标示出那些特殊情况，并使用<a href="{{site.baseurl}}/simplifying-conditional-expressions/Remove-Control-Flag.html">Remove Control Flag</a> 去除那些讨厌的控制标记。
  
 <p>
-较之于过程化（procedural ）程序而言，面向对象（object oriented）程序的条件式通常比较少，这是因为很多条件行为都被多态机制（polymorphism）处理掉了。多态之所以更好，是因为调用者无需了解条件行为的细节，因此条件的扩展更为容易。所以面向对象程序中很少出现switch 语句；一旦出现，就应该考虑运用Replace Conditional with Polymorphism 将它替换为多态。
+较之于过程化（procedural ）程序而言，面向对象（object oriented）程序的条件式通常比较少，这是因为很多条件行为都被多态机制（polymorphism）处理掉了。多态之所以更好，是因为调用者无需了解条件行为的细节，因此条件的扩展更为容易。所以面向对象程序中很少出现switch 语句；一旦出现，就应该考虑运用<a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Conditional-with-Polymorphism.html">Replace Conditional with Polymorphism</a> 将它替换为多态。
 
 <p>
 多态还有一种十分有用但鲜为人知的用途：通过 Introduce Null Object 去除对于null value 的检验。

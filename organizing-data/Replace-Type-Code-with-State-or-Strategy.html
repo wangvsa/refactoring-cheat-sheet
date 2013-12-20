@@ -12,7 +12,7 @@ head_en: Replace Type Code with State or Strategy
 <p>
 本项重构和Replace Type Code with Subclasses 很相似，但如果「type code 的值在对象生命期中发生变化」或「其他原因使得宿主类不能被subclassing 」，你也可以使用本重构。本重构使用State 模式或Stategy 模式[Gang of Four]。
 <p>
-State 模式和Stategy 模式非常相似，因此无论你选择其中哪一个，重构过程都是相同的。「选择哪一个模式」并非问题关键所在，你只需要选择更适合特定情境的模式就行了。如果你打算在完成本项重构之后再以 Replace Conditional with Polymorphism 简化一个算法，那么选择Stategy 模式比较合适；如果你打算搬移与状态相关（state-specific）的数据，而且你把新建对象视为一种变迁状态 （changing state），就应该选择使用State 模式。
+State 模式和Stategy 模式非常相似，因此无论你选择其中哪一个，重构过程都是相同的。「选择哪一个模式」并非问题关键所在，你只需要选择更适合特定情境的模式就行了。如果你打算在完成本项重构之后再以 <a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Conditional-with-Polymorphism.html">Replace Conditional with Polymorphism</a> 简化一个算法，那么选择Stategy 模式比较合适；如果你打算搬移与状态相关（state-specific）的数据，而且你把新建对象视为一种变迁状态 （changing state），就应该选择使用State 模式。
 
 <h3>作法（Mechanics）</h3>
 <ul>
@@ -153,7 +153,7 @@ class Salesman extends EmployeeType {
 {% endhighlight %}
  
 <p>
-这意味我将在这里拥有一个switch 语句。完成重构之后，这将是代码中惟一的switch 语句,并且只在对象型别发生改变时才会被执行。我也可以运用<a href="{{site.baseurl}}/making-method-calls-simpler/Replace-Constructor-with-Factory-Method.html">Replace Constructor with Factory Method</a> 针对不同的case 子句建立相应的factory method 。我还可以立刻再使用Replace Conditional with Polymorphism，从而将其他的case 子句完全消除。
+这意味我将在这里拥有一个switch 语句。完成重构之后，这将是代码中惟一的switch 语句,并且只在对象型别发生改变时才会被执行。我也可以运用<a href="{{site.baseurl}}/making-method-calls-simpler/Replace-Constructor-with-Factory-Method.html">Replace Constructor with Factory Method</a> 针对不同的case 子句建立相应的factory method 。我还可以立刻再使用<a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Conditional-with-Polymorphism.html">Replace Conditional with Polymorphism</a>，从而将其他的case 子句完全消除。
 <p>
 最后，我喜欢将所有关于type code 和subclass 的知识都移到新的class ，并以此结束Replace Type Code with State/Strategy 首先我把type code 的定义拷贝到EmployeeType class 去，在其中建立一个factory method 以生成适当的 EmployeeType 对象，并调整Employee class 中为type code 赋值的函数：
 {% highlight java linos %}
@@ -199,4 +199,4 @@ class Salesman extends EmployeeType {
 {% endhighlight %}
 
 <p>
-现在，万事俱备，我可以运用Replace Conditional with Polymorphism 来处理payAmount 函数了。
+现在，万事俱备，我可以运用<a href="{{site.baseurl}}/simplifying-conditional-expressions/Replace-Conditional-with-Polymorphism.html">Replace Conditional with Polymorphism</a> 来处理payAmount 函数了。
