@@ -176,7 +176,7 @@
 }
 </code></pre>
 
-<p><img alt="" src="/images/arrow.gif" /></p>
+<p><img alt="" src="../images/arrow.gif" /></p>
 <pre class="prettyprint well"><code class="java">void printOwing(double amount) {
     printBanner();
     printDetails(amount);
@@ -410,7 +410,7 @@ boolean moreThanFiveLateDeliveries() {
 }
 </code></pre>
 
-<p><img alt="" src="/images/arrow.gif" /></p>
+<p><img alt="" src="../images/arrow.gif" /></p>
 <pre class="prettyprint well"><code class="java">int getRating() {
   return (_numberOfLateDeliveries &gt; 5) ? 2 : 1;
 }
@@ -438,7 +438,7 @@ boolean moreThanFiveLateDeliveries() {
   return (basePrice &gt; 1000)
 </code></pre>
 
-<p><img alt="" src="/images/arrow.gif" /></p>
+<p><img alt="" src="../images/arrow.gif" /></p>
 <pre class="prettyprint well"><code class="java">  return (anOrder.basePrice() &gt; 1000)
 </code></pre>
 
@@ -464,7 +464,7 @@ else
     return basePrice * 0.98;
 </code></pre>
 
-<p><img alt="" src="/images/arrow.gif" /></p>
+<p><img alt="" src="../images/arrow.gif" /></p>
 <pre class="prettyprint well"><code class="java">if (basePrice() &gt; 1000)
     return basePrice() * 0.95;
 else
@@ -585,7 +585,7 @@ private double discountFactor() {
 }
 </code></pre>
 
-<p><img alt="" src="/images/arrow.gif" /></p>
+<p><img alt="" src="../images/arrow.gif" /></p>
 <pre class="prettyprint well"><code class="java">final boolean isMacOs     = platform.toUpperCase().indexOf(&quot;MAC&quot;) &gt; -1;
 final boolean isIEBrowser = browser.toUpperCase().indexOf(&quot;IE&quot;)  &gt; -1;
 final boolean wasResized  = resize &gt; 0;
@@ -721,7 +721,7 @@ temp = _height * _width;
 System.out.println (temp);
 </code></pre>
 
-<p><img alt="" src="/images/arrow.gif" /></p>
+<p><img alt="" src="../images/arrow.gif" /></p>
 <pre class="prettyprint well"><code class="java">final double perimeter = 2 * (_height + _width);
 System.out.println (perimeter);
 final double area = _height * _width;
@@ -819,7 +819,7 @@ System.out.println (area);
     if (inputVal &gt; 50) inputVal -= 2;
 </code></pre>
 
-<p><img alt="" src="/images/arrow.gif" /></p>
+<p><img alt="" src="../images/arrow.gif" /></p>
 <pre class="prettyprint well"><code class="java">int discount (int inputVal, int quantity, int yearToDate) {
     int result = inputVal;
     if (inputVal &gt; 50) result -= 2;
@@ -951,7 +951,7 @@ d2 after nextDay: Wed Apr 01 00:00:00 EST 1998
         return basePrice * 0.98;
 </code></pre>
 
-<p><img alt="" src="/images/arrow.gif" /></p>
+<p><img alt="" src="../images/arrow.gif" /></p>
 <pre class="prettyprint well"><code class="java">    if (basePrice() &gt; 1000)
         return basePrice() * 0.95;
     else
@@ -1080,8 +1080,8 @@ double price() {
 }
 </code></pre>
 
-<p><img alt="" src="/images/arrow.gif" />
-<img alt="" src="/images/06fig01.gif" /></p>
+<p><img alt="" src="../images/arrow.gif" />
+<img alt="" src="../images/06fig01.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p>我在本书中不断向读者强调小型函数的优美动人。只要将相对独立的代码从大型函数中提炼出来，就可以大大提高代码的可读性。</p>
 <p>但是，局部变量的存在会增加函数分解难度。如果一个函数之中局部变量泛滥成灾, 那么想分解这个函数是非常困难的。<a href="./#_8">以查询取代临时变量</a> 可以助你减轻这一负担，但有时候你会发现根本无法拆解一个需要拆解的函数。这种情况下，你应该把手深深地伸入你的工具箱（好酒沉瓮底呢），祭出函数对象（method object ）[Beck]这件法宝。</p>
@@ -1201,7 +1201,7 @@ void importantThing() {
 }
 </code></pre>
 
-<p><img alt="" src="/images/arrow.gif" /></p>
+<p><img alt="" src="../images/arrow.gif" /></p>
 <pre class="prettyprint well"><code class="java">String foundPerson(String[] people){
     List candidates = Arrays.asList(new String[] {&quot;Don&quot;, &quot;John&quot;, &quot;Kent&quot;});
     for (int i=0; i&lt;people.length; i++)

@@ -183,7 +183,7 @@
 <hr />
 <p>某个函数需要从调用端得到更多信息。
 <strong>为此函数添加一个对象参数，让该对象带进函数所需信息。</strong></p>
-<p><img alt="" src="/images/10fig02.gif" /></p>
+<p><img alt="" src="../images/10fig02.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p><a href="./#_1">添加参数</a>是一个很常用的重构手法，我几乎可以肯定已经用过它了。使用这项重构的动机很简单：你必须修改一个函数，而修改后的函数需要一些过去没有的信息，因此你需要给该函数添加一个参数。</p>
 <p>实际上我比较需要说明的是：不使用本重构的时机。除了添加参数外，你常常还有其他选择。只要可能，其他选择都比本项「添加参数」要好，因为它们不会增加参数列的长度。过长的参数列是不好的味道，因为程序员很难记住那么多参数，而且长参数列往往伴随着坏味道Date Clumps。</p>
@@ -220,7 +220,7 @@
 }
 </code></pre>
 
-<p><img alt="" src="/images/arrow.gif" /></p>
+<p><img alt="" src="../images/arrow.gif" /></p>
 <pre class="prettyprint well"><code class="java">Reading lastReading() {
     return (Reading) readings.lastElement();
 }
@@ -272,7 +272,7 @@ Reading lastReading() {
 <hr />
 <p>有一个函数，从来没有被其他任何class 用到。
 <strong>将这个函数修改为private 。</strong></p>
-<p><img alt="" src="/images/10fig08.gif" /></p>
+<p><img alt="" src="../images/10fig08.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p>重构往往促使你修改「函数的可见度」（ visibility of methods）。提高函数可见度的情况很容易想像：另一个class 需要用到某个函数，因此你必须提高该函数的可见度。但是要指出一个函数的可见度是否过高，就稍微困难一些。理想状况下你可以使用工具检查所有函数，指出可被隐藏起来的函数。即使没有这样的工具，你也应该时常进行这样的检查。</p>
 <p>一种特别常见的情况是：当你而对一个过于丰富、提供了过多行为的接口时，就值得将非必要的取值函数（getter）和设值函数（setter）隐藏起来。尤其当你面对的是一个「只不过做了点简单封装」的数据容器（data holder）时，情况更是如此。 随着愈来愈多行为被放入这个class 之中，你会发现许多取值/设值函数不再需要为public ，因此可以把它们隐藏起来。如果你把取值/设值函数设为private ，并在他处直接访问变量，那就可以放心移除取值/设值函数了。</p>
@@ -386,7 +386,7 @@ Reading lastReading() {
 <hr />
 <p>某些参数总是很自然地同时出现。
 <strong>以一个对象取代这些参数。</strong></p>
-<p><img alt="" src="/images/10fig06.gif" /></p>
+<p><img alt="" src="../images/10fig06.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p>你常会看到特定的一组参数总是一起被传递。可能有好几个函数都使用这一组参数，这些函数可能隶属同一个class，也可能隶属不同的classes 。这样一组参数就是所谓的Date Clump （数据泥团）」，我们可以运用一个对象包装所有这些数据，再以该对象取代它们。哪怕只是为了把这些数据组织在一起，这样做也是值得的。本项重构的价值在于「缩短了参数列的长度」，而你知道，过长的参数列总是难以理解的。此外，新对象所定义的访问函数（accessors）还可以使代码更具一致性，这又进一步降低了代码的理解难度和修改难度。</p>
 <p>本项重构还可以带给你更多好处。当你把这些参数组织到一起之后，往往很快可以发现一些「可被移至新建class」的行为。通常，原本使用那些参数的函数对那些参数会有一些共通措施，如果将这些共通行为移到新对象中，你可以减少很多重复代码。</p>
@@ -551,7 +551,7 @@ class DateRange...
 <hr />
 <p>若干函数做了类似的工作，但在函数本体中却包含了不同的值。
 <strong>建立单一函数，以参数表达那些不同的值。</strong></p>
-<p><img alt="" src="/images/10fig05.gif" /></p>
+<p><img alt="" src="../images/10fig05.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p>你可能会发现这样的两个函数：它们做着类似的工作，但因少数几个值致使动作略有不同。这种情况下，你可以将这些各自分离的函数替换为一个统一函数，并通过参数来处理那些变化情况，用以简化问题。这样的修改可以去除重复的代码，并提高灵活性，因为你可以用这个参数处理其他（更多种）变化情况。</p>
 <p>作法（Mechanics）</p>
@@ -619,7 +619,7 @@ int high = daysTempRange().getHigh();
 withinPlan = plan.withinRange(low, high);
 </code></pre>
 
-<p><img alt="" src="/images/arrow.gif" /></p>
+<p><img alt="" src="../images/arrow.gif" /></p>
 <pre class="prettyprint well"><code class="java">withinPlan = plan.withinRange(daysTempRange());
 </code></pre>
 
@@ -726,7 +726,7 @@ class TempRange...
 <hr />
 <p>函数本体（method body）不再需要某个参数。
 <strong>将该参数去除。</strong></p>
-<p><img alt="" src="/images/10fig03.gif" /></p>
+<p><img alt="" src="../images/10fig03.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p>程序员可能经常添加参数，却往往不愿意去掉它们。他们打的如意算盘是，无论如 何，多余的参数不会引起任何问题，而且以后还可能用上它。</p>
 <p>这也是恶魔的诱惑，一定要把它从脑子里赶出去！参数指出函数所需信息，不同的参数值代表不同的意义。函数调用者必须为每一个参数操心该传什么东西进去。如果你不去掉多余参数，你就是让你的每一位用户多费一份心。这是很不划算的，尤其「去除参数」是非常简单的一项重构。</p>
@@ -757,7 +757,7 @@ class TempRange...
 <hr />
 <p>你的class 中的某个值域，应该在对象初创时被设值，然后就不再改变。
 <strong>去掉该值域的所有设值函数（setter）。</strong></p>
-<p><img alt="" src="/images/10fig07.gif" /></p>
+<p><img alt="" src="../images/10fig07.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p>如果你为某个值域提供了设值函数（setter），这就暗示这个值域值可以被改变。如果你不希望在对象初创之后此值域还有机会被改变，那就不要为它提供设值函数 （同时并将该值域设为final ）。这样你的意图会更加清晰，并且往往可以排除其值被修改的可能性——这种可能性往往是非常大的。</p>
 <p>如果你保留了间接访问变量的方法，就可能经常有程序员盲目使用它们[Beck]。这些人甚至会在构造函数中使用设值函数！我猜想他们或许是为了代码的一致性，但却忽视了设值函数往后可能带来的混淆。</p>
@@ -869,7 +869,7 @@ InterestAccount (String id, double rate) {
 <hr />
 <p>函数的名称未能揭示函数的用途。
 <strong>修改函数名称。</strong></p>
-<p><img alt="" src="/images/10fig01.gif" /></p>
+<p><img alt="" src="../images/10fig01.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p>我极力提倡的一种编程风格就是：将复杂的处理过程分解成小函数。但是，如果做得不好，这会使你费尽周折却弄不清楚这些小函数各自的用途。要避免这种麻烦，关键就在于给函数起一个好名称。函数的名称应该准确表达它的用途。给函数命名有一个好办法：首先考虑应该给这个函数写上一句怎样的注释，然后想办法将注释变成函数名称。</p>
 <p>人生不如意，十之八九。你常常无法第一次就给函数起一个好名称。这时候你可能会想：就这样将就着吧——毕竟只是一个名称而已。当心！这是恶魔的召唤，是通 向混乱之路，千万不要被它诱惑！如果你看到一个函数名称不能很好地表达它的用 途，应该马上加以修改。记住，你的代码首先是为人写的，其次才是为计算器写的。 而人需要良好名称的函数。想想过去曾经浪费的无数时间吧。如果给每个函数都起一个良好的名称，也许你可以节约好多时间。起一个好名称并不容易，需要经验； 要想成为一个真正的编程高手，「起名称」的水平是至关重要的。当然，函数签名式（signature）中的其他部分也一样重要；如果重新安排参数顺序，能够帮助提高代码的清晰度，那就大胆地去做吧，你有 <a href="./#_1">添加参数</a> 和<a href="./#_7">移除参数</a> 这两项武器。</p>
@@ -919,7 +919,7 @@ InterestAccount (String id, double rate) {
 }
 </code></pre>
 
-<p><img alt="" src="/images/arrow.gif" /></p>
+<p><img alt="" src="../images/arrow.gif" /></p>
 <pre class="prettyprint well"><code class="java">static Employee create(int type) {
     return new Employee(type);
 }
@@ -1054,7 +1054,7 @@ static Person createFemale() {
 }
 </code></pre>
 
-<p><img alt="" src="/images/arrow.gif" /></p>
+<p><img alt="" src="../images/arrow.gif" /></p>
 <pre class="prettyprint well"><code class="java">void withdraw(int amount) throws BalanceException {
     if (amount &gt; _balance) throw new BalanceException();
     _balance -= amount;
@@ -1222,7 +1222,7 @@ class Account ...
 }
 </code></pre>
 
-<p><img alt="" src="/images/arrow.gif" /></p>
+<p><img alt="" src="../images/arrow.gif" /></p>
 <pre class="prettyprint well"><code class="java">double getValueForPeriod (int periodNumber) {
     if (periodNumber &gt;= _values.length) return 0;
     return _values[periodNumber];
@@ -1351,7 +1351,7 @@ class Assert...
 }
 </code></pre>
 
-<p><img alt="" src="/images/arrow.gif" /></p>
+<p><img alt="" src="../images/arrow.gif" /></p>
 <pre class="prettyprint well"><code class="java">void setHeight(int arg) {
     _height = arg;
 }
@@ -1453,7 +1453,7 @@ discountLevel = getDiscountLevel();
 double finalPrice = discountedPrice (basePrice, discountLevel);
 </code></pre>
 
-<p><img alt="" src="/images/arrow.gif" /></p>
+<p><img alt="" src="../images/arrow.gif" /></p>
 <pre class="prettyprint well"><code class="java">int basePrice = _quantity * _itemPrice;
 double finalPrice = discountedPrice (basePrice);
 </code></pre>
@@ -1556,7 +1556,7 @@ private double getBasePrice() {
 <hr />
 <p>某个函数既返回对象状态值，又修改对象状态（state）。
 <strong>建立两个不同的函数，其中一个负责査询，另一个负责修改。</strong></p>
-<p><img alt="" src="/images/10fig04.gif" /></p>
+<p><img alt="" src="../images/10fig04.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p>如果某个函数只是向你提供一个值，没有任何看得到的副作用（或说连带影响）， 那么这是个很有价值的东西。你可以任意调用这个函数，也可以把调用动作搬到函 数的其他地方。简而言之，需要操心的事情少多了。</p>
 <p>明确表现出「有副作用」与「无副作用」两种函数之间的差异，是个很好的想法。 下而是一条好规则：任何有返回值的函数，都不应该有看得到的副作用。有些程序 员甚至将此作为一条必须遵守的规则[Meyer]。就像对待任何东西一样，我并不绝对遵守它，不过我总是尽量遵守，而它也回报我很好的效果。</p>

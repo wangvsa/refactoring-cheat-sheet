@@ -162,7 +162,7 @@
 <hr />
 <p>某个class做了应该由两个classes做的事。</p>
 <p><strong>建立一个新class，将相关的值域和函数从旧class搬移到新class。</strong></p>
-<p><img alt="" src="/images/07fig03.gif" /></p>
+<p><img alt="" src="../images/07fig03.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p>你也许听过类似这样的教诲：一个class应该是一个清楚的抽象（abstract），处理一些明确的责任。但是在实际工作中，class会不断成长扩展。你会在这儿加入一些功能，在那儿加入一些数据。给某个class添加一项新责任时，你会觉得不值得为这项责任分离出一个单独的class。于是，随着责任不断増加，这个class会变得过份复杂。很快，你的class就会变成一团乱麻。</p>
 <p>这样的class往往含有大量函数和数据。这样的class往往太大而不易理解。此时你需要考虑哪些部分可以分离出去，并将它们分离到一个单独的class中。如果某些数据和某些函数总是一起出现，如果某些数据经常同时变化甚至彼此相依，这就表示你应该将它们分离出去。一个有用的测试就是问你自己，如果你搬移了某些值域和函数，会发生什么事？其他值域和函数是否因此变得无意义？</p>
@@ -292,7 +292,7 @@ class TelephoneNumber...
 <p>译注：本节大量保留class,method,source,target等字眼）</p>
 <p>你的程序中，某个field（值域〕被其所驻class之外的另一个class更多地用到。</p>
 <p><strong>在target class 建立一个new field，修改source field的所有用户，令它们改用此new field。</strong></p>
-<p><img alt="" src="/images/07fig02.gif" /></p>
+<p><img alt="" src="../images/07fig02.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p>在classes之间移动状态（states）和行为，是重构过程中必不可少的措施。随着系统发展，你会发现自己需要新的class，并需要将原本的工作责任拖到新的class中。这个星期中合理而正确的设计决策，到了下个星期可能不再正确。这没问题；如果你从来没遇到这种情况，那才有问题。</p>
 <p>如果我发现，对于一个field（值域），在其所驻class之外的另一个class中有更多函数使用了它，我就会考虑搬移这个field。上述所谓「使用」可能是通过设值/取值（setting/getting）函数间接进行。我也可能移动该field的用户（某函数），这取决于是否需要保持接口不受变化。如果这些函数看上去很适合待在原地，我就选择搬移field。</p>
@@ -383,7 +383,7 @@ private double getInterestRate () {
 <p>（译注：本节大量保留class,method,source,target等字眼）</p>
 <p><strong>你的程序中，有个函数与其所驻class之外的另一个class进行更多交流：调用后者，或被后者调用。</strong></p>
 <p>在该函数最常引用（指涉）的class中建立一个有着类似行为的新函数。将旧函数变成一个单纯的委托函数（delegating method），或是将旧函数完全移除。</p>
-<p><img alt="" src="/images/07fig01.gif" /> </p>
+<p><img alt="" src="../images/07fig01.gif" /> </p>
 <p><strong>动机（Motivation）</strong></p>
 <p>「函数搬移」是重构理论的支柱。如果一个class有太多行为，或如果一个class与另一个class有太多合作而形成高度耦合（highly coupled)，我就会搬移函数。通过这种手段，我可以使系统中的classes更简单，这些classes最终也将更干净利落地实现系统交付的任务。</p>
 <p>常常我会浏览class的所有函数，从中寻找这样的函数：使用另一个对象的次数比使用自己所驻对象的次数还多。一旦我移动了一些值域，就该做这样的检查。一旦发现「有可能被我搬移」的函数，我就会观察调用它的那一端、它调用的那一端，以及继承体系中它的任何一个重定义函数。然后，我会根据「这个函数与哪个对象的交流比较多」，决定其移动路径。</p>
@@ -492,7 +492,7 @@ private double getInterestRate () {
 <hr />
 <p>你的某个class没有做太多事情（没有承担足够责任）。 </p>
 <p><strong>将class的所有特性搬移到另一个class中，然后移除原class。</strong> </p>
-<p><img alt="" src="/images/07fig04.gif" /></p>
+<p><img alt="" src="../images/07fig04.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p><a href="./#_4">将类内联化</a>正好与<a href="./#_1">提炼类</a> 相反。如果一个class不再承担足够 责任、不再有单独存在的理由〔这通常是因为此前的重构动作移走了这个class的 责任），我就会挑选这一「萎缩class」的最频繁用户（也是个class），以<a href="./#_4">将类内联化</a>手法将「妻缩class」塞进去。</p>
 <p><strong>作法（Mechanics）</strong></p>
@@ -572,12 +572,12 @@ martin.setAreaCode (&quot;781&quot;);
 <hr />
 <p>客户直接调用其server object（服务对象）的delegate class。</p>
 <p><strong>在server端（某个class〕建立客户所需的所有函数，用以隐藏委托关系（delegation）。</strong></p>
-<p><img alt="" src="/images/07fig05.gif" /> </p>
+<p><img alt="" src="../images/07fig05.gif" /> </p>
 <p><strong>动机（Motivation）</strong></p>
 <p>「封装」即使不是对象的最关键特征，也是最关键特征之一。「封装」意味每个对象都应该尽可能少了解系统的其他部分。如此一来，一旦发生变化，需要了解这一 变化的对象就会比较少——这会使变化比较容易进行。</p>
 <p>任何学过对象技术的人都知道：虽然Java允许你将值域声明为public，但你还是应该隐藏对象的值域。随着经验日渐丰富，你会发现，有更多可以（并值得）封装的东西。</p>
 <p>如果某个客户调用了「建立于server object (服务对象）的某个值域基础之上」的函数，那么客户就必须知晓这一委托对象（delegate object。译注：即server object的那个特殊值域）。万一委托关系发生变化，客户也得相应变化。你可以在server 端放置一个简单的委托函数（delegating method），将委托关系隐藏起来，从而去除这种依存性（图7.1）。这么一来即便将来发生委托关系上的变化，变化将被限制在server中，不会波及客户。</p>
-<p><img alt="" src="/images/07fig06.gif" /> 
+<p><img alt="" src="../images/07fig06.gif" /> 
 图7.1  简单的委托关系（delegation）</p>
 <p>对于某些客户或全部客户，你可能会发现，有必要先使用<a href="./#_1">提炼类</a>。一旦你对所有客户都隐藏委托关系（delegation），你就可以将server 接口中的所有 委托都移除。</p>
 <p><strong>作法（Mechanics）</strong></p>
@@ -635,7 +635,7 @@ class Department {
 <hr />
 <p>某个class做了过多的简单委托动作（simple delegation）。 </p>
 <p><strong>让客户直接调用delegate（受托类）。</strong>
-<img alt="" src="/images/07fig07.gif" /></p>
+<img alt="" src="../images/07fig07.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p>在<a href="./#_5">隐藏委托关系</a>的「动机」栏，我谈到了「封装 delegated object（受托对 象）」的好处。但是这层封装也是要付出代价的，它的代价就是：每当客户要使用 delegate（受托类）的新特性时，你就必须在server 端添加一个简单委托函数。随着delegate的特性（功能）愈来愈多，这一过程会让你痛苦不己。server 完全变成了一 个「中间人」，此时你就应该让客户直接调用delegate。</p>
 <p>很难说什么程度的隐藏才是合适的。还好，有了<a href="./#_5">隐藏委托关系</a>和<a href="./#_6">移除中间人</a>，你大可不必操心这个问题，因为你可以在系统运行过程中不断进行调整。随着系统的变化，「合适的隐藏程度」这个尺度也相应改变。六个月 前恰如其分的封装，现今可能就显得笨拙。重构的意义就在于：你永远不必说对不起——只要把出问题的地方修补好就行了。</p>
@@ -683,7 +683,7 @@ class Department...
 <pre class="prettyprint well"><code class="java">Date newStart = new Date (previousEnd.getYear(), previousEnd.getMonth(), previousEnd.getDate() + 1);
 </code></pre>
 
-<p><img alt="" src="/images/arrow.gif" /></p>
+<p><img alt="" src="../images/arrow.gif" /></p>
 <pre class="prettyprint well"><code class="java">Date newStart = nextDay(previousEnd);
 
 private static Date nextDay(Date arg) {
@@ -723,7 +723,7 @@ private static Date nextDay(Date arg) {
 <hr />
 <p>你所使用的server class需要一些额外函数，但你无法修改这个class。</p>
 <p><strong>建立一个新class，使它包含这些额外函数。让这个扩展品成为source class的subclass （子类〕或wrapper（外覆类）。</strong></p>
-<p><img alt="" src="/images/07fig08.gif" /></p>
+<p><img alt="" src="../images/07fig08.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p>很遗憾，classes的作者无法预知未来，他们常常没能为你预先准备一些有用的函数。如果你可以修改源码，最好的办法就是直接加入自己需要的函数。但你经常无法修改源码。如果只需要一两个函数，你可以使用<a href="./#_7">引入外加函数</a>。 但如果你需要的额外函数超过两个，外加函数（foreign methods）就很难控制住它 们了。所以，你需要将这些函数组织在一起，放到一个恰当地方去。要达到这一目 的，标准对象技术subclassing和wrapping是显而易见的办法。这种情况下我把 subclass 或wrapper称为local extention（本地扩展〕。</p>
 <p>所谓local extention是一个独立的class，但也是其extended class的subtype（译注： 这里的subtype不同于subclass；它和extended class并不一定存在严格的继承关系，只要能够提供extended class的所有特性即可）。这意味它提供original class的一切特性，同时并额外添加新特性。在任何使用original class的地方，你都可以使用local extention取而代之。</p>

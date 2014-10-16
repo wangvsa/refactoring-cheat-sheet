@@ -186,7 +186,7 @@
 <hr />
 <p>两个鄉之间有双向关联，但其中一个class如今不再需要另一个class的特性。</p>
 <p>去除不必要的关联（association）。</p>
-<p><img alt="" src="/images/08fig07.gif" /></p>
+<p><img alt="" src="../images/08fig07.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p>双向关联（bidirectional associations）很有用，但你也必须为它付出代价，那就是「维护双向连接、确保对象被正确创建和删除」而增加的复杂度。而且，由于很多程序 员并不习惯使用双向关联，它往往成为错误之源。</p>
 <p>大量的双向连接（two-way links）也很容易引发「僵尸对象」：某个对象本来已经该死亡了，却仍然保留在系统中，因为对它的各项引用还没有完全清除。</p>
@@ -279,7 +279,7 @@ double getPriceFor(Order order) {
 <hr />
 <p>你有一个reference object（引用对象），很小且不可变（immutable），而且不易管理。</p>
 <p>将它变成一个value object（实值对象）。
-<img alt="" src="/images/08fig03.gif" /></p>
+<img alt="" src="../images/08fig03.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p>正如我在<a href="./#_2">将引用对象改为实值对象</a>中所说，要在reference object和value object之间做选择，有时并不容易。作出选择后，你常会需要一条回头路。</p>
 <p>如果reference object开始变得难以使用，也许你就应该将它改为value object。 reference object必须被某种方式控制，你总是必须向其控制者请求适当的reference object。它们可能造成内存区域之间错综复杂的关联。在分布系统和并发系统中，不可变的value object特别有用，因为你无须考虑它们的同步问题。</p>
@@ -340,7 +340,7 @@ double getPriceFor(Order order) {
 <hr />
 <p>两个classes都需要使用对方特性，但其间只有一条单向连接（one-way link）。</p>
 <p>添加一个反向指针，并使修改函数（modifiers）能够同时更新两条连接。（译注：这里的指针等同于句柄（handle），修改函数（modifier）指的是改变双方关系者）
-<img alt="" src="/images/08fig06.gif" /></p>
+<img alt="" src="../images/08fig06.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p>开发初期，你可能会在两个classes之间建立一条单向连接，使其中一个可以引用另一个class。随着时间推移，你可能发现referred class 需要得到其引用者（某个object）以便进行某些处理。也就是说它需要一个反向指针。但指针乃是一种单向连接，你不可能反向操作它。通常你可以绕道而行，虽然会耗费一些计算时间， 成本还算合理，然后你可以在referred class中建立一个专职函数，负责此一行为。 但是，有时候，想绕过这个问题并不容易，此时你就需要建立双向引用关系（two-way reference），或称为反向指针（back pointer）。如果你不习惯使用反向指针，它们很容易造成混乱；但只要你习惯了这种手法，它们其实并不是太复杂。</p>
 <p>「反向指针」手法有点棘手，所以在你能够自在运用它之前，应该有相应的测试。通常我不花心思去测试访问函数（accessors），因为普通访问函数的风险没有高到需要测试的地步，但本重构要求测试访问函数，所以它是极少数需要添加测试的重构 手法之一。</p>
@@ -425,7 +425,7 @@ class Customer...
 <hr />
 <p>你有一个class，衍生出许多相等实体（equal instances），你希望将它们替换为单一对象。</p>
 <p>将这个value object （实值对象）变成一个reference object (引用对象）。</p>
-<p>![](/images/08fig02.gif"/&gt;</p>
+<p>![](../images/08fig02.gif"/&gt;</p>
 <p><strong>动机（Motivation）</strong></p>
 <p>在许多系统中，你都可以对对象做一个有用的分类：reference object和value objects。前者就像「客户」、「帐户」这样的东西，每个对象都代表真实世界中的一个实物，你可以直接以相等操作符（==，用来检验同一性，identity）检査两个对象 是否相等。后者则是像「日期」、「钱」这样的东西，它们完全由其所含的数据值来定义，你并不在意副本的存在；系统中或许存在成百上千个内容为"1/1/2000"的「日期」对象。当然，你也需要知道两个value objects是否相等，所以你需要覆写equals()和hashCode()）。</p>
 <p>要在reference object和value objects之间做选择有时并不容易。有时候，你会从一个简单的value objects开始，在其中保存少量不可修改的数据。而后，你可能会希望给这个对象加入一些可修改数据，并确保对任何一个对象的修改都能影响到所有引用此一对象的地方。这时候你就需要将这个对象变成一个reference object。</p>
@@ -541,7 +541,7 @@ class Customer...
 <p>(译注：本节大量保留domain，presentation，event，getter/setter，observed等字眼。所谓presentation class，用以处理「数据表现形式」；所谓domain class，用以处理业务逻辑。）</p>
 <p>你有一些domain class置身于GUI控件中，而domain method需要访问之。</p>
 <p>将该笔数据拷贝到一个domain object中。建立一个Observer模式，用以对domain object和GUI object内的重复数据进行同步控制（sync.）。
-<img alt="" src="/images/08fig04.gif" /></p>
+<img alt="" src="../images/08fig04.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p>一个分层良好的系统，应该将处理用户界面（UI）和处理业务逻辑（business logic）的代码分开。之所以这样做，原因有以下几点：(1) 你可能需要使用数个不同的用 户界面来表现相同的业务逻辑；如果同时承担两种责任，用户界面会变得过分复杂； (2) 与GUI隔离之后，domain class的维护和演化都会更容易；你甚至可以让不同的开发者负责不同部分的开发。</p>
 <p>尽管你可以轻松地将「行为」划分到不同部位，「数据」却往往不能如此。同一笔 数据有可能既需要内嵌于GUI控件，也需要保存于domain model里头。自从MVC（Model-View-Controller）模式出现后，用户界面框架都使用多层系统（multitiered system）来提供某种机制，使你不但可以提供这类数据，并保持它们同步（sync.）。</p>
@@ -573,7 +573,7 @@ class Customer...
 </ul>
 <p><strong>范例（Example）</strong></p>
 <p>我们的范例从图8.1所示窗口开始。其行为非常简单：当用户修改文本框中的数值，另两个文本框就会自动更新。如果你修改Start或End，length就会自动成为两者计算所得的长度；如果你修改length，End就会随之改变。
-<img alt="" src="/images/08fig05.gif" />
+<img alt="" src="../images/08fig05.gif" />
 图8.1  一个简单的GUI窗口</p>
 <p>一开始，所有函数都放在IntervalWindow class中。所有文本都能够响应「失去键盘焦点」（loss of focus）这一事件。</p>
 <pre class="prettyprint well"><code class="java">public class IntervalWindow extends Frame...
@@ -762,7 +762,7 @@ void EndField_FocusLost(java.awt.event.FocusEvent event) {
 <hr />
 <p>有个函数（method）返回一个群集（collection）。</p>
 <p>让这个函数返回该群集的一个只读映件（read-only view），并在这个class中提供「添加/移除」（add/remove）群集元素的函数。
-![](/images/08fig08.gif"/&gt;</p>
+![](../images/08fig08.gif"/&gt;</p>
 <p><strong>动机（Motivation）</strong></p>
 <p>class常常会使用群集（collection，可能是array、list、set或vector）来保存一组实体。这样的class通常也会提供针对该群集的「取值/设值函数」（getter/setter）。</p>
 <p>但是，群集的处理方式应该和其他种类的数据略有不同。取值函数（getter）不该返回群集自身，因为这将让用户得以修改群集内容而群集拥有者却一无所悉。这也会对用户暴露过多「对象内部数据结构」的信息。如果一个取值函数（getter）确实需要返回多个值，它应该避免用户直接操作对象内所保存的群集，并隐藏对象内「与用户无关」的数据结构。至于如何做到这一点，视你使用的版本不同而有所不同。</p>
@@ -1072,7 +1072,7 @@ String[] _skills;
 <pre class="prettyprint well"><code class="java">public String _name
 </code></pre>
 
-<p><img alt="" src="/images/arrow.gif" /></p>
+<p><img alt="" src="../images/arrow.gif" /></p>
 <pre class="prettyprint well"><code class="java">private String _name;
 public String getName() {return _name;}
 public void setName(String arg) {_name = arg;}
@@ -1102,7 +1102,7 @@ row [0] = &quot;Liverpool&quot;;
 row [1] = &quot;15&quot;;
 </code></pre>
 
-<p><img alt="" src="/images/arrow.gif" /></p>
+<p><img alt="" src="../images/arrow.gif" /></p>
 <pre class="prettyprint well"><code class="java">Performance row = new Performance();
 row.setName(&quot;Liverpool&quot;);
 row.setWins(&quot;15&quot;);
@@ -1212,7 +1212,7 @@ int wins = row.getWins();
 <hr />
 <p>你有一笔数据项（data item），需要额外的数据和行为。</p>
 <p>将这笔数据项变成一个对象。</p>
-<p>![](/images/08fig01.gif"/&gt;</p>
+<p>![](../images/08fig01.gif"/&gt;</p>
 <p><strong>动机（Motivation）</strong></p>
 <p>开发初期，你往往决定以简单的数据项（data item）表示简单的行为。但是，随着开发的进行，你可能会发现，这些简单数据项不再那么简单了。比如说，一开始你可能会用一个字符串来表示「电话号码」概念，但是随后你就会发现，电话号码需要「格式化」、「抽取区号」之类的特殊行为。如果这样的数据项只有一二个，你还可以把相关函数放进数据项所属的对象里头；但是Duplication Code臭味和Feature Envy臭味很快就会从代码中散发出来。当这些臭味开始出现，你就应该将数据值（data value）变成对象（object）。</p>
 <p>作法（Mechanics）</p>
@@ -1307,7 +1307,7 @@ public void setCustomer(String customerName) {
 }
 </code></pre>
 
-<p><img alt="" src="/images/arrow.gif" /></p>
+<p><img alt="" src="../images/arrow.gif" /></p>
 <pre class="prettyprint well"><code class="java">double potentialEnergy(double mass, double height) {
     return mass * GRAVITATIONAL_CONSTANT * height;
 }
@@ -1345,7 +1345,7 @@ static final double GRAVITATIONAL_CONSTANT = 9.81;
 <hr />
 <p>你的各个subclasses 的惟一差别只在「返回常量数据」的函数身上。</p>
 <p><em>修改这些函数，使它们返回superclass 中的某个（新增）值域，然后销毁subclasses 。</em>
-<img alt="" src="/images/08fig12.gif" /></p>
+<img alt="" src="../images/08fig12.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p>建立subclass 的目的，是为了增如新特性，或变化其行为。有一种变化行为（variant behavior ）称为「常量函数」（constant method）[Beck]，它们会返回一个硬编码 （hard-coded）值。这东西有其用途：你可以让不同的subclasses 中的同一个访问函数（accessors）返回不同的值。你可以在superclass 中将访问函数声明为抽象函数， 并在不同的subclass 中让它返回不同的值。</p>
 <p>尽管常量函数有其用途，但若subclass 中只有常量函数，实在没有足够的存在价值。 你可以在中设计一个与「常量函数返回值」相应的值域，从而完全去除这样的subclass 。如此一来就可以避免因subclassing 而带来的额外复杂性。</p>
@@ -1461,7 +1461,7 @@ class Male...
 <hr />
 <p>class 之中有一个数值型别码（ numeric type code ），但它并不影响class 的行为。</p>
 <p><em>以一个新的class 替换该数值型别码（type code）。</em></p>
-<p>![](/images/08fig09.gif"/&gt;</p>
+<p>![](../images/08fig09.gif"/&gt;</p>
 <p><strong>动机（Motivation）</strong></p>
 <p>在以C 为基础的编程语言中，type code（型别码）或枚举值（enumerations）很常见。如果带着一个有意义的符号名，type code 的可读性还是不错的。问题在于，符号名终究只是个别名，编译器看见的、进行型别检验的，还是背后那个数值。任何接受type code 作为引数（argument）的函数，所期望的实际上是一个数值，无法强制使用符号名。这会大大降低代码的可读性，从而成为臭虫之源。</p>
 <p>如果把那样的数值换成一个class ，编译器就可以对这个class 进行型别检验。只要为这个class 提供factory methods ，你就可以始终保证只有合法的实体才会被创建出 来，而且它们都会被传递给正确的宿主对象。</p>
@@ -1647,7 +1647,7 @@ public void setBloodGroup(BloodGroup arg) {
 <hr />
 <p>你有一个type code ，它会影响class 的行为，但你无法使用subclassing。</p>
 <p><em>以state object （专门用来描述状态的对象）取代type code 。</em>
-<img alt="" src="/images/08fig11.gif" /></p>
+<img alt="" src="../images/08fig11.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p>本项重构和<a href="./#_14">以子类取代型别码</a> 很相似，但如果「type code 的值在对象生命期中发生变化」或「其他原因使得宿主类不能被subclassing 」，你也可以使用本重构。本重构使用State 模式或Stategy 模式[Gang of Four]。</p>
 <p>State 模式和Stategy 模式非常相似，因此无论你选择其中哪一个，重构过程都是相同的。「选择哪一个模式」并非问题关键所在，你只需要选择更适合特定情境的模式就行了。如果你打算在完成本项重构之后再以 <a href="../simplifying-conditional-expressions/#_6">以多态取代条件式</a> 简化一个算法，那么选择Stategy 模式比较合适；如果你打算搬移与状态相关（state-specific）的数据，而且你把新建对象视为一种变迁状态 （changing state），就应该选择使用State 模式。</p>
@@ -1821,7 +1821,7 @@ class EmployeeType...
 <hr />
 <p>你有一个不可变的（immutable）type code ，它会影响class 的行为。</p>
 <p><em>以一个subclass 取代这个type code。</em>
-<img alt="" src="/images/08fig10.gif" /></p>
+<img alt="" src="../images/08fig10.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p>如果你面对的type code 不会影响宿主类的行为，你可以使用<a href="./#_13">以类取代型别码</a> 来处理它们。但如果type code 会影响宿主类的行为，那么最好的办法就是借助多态（polymorphism ）来处理变化行为。</p>
 <p>一般来说，这种情况的标志就是像switch 这样的条件式。这种条件式可能有两种表现形式：switch 语句或者if-then-else 结构。不论哪种形式，它们都是检查type code 值，并根据不同的值执行不同的动作。这种情况下你应该以<a href="../simplifying-conditional-expressions/#_6">以多态取代条件式</a> 进行重构。但为了能够顺利进行那样的重构，首先应该将type code 替换为可拥有多态行为的继承体系。这样的一个继承体系应该以type code 的宿主类为base class，并针对每一种type code 各建立一个subclass 。</p>
@@ -1912,7 +1912,7 @@ boolean includes (int arg) {
 }
 </code></pre>
 
-<p><img alt="" src="/images/arrow.gif" /></p>
+<p><img alt="" src="../images/arrow.gif" /></p>
 <pre class="prettyprint well"><code class="java">private int _low, _high;
 boolean includes (int arg) {
     return arg &gt;= getLow() &amp;&amp; arg &lt;= getHigh();

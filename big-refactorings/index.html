@@ -150,7 +150,7 @@
 <hr />
 <p>某个继承体系（inheritance hierarchy ）同时承担两项责任。</p>
 <p><strong><em>建立两个继承体系，并通过委托关系（delegation）让其中一个可以调用另一个。</em></strong></p>
-<p><img alt="" src="/images/12fig01.gif" /></p>
+<p><img alt="" src="../images/12fig01.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p>继承是个好东西，它使你得以在subclass 中写出明显「压缩过」（compressed）的 代码。函数的重要性可能并不和它的大小成比例——在继承体系之中尤然。</p>
 <p>不过，先别急着为这个强大的工具欢呼雀跃，因为继承也很容易被误用，并且这种误用还很容易在开发人员之间蔓延。今天你为了一项小小任务而加入一个小小的subclass ；明天又为同样任务在继承体系的另一个地方加入另一个subclass 。一个星期（或者一个月或者一年）之后，你就会发现自己身陷泥淖，而且连一根拐杖都没有。</p>
@@ -168,7 +168,7 @@
 </ul>
 <p><strong>范例：（Example）</strong></p>
 <p>让我们来看一个混乱的继承体系（如图12.1）。</p>
-<p><img alt="" src="/images/12fig02.png" /></p>
+<p><img alt="" src="../images/12fig02.png" /></p>
 <p>图12.1  一个混乱的继承体系</p>
 <p>这个继承体系之所以混乱，因为一开始Deal class 只被用来显示单笔交易。后来，某个人突发奇想地用它来显示一张交易表格。只需飞快建立一个ActiveDeal subclass 再加上一点点经验，不必做太多工作就可以显示一张表格了。哦，还要「被动交易（PassiveDeal）」表格是吗？没问题，再加一个subclass 就行了。</p>
 <p>两个月过去，表格相关代码变得愈来愈复杂，你却没有一个好地方可以放它们，因为时间太紧了。咳，老戏码！现在你将很难向系统加入新种交易，因为「交易处理逻辑」与「数据显示逻辑」已经「你中有我，我中有你」了。</p>
@@ -191,10 +191,10 @@
 </table>
 <p>下一步要判断哪一项职责更重要。很明显「交易种类」比「显示风格」重要，因此我们把「交易种类」留在原地，把「显示风格」提炼到另一个继承体系中。不过，实际工作中，我们可能需要将「代码较多」的职责留在原地，这样一来需要搬移的 代码数量会比较少。</p>
 <p>然后，我们应该使用<a href="../moving-features-between-objects/#_1">提炼类</a> 提炼出一个单独的PresentationStyle class 用以表示「显示风格」（如图12.2）。</p>
-<p><img alt="" src="/images/12fig03.gif" /></p>
+<p><img alt="" src="../images/12fig03.gif" /></p>
 <p>图12.2  添加PresentationStyle ，用以表示「显示风格」</p>
 <p>接下来我们需要针对原继承体系中的每个subclass ，建立PresentationStyle 的一个个subclasses （如图 12.3），并将Deal class之中用来保存PresentationStyle 实体的那个instance 变量初始化为适当的subclass 实体：</p>
-<p><img alt="" src="/images/12fig04.gif" /></p>
+<p><img alt="" src="../images/12fig04.gif" /></p>
 <p>图12.3  为PresentationStyle 添加subclasses</p>
 <pre class="prettyprint well"><code class="java">ActiveDeal constructor
   ...presentation= new SingleActivePresentationStyle();...
@@ -202,21 +202,21 @@
 
 <p>你可能会说：『这不是比原先的classes 数量还多了吗？难道这还能让我的生活更舒服？』生活往往如此：以退为进，走得更远。对一个纠结成团的继承体系来说，被提炼出来的另一个继承体系几乎总是可以再戏剧性地大量简化。不过，比较安全的态度是一次一小步，不要过于躁进。</p>
 <p>现在，我们要使用 <a href="../moving-features-between-objects/#_3">搬移函数</a> 和 <a href="../moving-features-between-objects/#_2">搬移值域</a>，将Deal subclass 中[与显示逻辑相关」的函数和变量搬移到PresentationStyle 相应的subclasses 去。我们想不出什么好办法来模拟这个过程，只好请你自己想像。总之，这个步骤完成后，TabularActiveDeal 和 TabularPassiveDeal不再有任何代码，因此我们将它们移除（如图12.4）。</p>
-<p><img alt="" src="/images/12fig05.gif" /></p>
+<p><img alt="" src="../images/12fig05.gif" /></p>
 <p>图12.4  与表格相关的 Deal subclass 都移除了</p>
 <p>两项职责被分割之后，我们可以分别简化两个继承体系。一旦本重构完成，我们总是能够大大简化被提炼出来的新继承体系，而且通常还可以简化原继承体系。</p>
 <p>下一步，我们将摆脱「显示风格」中的主动（active）与被动（passive）区别，如图 12.5。</p>
-<p><img alt="" src="/images/12fig06.gif" /></p>
+<p><img alt="" src="../images/12fig06.gif" /></p>
 <p>图12.5  继承体系被分割了</p>
 <p>就连「单一显示」和「表格显示」之间的区别，都可以运用若干变量值来捕捉，根本不需要为它们建立subclasses （如图12.6〕。</p>
-<p><img alt="" src="/images/12fig07.gif" /></p>
+<p><img alt="" src="../images/12fig07.gif" /></p>
 <p>图12.6「显示风格」（presentation style）之间的差异可以使用一些变量来表现</p>
 <h2 id="_2">将过程化设计转化为对象设计</h2>
 <hr />
 <p>你手上有一些代码，以传统的过程化风格（procedural style）写就。</p>
 <p><strong>将数据记录（data records）<sup>9</sup> 变成对象，将行为分开，并将行为移入相关对象之中。</strong></p>
 <p><i><sup>9</sup>译注：这里所谓的记录（record），是指像C struct 那样的结构。</i></p>
-<p><img alt="" src="/images/12fig08.gif" /></p>
+<p><img alt="" src="../images/12fig08.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p>有一次，我们的一位客户，在项目开始时，给开发者提出了两条必须遵守的条件：（1）必须使用Java；（2）不能使用对象。</p>
 <p>这让我们忍俊不禁。尽管是面向对象语言，「使用对象」可远不仅仅是「调用构造函数」而已。对象的使用也需要花时间去学习。往往你会面对一些过程化风格（procedural style）的代码所带来的问题，并因而希望它们变得更面向对象一些。 典型的情况是：class 中有着长长的过程化函数和极少的数据，以及所谓的「哑数据 对象」——除了数据访问函数（accessors）外没有其他任何函数。如果你要转换的是一个纯粹的过程化程序（procedural program），可能连这些东西都没有。</p>
@@ -235,7 +235,7 @@
 <p><i>（译注：本节保留domain-，presentation-logic，UI，class，object等英文词）</i></p>
 <p>某些GUI class 之中包含了domain logic（领域逻辑）。</p>
 <p><strong>将domain logic（领域逻辑）分离出来，为它们建立独立的domain class。</strong></p>
-<p><img alt="" src="/images/12fig09.gif" /></p>
+<p><img alt="" src="../images/12fig09.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p>提到面向对象，就不能不提model-view-controller （MVC，模型-视图-控制器） 模式。在Smalltalk-80环境中，人们以此模式维护GUI（图形用户界面）和domain object （领域对象）间的关系。</p>
 <p>MVC模式的最核心价值在于：它将用户界面代码（即所谓view，视图；亦即现今常说的presentation，表述）和领域逻辑（即所谓model，模型）分离了。presentation class 只含用以处理用户界面的逻辑；domain class不含任何与程序外观相关的代码，只含业务逻辑（business logic）相关代码。将程序中这两块复杂的部分加以分离，程序未来的修改将变得更加容易，同时也使同一业务逻辑（business logic）的多种表述（显示）方式成为可能。那些熟稔面向对象技术的程序员会毫不犹豫地在他们的程序中进行这种分离，并且这种作法也的确证实了它自身的价值。</p>
@@ -251,16 +251,16 @@
 </ul>
 <p><strong>范例：（Example）</strong></p>
 <p>下面是一个商品订购程序。其GUI 如图12.7所示，其presentation class 与图12.8 所示的关系式数据库（relational database）互动。</p>
-<p><img alt="" src="/images/12fig10.gif" /></p>
+<p><img alt="" src="../images/12fig10.gif" /></p>
 <p>图12.7  启动程序的用户界面</p>
-<p><img alt="" src="/images/12fig11.gif" /></p>
+<p><img alt="" src="../images/12fig11.gif" /></p>
 <p>图12.8  订单程序所用的数据库</p>
 <ul>
 <li>所有classes 都是《SQL table》，粗体字表示主键（primary key），《FK》表示外键（foreign keys）</li>
 </ul>
 <p>所有行为（包括GUI 和定单处理）都由OrderWindow class 处理。</p>
 <p>首先建立一个Order class 表示「定单」。然后把Order 和OrderWindow 联系起来， 如图12.9。由于窗口中有一个用以显示定单的表格（grid），所以我们还得建立一个OrderLine，用以表示表格中的每一行（rows）。</p>
-<p><img alt="" src="/images/12fig12.gif" /></p>
+<p><img alt="" src="../images/12fig12.gif" /></p>
 <p>图12.9  OrderWindow class 和Order class</p>
 <p>我们将从窗口这边而不是从数据库那边开始重构。当然，一开始就把domain model 建立在数据库基础上，也是一种合理策略，但我们最大的风险源于presentation logic 和domain logic之间的混淆，因此我们首先基于窗口将这些分离出来，然后再考虑对其他地方进行重构。</p>
 <p>面对这一类程序，在窗口中寻找内嵌的SQL （结构化查询语言）语句，会对你有所帮助，因为SQL 语句获取的数据一定是domain data 。</p>
@@ -268,13 +268,13 @@
 <p>对于其他值域，我们就没有这么幸运了，因为它们内含AWT 组件，既显示于窗口， 也被domain object 使用。面对这些值域，我们需要使用<a href="../organizing-data/#_5">复制被监视数据</a>，把一个domain field 放进Order class，又把一个相应的AWT field 放进OrderWindow class。</p>
 <p>这是一个缓慢的过程，但最终我们还是可以把所有domain logic field 都搬到domain class。进行这一步骤时，你可以试着把所有SQL calls 都移到domain class，这样你就是同时移动了database logic 和domain data。最后，你可以在OrderWindow 中移除import java.sql 之类的语句，这就表示我们的重构告一段落了。在此阶段中 你可能需要大量运用 <a href="../composing-methods/#_1">提炼函数</a> 和 <a href="../moving-features-between-objects/#_3">搬移函数</a>。</p>
 <p>现在，我们拥有的三个classes，如图12.10所示，它们离「组织良好」还有很大的距离。不过这个模型的确已经很好地分离了presentation logic 和domain logic （business logic）。本项重构的进行过程中，你必须时刻留心你的风险来自何方。 如果「presentation logic 和domain logic 混淆」是最大风险，那么就先把它们完全分开，然后才做其他工作；如果其他方面的事情（例如产品定价策略〉更重要，那么就先把那一部分的logic 从窗口提炼出来，并围绕着这个高风险部分进行重构，为它建立合适的结构。反正domain logic 早晚都必须从窗口移出，如果你在处理高风险部分的重构时会遗留某些logic 于窗口之中，没关系，就放手去做吧。</p>
-<p><img alt="" src="/images/12fig13.gif" /></p>
+<p><img alt="" src="../images/12fig13.gif" /></p>
 <p>图12.10  将数据安置（分散）于domain classes 中</p>
 <h2 id="_4">提炼继承体系</h2>
 <hr />
 <p>你有某个class 做了太多（过多〕工作，其中一部分工作是以大量条件式完成的。</p>
 <p><strong>建立继承体系，以一个subclass 表示一种特殊情况。</strong></p>
-<p><img alt="" src="/images/12fig14.gif" /></p>
+<p><img alt="" src="../images/12fig14.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p>在渐进式设计过程中，常常会有这样的情况：一开始设计者只想「以一个class 实 现一个概念」；但随着设计方案的演化，最后却可能「一个class 实现了两个、三 个乃至十个不同的概念」。一开始，你建立了这个简单的class ；数天或数周之后， 你可能发现：只要加入一个标记（flag）和一两个测试，就可以在另一个环境下使用这个class ；一个月之后你又发现了另一个这样的机会；一年之后，这个class 就完全一团糟了：标记变量和条件式遍布各处。</p>
 <p>当你遇到这种「瑞士小刀般」的class ，不但能够开瓶开罐、砍小树枝、在演示文稿会上打出激光强调重点……（简直无所不能），你就需要一个好策略（亦即本项重构、将它的各个功能梳理并分开。不过，请注意，只有当条件逻辑（conditional logic）在对象的整个生命期间保持不变，本重构所导入的策略才适用。否则你可能必须在分离各种状况之前先使用<a href="../moving-features-between-objects/#_1">提炼类</a>。</p>
@@ -306,13 +306,13 @@
 <p><strong>范例：（Example）</strong></p>
 <p>这里所举的例子是「变异并不明朗」的情况。你可以在 <a href="../organizing-data/#_14">以子类取代型别码</a>、<a href="../organizing-data/#statestrategy">以State/Strategy取代型别码</a> 和 <a href="../simplifying-conditional-expressions/#_6">以多态取代条件式</a> 等重构结果之上，验证「变异已经明朗」的情况下如何使用本项重构。</p>
 <p>我们以一个电费计算程序为例。这个程序有两个classes ：表示「消费者」的Customer 和表示「计费方案」的BillingScheme，如图12.11。</p>
-<p><img alt="" src="/images/12fig15.gif" /></p>
+<p><img alt="" src="../images/12fig15.gif" /></p>
 <p>图12.11  Customer 和BillingScheme</p>
 <p>BillingScheme 使用大量条件逻辑来计算不同情况（变异）下的费用：冬季和夏季的电价不同，私宅用电、小型企业用电、社会救济（包括残障人士）用电的价格也不同。这些复杂的逻辑导致BillingScheme 变得复杂。</p>
 <p>第一个步骤是，提炼出条件逻辑中经常出现的某种变异性。本例之中可能是「视用户是否为残障人士」而发生的变化。用于标示这种情况的可能是Customer、 BillingScheme 或其他地方的一个标记变量（flag）。</p>
 <p>我们针对这种变异建立一个subclass 。为了使用这个subclass ，我们需要确保它被建立并且被使用。因此我们需要处理BillingScheme 构造函数：首先对它实施 <a href="../making-method-calls-simpler/#_10">以工厂函数取代构造函数</a>，然后在所得的factory method 中为残障 人士增加一个条件子句，使它在适当时候返回一个DisablityBillingScheme对象。</p>
 <p>然后，我们需要观察BillingScheme 的其他函数，寻找那些随着「用户是否为残障人士」而变化的行为。createBill() 就是这样一个函数，因此我们将它拷贝到subclass （图 12,12）。</p>
-<p><img alt="" src="/images/12fig16.gif" />
+<p><img alt="" src="../images/12fig16.gif" />
 图12.12  为「残障人士」添加一个subclass</p>
 <p>现在，我们需要检查subclass 中的createBill() 函数。由于现在我们可以肯定该 消费者是残障人士，因此可以简化这个函数。所以下列代码：</p>
 <pre class="prettyprint well"><code class="java">if (disabilityScheme()) doSomething

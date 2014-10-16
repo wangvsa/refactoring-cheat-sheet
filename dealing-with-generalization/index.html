@@ -174,7 +174,7 @@
 <hr />
 <p>superclass 和subclass 之间无太大区别。</p>
 <p><strong>将它们合为一体。</strong></p>
-<p><img alt="" src="/images/11fig10.gif" /></p>
+<p><img alt="" src="../images/11fig10.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p>如果你曾经编写过继承体系，你就会知道，继承体系很容易变得过分复杂。所谓重构继承体系，往往是将函数和值域在体系中上下移动。完成这些动作后，你 很可能发现某个subclass 并未带来该有的价值，因此需要把classes 并合（折叠）起来。</p>
 <p><strong>作法（Mechanics）</strong></p>
@@ -190,7 +190,7 @@
 <hr />
 <p>若干客户使用class 接口中的同一子集；或者，两个classes 的接口有部分相同。</p>
 <p><strong>将相同的子集提炼到一个独立接口中。</strong></p>
-<p><img alt="" src="/images/11fig09.gif" /></p>
+<p><img alt="" src="../images/11fig09.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p>classes 之间彼此互用的方式有若干种。「使用一个class 」通常意味覆盖该class 的所有责任区（ whole area of responsibilities ）。另一种情况是，某一组客户只使用class 责任区中的一个特定子集。再一种情况则是，class 需要与「所有可协助处理某些特定请求」的classes 合作。</p>
 <p>对于后两种情况，将「被使用之部分责任」分离出来通常很有意义，因为这样可以使系统的用法更清晰，同时也更容易看清系统的责任划分。如果新的需要支持上述子集，也比较能够看清子集内有些什么东西。</p>
@@ -239,7 +239,7 @@
 <hr />
 <p>class 中的某些特性（features）只被某些（而非全部）实体（instances）用到。</p>
 <p><strong>新建一个subclass ，将上面所说的那一部分特性移到subclass 中。</strong>
-<img alt="" src="/images/11fig07.gif" /></p>
+<img alt="" src="../images/11fig07.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p>使用<a href="./#_3">提炼子类</a>的主要动机是：你发现class 中的某些行为只被一部分实体用到，其他实体不需要它们。有时候这种行为上的差异是通过type code 区分 的，此时你可以使用<a href="../organizing-data/#_14">以子类取代型别码</a>或<a href="../organizing-data/#statestrategy">以State/Strategy取代型别码</a>。但是，并非一定要出现了type code 才表示需要考虑使用subclass 。</p>
 <p><a href="../moving-features-between-objects/#_1">提炼类</a> 是<a href="./#_3">提炼子类</a> 之外的另一种选择，两者之间的抉择其实就是委托（delegation）和继承（inheritance）之间的抉择。<a href="./#_3">提炼子类</a>通常更容易进行，但它也有限制：一旦对象创建完成，你无法再改变「与型别相关的行为」（class-based behavior ）。但如果使用<a href="../moving-features-between-objects/#_1">提炼类</a> ，你只需插入另一个不同组件（ plugging in different components）就可以改变对象的行为。此外，subclasses 只能用以表现一组变化（one set of variations）。如果你希望class 以数种不同的方式变化，就必须使用委托（delegation）。</p>
@@ -410,7 +410,7 @@ class LaborItem...
 <hr />
 <p>两个classes 有相似特性（similar features）。</p>
 <p><strong>为这两个classes 建立一个superclass ，将相同特性移至superclass 。</strong></p>
-<p><img alt="" src="/images/11fig08.gif" /></p>
+<p><img alt="" src="../images/11fig08.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p>重复代码是系统中最主要的一种糟糕东西。如果你在不同的地方进行相同一件事 情，一旦需要修改那些动作时，你就得负担比你原本应该负担的更多事情。</p>
 <p>重复代码的某种形式就是：两个classes 以相同的方式做类似的事情，或者以不同的方式做类似的事情。对象提供了一种简化这种情况的机制，那就是继承机制。但是，在建立这些具有共通性的classes 之前，你往往无法发现这样的共通性，因此你经常会在「具有共通性」的classes 存在之后，再幵始建立其间的继承结构。</p>
@@ -552,7 +552,7 @@ class Department...
 <hr />
 <p>你有一些subclasses ，其中相应的某些函数以相同顺序执行类似的措施，但各措施实际上有所不同。</p>
 <p><strong>将各个措施分别放进独立函数中，并保持它们都有相同的签名式（signature），于是原函数也就变得相同了。然后将原函数上移至superclass 。</strong></p>
-<p><img alt="" src="/images/11fig11.gif" /></p>
+<p><img alt="" src="../images/11fig11.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p>继承是「避免重复行为」的一个强大工具。无论何时，只要你看见两个subclasses 之中有类似的函数，就可以把它们提升到superclass 。但是如果这些函数并不完全相同呢？此时的你应该怎么办？我们仍有必要尽量避免重复，但又必须保持这些函 数之间的实质差异。</p>
 <p>常见的一种情况是：两个函数以相同序列（sequence）执行大致相近的措施，但是各措施不完全相同。这种情况下我们可以将「执行各措施」的序列移至superclass ， 并倚赖多态（polymorphism ）保证各措施仍得以保持差异性。这样的函数被称为Template Method （模板函数）[Gang of Four]。</p>
@@ -607,7 +607,7 @@ class Department...
 </code></pre>
 
 <p>使用 <a href="./#_5">塑造模板函数</a> 之前，我需要对上述两个函数做一些整理，使它们成为「某个共同superclass 」下的subclass 函数。为了这一目的，我使用函数对象（method object）[Beck] 针对「报表打印工作」创建一个「独立的策略继承体系」（separate strategy hierarchy ），如图11.1。</p>
-<p><img alt="" src="/images/11fig12.gif" />
+<p><img alt="" src="../images/11fig12.gif" />
 图7.1  简单的委托关系（delegation）</p>
 <pre class="prettyprint well"><code class="java">class Statement {}
 class TextStatement extends Statement {}
@@ -771,7 +771,7 @@ class HtmlStatement...
 
 <p>然后我把TextStatement.value() 函数拿掉，编译并测试。完成之后再把HtmlStatement.value() 也删掉，再次编译并测试。最后结果如图11.2。</p>
 <p>完成本重构后，处理其他种类的报表就容易多了：你只需为Statement 再建一个subclass ，并在其中覆写（overrides）三个抽象函数即可。
-<img alt="" src="/images/11fig13.gif" />
+<img alt="" src="../images/11fig13.gif" />
 图11.2  Templae Method（模板函数）塑造完毕后的classes </p>
 <h2 id="_6">构造函数本体上移</h2>
 <hr />
@@ -785,7 +785,7 @@ class HtmlStatement...
     }
 </code></pre>
 
-<p><img alt="" src="/images/arrow.gif" /></p>
+<p><img alt="" src="../images/arrow.gif" /></p>
 <pre class="prettyprint well"><code class="java">public Manager (String name, String id, int grade) {
     super (name, id);
     _grade = grade;
@@ -876,7 +876,7 @@ class Manager...
 <hr />
 <p>两个subclasses 拥有相同的值域。</p>
 <p><strong>将此一值域移至superclass。</strong></p>
-<p><img alt="" src="/images/11fig01.gif" /></p>
+<p><img alt="" src="../images/11fig01.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p>如果各个subclass 是分别开发的，或者是在重构过程中组合起来的，你常会发现它们拥有重复特性，特别是值域更容易重复。这样的值域有时拥有近似的名字，但也并非绝对如此。判断若干值域是否重复，惟一的办法就是观察函数如何使用它们。如果它们被使用的方式很相似，你就可以将它们归纳到superclass 去。</p>
 <p>本项重构从两方面减少重复：首先它去除了「重复的数据声明」；其次它使你可以将使用该值域的行为从subclass 移至superclass，从而去除「重复的行为」。</p>
@@ -897,7 +897,7 @@ class Manager...
 <hr />
 <p>有些函数，在各个subclass 中产生完全相同的结果。</p>
 <p><strong>将该函数移至superclass。</strong></p>
-<p><img alt="" src="/images/11fig02.gif" /></p>
+<p><img alt="" src="../images/11fig02.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p>避免「行为重复」是很重要的。尽管「重复的两个函数」也可以各自工作得很好， 但「重复」自身会成为错误的滋生地，此外别无价值。无论何时，只要系统之内出现重复，你就会面临「修改其中一个却未能修改另一个」的风险。通常，找出重复也有一定困难。</p>
 <p>如果某个函数在各subclass 中的函数体都相同（它们很可能是通过「拷贝-粘贴」得到的），这就是最显而易见的<a href="./#_8">函数上移</a> 适用场合。当然，情况并不总是如此明显。你也可以只管放心地重构，再看看测试程序会不会发牢骚，但这就需要对你的测试有充分的信心。我发现，观察这些可疑（可能重复的〕函数之间的差异往往大有收获：它们经常会向我展示那些我忘记测试的行为。</p>
@@ -924,7 +924,7 @@ class Manager...
 </ul>
 <p><strong>范例：（Example）</strong></p>
 <p>我以Customer「表示「顾客」，它有两个subclass  ：表示「普通顾客」的RegularCustomer 和表示「贵宾」PreferredCustomer。</p>
-<p><img alt="" src="/images/11fig03.gif" /></p>
+<p><img alt="" src="../images/11fig03.gif" /></p>
 <p>两个subclass 都有一个createBill() 函数，并且代码完全一样：</p>
 <pre class="prettyprint well"><code class="java">void createBill (date Date) {
     double chargeAmount = charge (lastBillDate, date);
@@ -938,12 +938,12 @@ class Manager...
 </code></pre>
 
 <p>然后，我就可以将createBill()  函数从其中一个subclass 拷贝到superclass。拷贝完之后应该编译，然后移除那个subclass 的createBill() 函数，然后编译并测试。 随后再移除另一个subclass 的createBill() 函数，再次编译并测试：
-<img alt="" src="/images/11fig04.gif" /></p>
+<img alt="" src="../images/11fig04.gif" /></p>
 <h2 id="_9">值域下移</h2>
 <hr />
 <p>superclass 中的某个值域只被部分（而非全部）subclasses 用到。</p>
 <p><strong>将这个值域移到需要它的那些subclasses 去。</strong>
-<img alt="" src="/images/11fig06.gif" /></p>
+<img alt="" src="../images/11fig06.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p><a href="./#_9">值域下移</a> 恰恰相反 <a href="./#_7">值域上移</a>。如果只有某些（而非全部）subclasses 需要superclass 内的一个值域，你可以使用本项重构。</p>
 <p><strong>作法（Mechanics）</strong></p>
@@ -958,7 +958,7 @@ class Manager...
 <hr />
 <p>superclass 中的某个函数只与部分（而非全部）subclasses 有关。</p>
 <p><strong>将这个函数移到相关的那些subclasses 去。</strong></p>
-<p><img alt="" src="/images/11fig05.gif" /></p>
+<p><img alt="" src="../images/11fig05.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p><a href="./#_10">函数下移</a> 恰恰相反于 <a href="./#_8">函数上移</a>。当我有必要把某些行为从superclass 移至特定的subclass 时，我就使用<a href="./#_10">函数下移</a>，它通常也只在这种时候有用。使用<a href="./#_3">提炼子类</a> 之后你可能会需要它。</p>
 <p><strong>作法（Mechanics）</strong></p>
@@ -978,7 +978,7 @@ class Manager...
 </ul>
 <p><strong>范例：（Example）</strong></p>
 <p>我以Customer「表示「顾客」，它有两个subclass  ：表示「普通顾客」的RegularCustomer 和表示「贵宾」PreferredCustomer。</p>
-<p><img alt="" src="/images/11fig03.gif" /></p>
+<p><img alt="" src="../images/11fig03.gif" /></p>
 <p>两个subclass 都有一个createBill() 函数，并且代码完全一样：</p>
 <pre class="prettyprint well"><code class="java">void createBill (date Date) {
     double chargeAmount = charge (lastBillDate, date);
@@ -992,12 +992,12 @@ class Manager...
 </code></pre>
 
 <p>然后，我就可以将createBill()  函数从其中一个subclass 拷贝到superclass。拷贝完之后应该编译，然后移除那个subclass 的createBill() 函数，然后编译并测试。 随后再移除另一个subclass 的createBill() 函数，再次编译并测试：</p>
-<p><img alt="" src="/images/11fig04.gif" /></p>
+<p><img alt="" src="../images/11fig04.gif" /></p>
 <h2 id="_11">以继承取代委托</h2>
 <hr />
 <p>你在两个classes 之间使用委托关系（delegation），并经常为整个接口编写许多极简单的请托函数（delegating methods）。</p>
 <p><strong>让「请托（delegating）class」继承「受托 class （delegate）」。</strong></p>
-<p><img alt="" src="/images/11fig15.gif" /></p>
+<p><img alt="" src="../images/11fig15.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p>本重构与<a href="./#_11">以继承取代委托</a>恰恰相反。如果你发现自己需要使用「受托 class」中的所有函数，并且费了很大力气编写所有极简的请托函数（delegating methods），本重构可以帮助你轻松回头使用「继承」。</p>
 <p>两条告诫需牢记于心。首先，如果你并没有使用「受托class 」的所有函数（而非只是部分函数），那么就不应该使用<a href="./#_11">以继承取代委托</a>，因为subclass 应该总是遵循（奉行）superclass 的接口。如果过多的请托函数让你烦心，你有别的选择：你可以通过 <a href="../moving-features-between-objects/#_6">移除中间人</a> 让客户端自己调用受托函数，也可以使用<a href="./#_4">提炼超类</a> 将两个classes 接口相同的部分提炼到superclass 中， 然后让两个classes 都继承这个新的superclass ；你还可以以类似手法使用<a href="./#_2">提炼接口</a>。</p>
@@ -1063,7 +1063,7 @@ class Person {
 <hr />
 <p>某个subclass 只使用superclass 接口中的一部分，或是根本不需要继承而来的数据。</p>
 <p><strong>在subclass 中新建一个值域用以保存superclass ；调整subclass 函数，令它改而委托superclass ；然后去掉两者之间的继承关系。</strong></p>
-<p><img alt="" src="/images/11fig14.gif" /></p>
+<p><img alt="" src="../images/11fig14.gif" /></p>
 <p><strong>动机（Motivation）</strong></p>
 <p>继承（Inheritance ）是一件很棒的事，但有时候它并不是你要的。常常你会遇到这样的情况：一开始你继承了一个class ，随后发现superclass 的许多操作并不真正 适用于subclass 。这种情况下你所拥有的接口并未真正反映出class 的功能。或者，你可能发现你从superclass 中继承了 一大堆subclass 并不需要的数据，抑或者你可能发现superclass 中的某些protected 函数对subclass 并没有什么意义。</p>
 <p>你可以选择容忍，并接受传统说法：subclass 可以只使用superclass 功能的一部分。但这样做的结果是：代码传达的信息与你的意图南辑北辙——这是一种裩淆，你应该将它去除。</p>
