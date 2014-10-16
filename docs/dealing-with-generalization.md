@@ -565,6 +565,7 @@ public String htmlStatement() {
 使用 [塑造模板函数](dealing-with-generalization.md#_5) 之前，我需要对上述两个函数做一些整理，使它们成为「某个共同superclass 」下的subclass 函数。为了这一目的，我使用函数对象（method object）[Beck] 针对「报表打印工作」创建一个「独立的策略继承体系」（separate strategy hierarchy ），如图11.1。
 
 ![](../images/11fig12.gif)
+
 图7.1  简单的委托关系（delegation）
 
 ```java
@@ -747,6 +748,7 @@ class Statement...
 
 完成本重构后，处理其他种类的报表就容易多了：你只需为Statement 再建一个subclass ，并在其中覆写（overrides）三个抽象函数即可。
 ![](../images/11fig13.gif)
+
 图11.2  Templae Method（模板函数）塑造完毕后的classes 
 
 ## 构造函数本体上移

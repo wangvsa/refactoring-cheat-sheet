@@ -312,8 +312,8 @@
 <p>第一个步骤是，提炼出条件逻辑中经常出现的某种变异性。本例之中可能是「视用户是否为残障人士」而发生的变化。用于标示这种情况的可能是Customer、 BillingScheme 或其他地方的一个标记变量（flag）。</p>
 <p>我们针对这种变异建立一个subclass 。为了使用这个subclass ，我们需要确保它被建立并且被使用。因此我们需要处理BillingScheme 构造函数：首先对它实施 <a href="../making-method-calls-simpler/#_10">以工厂函数取代构造函数</a>，然后在所得的factory method 中为残障 人士增加一个条件子句，使它在适当时候返回一个DisablityBillingScheme对象。</p>
 <p>然后，我们需要观察BillingScheme 的其他函数，寻找那些随着「用户是否为残障人士」而变化的行为。createBill() 就是这样一个函数，因此我们将它拷贝到subclass （图 12,12）。</p>
-<p><img alt="" src="../images/12fig16.gif" />
-图12.12  为「残障人士」添加一个subclass</p>
+<p><img alt="" src="../images/12fig16.gif" /></p>
+<p>图12.12  为「残障人士」添加一个subclass</p>
 <p>现在，我们需要检查subclass 中的createBill() 函数。由于现在我们可以肯定该 消费者是残障人士，因此可以简化这个函数。所以下列代码：</p>
 <pre class="prettyprint well"><code class="java">if (disabilityScheme()) doSomething
 </code></pre>

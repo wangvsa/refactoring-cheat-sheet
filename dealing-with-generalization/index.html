@@ -607,8 +607,8 @@ class Department...
 </code></pre>
 
 <p>使用 <a href="./#_5">塑造模板函数</a> 之前，我需要对上述两个函数做一些整理，使它们成为「某个共同superclass 」下的subclass 函数。为了这一目的，我使用函数对象（method object）[Beck] 针对「报表打印工作」创建一个「独立的策略继承体系」（separate strategy hierarchy ），如图11.1。</p>
-<p><img alt="" src="../images/11fig12.gif" />
-图7.1  简单的委托关系（delegation）</p>
+<p><img alt="" src="../images/11fig12.gif" /></p>
+<p>图7.1  简单的委托关系（delegation）</p>
 <pre class="prettyprint well"><code class="java">class Statement {}
 class TextStatement extends Statement {}
 class HtmlStatement extends Statement {}
@@ -771,8 +771,8 @@ class HtmlStatement...
 
 <p>然后我把TextStatement.value() 函数拿掉，编译并测试。完成之后再把HtmlStatement.value() 也删掉，再次编译并测试。最后结果如图11.2。</p>
 <p>完成本重构后，处理其他种类的报表就容易多了：你只需为Statement 再建一个subclass ，并在其中覆写（overrides）三个抽象函数即可。
-<img alt="" src="../images/11fig13.gif" />
-图11.2  Templae Method（模板函数）塑造完毕后的classes </p>
+<img alt="" src="../images/11fig13.gif" /></p>
+<p>图11.2  Templae Method（模板函数）塑造完毕后的classes </p>
 <h2 id="_6">构造函数本体上移</h2>
 <hr />
 <p>你在各个subclass 中拥有一些构造函数，它们的本体（代码）几乎完全一致。</p>

@@ -546,6 +546,7 @@ martin.setAreaCode ("781");
 
 
 ![](../images/07fig06.gif) 
+
 图7.1  简单的委托关系（delegation）
   
  
