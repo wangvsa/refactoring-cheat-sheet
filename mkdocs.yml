@@ -1,0 +1,18 @@
+site_name: Refactoring Cheat Sheet
+
+pages:
+- [index.md, 首页]
+- [composing-methods.md, 重新组织你的函数]
+- [moving-features-between-objects.md, 在对象之间搬移特性]
+- [organizing-data.md, 组织的你数据]
+- [simplifying-conditional-expressions.md, 简化条件表达式]
+- [making-method-calls-simpler.md, 简化函数调用]
+- [dealing-with-generalization.md, 处理概括关系]
+- [big-refactorings.md, 大型重构]
+
+site_url: http://wangchen.info/refactoring-cheat-sheet
+repo_url: https://github.com/wangvsa/refactoring-cheat-sheet
+
+site_dir: ./
+
+theme_dir: 'custom_theme/simplex'

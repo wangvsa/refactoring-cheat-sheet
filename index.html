@@ -1,18 +1,338 @@
-<html>
-  <head>
-    <title>Refactoring Cheat Sheet</title>
-  </head>
-  <body>
-    <h1>Recactoring Cheat Sheet</h1>
-    <ul>
-      <li><a href="bad-smells-in-code">Bad Smells in Code</a></li>
-      <li><a href="composing-methods">Composing Methods</a></li>
-      <li><a href="moving-features-between-objects">Moving Features between Objects</a></li>
-      <li><a href="organizing-data">Organizing Data</a></li>
-      <li><a href="simplifying-conditional-expressions">Simplifying Conditional Expressions</a></li>
-      <li><a href="making-method-calls-simpler">Making Method Calls Simpler</a></li>
-      <li><a href="dealing-with-generalization">Dealing with Generalization</a></li>
-      <li><a href="big-refactorings">Big Refactorings</a></li>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="http://wangchen.info/refactoring-cheat-sheet/">
+        <link rel="shortcut icon" href="./img/favicon.ico">
+
+        <title>Refactoring Cheat Sheet</title>
+
+        <link href="./css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="./css/font-awesome-4.0.3.css" rel="stylesheet">
+        <link href="./css/prettify-1.0.css" rel="stylesheet">
+        <link href="./css/base.css" rel="stylesheet">
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <!-- Main title -->
+            <a class="navbar-brand" href=".">Refactoring Cheat Sheet</a>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+
+            <!-- Search, Navigation and Repo links -->
+            <ul class="nav navbar-nav navbar-right">
+                
+                <li class="disabled">
+                    <a rel="next" >
+                        <i class="fa fa-arrow-left"></i> Previous
+                    </a>
+                </li>
+                <li >
+                    <a rel="prev" href="composing-methods/">
+                        Next <i class="fa fa-arrow-right"></i>
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="https://github.com/wangvsa/refactoring-cheat-sheet">
+                        
+                            <i class="fa fa-github"></i>
+                        
+                        GitHub
+                    </a>
+                </li>
+                
+            </ul>
+
+            <!-- Main navigation -->
+            <ul class="nav navbar-nav">
+            
+            
+                <li class="active">
+                    <a href=".">首页</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="composing-methods/">重新组织你的函数</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="moving-features-between-objects/">在对象之间搬移特性</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="organizing-data/">组织的你数据</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="simplifying-conditional-expressions/">简化条件表达式</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="making-method-calls-simpler/">简化函数调用</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="dealing-with-generalization/">处理概括关系</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="big-refactorings/">大型重构</a>
+                </li>
+            
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+        <div class="container">
+            <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+    
+        <li class="main active"><a href="#_1">代码的坏味道</a></li>
+        
+    
+        <li class="main "><a href="#_2">重新组织你的函数</a></li>
+        
+    
+        <li class="main "><a href="#_3">在对象之间搬移特性</a></li>
+        
+    
+        <li class="main "><a href="#_4">组织你的数据</a></li>
+        
+    
+        <li class="main "><a href="#_5">简化条件表达式</a></li>
+        
+    
+        <li class="main "><a href="#_6">简化函数调用</a></li>
+        
+    
+        <li class="main "><a href="#_7">处理概括关系</a></li>
+        
+    
+        <li class="main "><a href="#_8">大型重构</a></li>
+        
+    
     </ul>
-  </body>
+</div></div>
+            <div class="col-md-9" role="main">
+
+<h2 id="_1">代码的坏味道</h2>
+<hr />
+<p><strong><em>重复的代码（Duplicated Code）</em></strong></p>
+<p>臭味行列中首当其冲的就是Duplicated Code。如果你在一个以上的地点看到相同的程序结构，那么当可肯定：设法将它们合而为一，程序会变得更好。</p>
+<p>最单纯的Duplicated Code就是「同一个class内的两个函数含有相同表达式（expression）」。这时候你需要做的就是采用<a href="composing-methods/#_1">提炼函数</a>提炼出重复的代码，然后让这两个地点都调用被提炼出来的那一段代码。</p>
+<p>另一种常见情况就是「两个互为兄弟〔sibling）的subclasses内含相同表达式」。要避免这种情况，只需对两个classes都使用<a href="composing-methods/#_1">提炼函数</a>，然后再对被提炼出来的代码使用<a href="dealing-with-generalization/#_7">值域上移</a>，将它推入superclass内。如果代码之间只是类似，并非完全相同，那么就得运用<a href="composing-methods/#_1">提炼函数</a>将相似部分和差异部分割开，构成单独一个函数。然后你可能发现或许可以运用<a href="dealing-with-generalization/#_5">塑造模板函数</a>获得一个Template Method设计模式。如果有些函数以不同的算法做相同的事，你可以择定其中较清晰的一个，并使用<a href="composing-methods#_10">替换你的算法</a>将其他函数的算法替换掉。</p>
+<p>如果两个毫不相关的classes内出现Duplicated Code，你应该考虑对其中一个使用<a href="moving-features-between-objects/#_1">提炼类</a>，将重复代码提炼到一个独立class中，然后在另一个class内 使用这个新class。但是，重复代码所在的函数也可能的确只应该属于某个class， 另一个class只能调用它，抑或这个函数可能属于第三个class，而另两个classes应该引用这第三个class。你必须决定这个函数放在哪儿最合适，并确保它被安置后就不会再在其他任何地方出现。</p>
+<p><strong><em>过长函数（Long Method）</em></strong></p>
+<p>拥有[短函数」（short methods）的对象会活得比较好、比较长。不熟悉面向对象技术的人，常常觉得对象程序中只有无穷无尽的delegation（委托），根本没有进行任何计算。和此类程序共同生活数年之后，你才会知道，这些小小函数有多大价值。「间接层」所能带来的全部利益――解释能力、共享能力、选择能力――都是由小型函数支持的（请看p.61的「闯接层和重构」〕。 </p>
+<p>很久以前程序员就巳认识到：程序愈长愈难理解。早期的编程语言中，「子程序调用动作」需要额外开销，这使得人们不太乐意使用small method。现代OO语言几乎已经完全免除了进程（process）内的「函数调用动作额外开销」。不过代码阅读者还是得多费力气，因为他必须经常转换上下文去看看子程序做了什么。某些开发环境允许用户同时看到两个函数，这可以帮助你省去部分麻烦，但是让small method容易理解的真正关键在于一个好名字。如果你能给函数起个好名字，读者就可以通过名字了解函数的作用，根本不必去看其中写了些什么。 </p>
+<p>最终的效果是：你应该更积极进取地分解函数。我们遵循这样一条原则：每当感觉需要以注释来说明点什么的时候，我们就把需要说明的东西写进一个独立函数中，并以其用途（而非实现手法）命名。我们可以对一组或甚至短短一行代码做这件事。哪怕替换后的函数调用动作比函数自身还长，只要函数名称能够解释其用途，我们也该毫不犹豫地那么做。关键不在于函数的长度，而在于函数「做什么」和「如何做」之间的语义距离。 </p>
+<p>百分之九十九的场合里，要把函数变小，只需使用<a href="composing-methods/#_1">提炼函数</a>。找到函数中适合集在一起的部分，将它们提炼出来形成一个新函数。</p>
+<p>如果函数内有大量的参数和临时变量，它们会对你的函数提炼形成阻碍。如果你尝试运用<a href="composing-methods/#_1">提炼函数</a>，最终就会把许多这些参数和临时变量当作参数，传递给被提炼出来的新函数，导致可读性几乎没有任何提升。啊是的，你可以经常运用<a href="composing-methods#_4">以查询取代临时变量</a>来消除这些暂时元素。<a href="making-method-calls-simpler/#_4">引入参数对象</a>和<a href="making-method-calls-simpler/#_6">保持对象完整</a>则可以将过长的参数列变得更简洁一些。 </p>
+<p>如果你已经这么做了，仍然有太多临时变量和参数，那就应该使出我们的杀手锏：<a href="composing-methods#_9">以函数对象取代函数</a>。</p>
+<p>如何确定该提炼哪一段代码昵？ 一个很好的技巧是：寻找注释。它们通常是指出「代码用途和实现手法间的语义距离」的信号。如果代码前方有一行注释，就是在提醒 你：可以将这段代码替换成一个函数，而且可以在注释的基础上给这个函数命名。就算只有一行代码，如果它需要以注释来说明，那也值得将它提炼到独立函数去。 </p>
+<p>条件式和循环常常也是提炼的信号。你可以使用<a href="simplifying-conditional-expressions/#_3">分解条件式</a>处理条件式。至于循环，你应该将循环和其内的代码提炼到一个独立函数中。]</p>
+<p><strong><em>过大类（Large Class）</em></strong></p>
+<p>如果想利用单一class做太多事情，其内往往就会出现太多instance变量。一旦如此，Duplicated Code也就接踵而至了。</p>
+<p>你可以运用<a href="moving-features-between-objects/#_1">提炼类</a>将数个变量一起提炼至新class内。提炼时应该选择class内彼此相关的变量，将它们放在一起。例如"depositAmount"和 "depositCurrency"可能应该隶属同一个class。通常如果class内的数个变量有着相同的前缀或字尾，这就意味有机会把它们提炼到某个组件内。如果这个组件适合作为一个subclass，你会发现<a href="dealing-with-generalization/#_3">提炼子类</a>往往比较简单。</p>
+<p>有时候class并非在所有时刻都使用所有instance变量。果真如此，你或许可以多次使用<a href="moving-features-between-objects/#_1">提炼类</a>或<a href="dealing-with-generalization/#_3">提炼子类</a>。 </p>
+<p>和「太多instance变量」一样，class内如果有太多代码，也是「代码重复、混乱、死亡」的绝佳滋生地点。最简单的解决方案（还记得吗，我们喜欢简单的解决方案）是把赘余的东西消弭于class内部。如果有五个「百行函数」，它们之中很多代码都相同，那么或许你可以把它们变成五个「十行函数」和十个提炼出来的「双行函 数」。 </p>
+<p>和「拥有太多instance变量」一样，一个class如果拥有太多代码，往往也适合使用<a href="moving-features-between-objects/#_1">提炼类</a>和<a href="dealing-with-generalization/#_3">提炼子类</a>。这里有个有用技巧：先确定客户端如何使用它们，然后运用<a href="dealing-with-generalization/#_2">提炼接口</a>为每一种使用方式提炼出一个接口。这或许可以帮助你看清楚如何分解这个class。 </p>
+<p>如果你的Large class是个GUI class，你可能需要把数据和行为移到一个独立的领域对象（domain objec）去。你可能需要两边各保留一些重复数据，并令这些数据同步（sync.）。<a href="organizing-data/#_5">复制被监视数据</a>告诉你该怎么做。这种情况下，特别是如果你使用旧式Abstract Windows Toolkit (AWT)组件，你可以采用这种方式去掉GUI class并代以Swing组件。 </p>
+<p><strong><em>过长参数列（Long Parameter List）</em></strong></p>
+<p>刚开始学习编程的时候，老师教我们：把函数所需的所有东西都以参数传递进去。这可以理解，因为除此之外就只能选择全局数据，而全局数据是邪恶的东西。对象 技术改变了这一情况，因为如果你手上没有你所需要的东西，总可以叫另一个对象给你。因此，有了对象，你就不必把函数需要的所有东西都以参数传递给它了，你只需传给它足够的东西、让函数能从中获得自己需要的所有东西就行了。函数需要的东西多半可以在函数的宿主类（host class）中找到。面向对象程序中的函数，其参数列通常比在传统程序中短得多。 </p>
+<p>这是好现象，因为太长的参数列难以理解，太多参数会造成前后不一致、不易使用，而且一旦你需要更多数据，就不得不修改它。如果将对象传递给函数，大多数修改都将没有必要，因为你很可能只需（在函数内）增加一两条请求（requests），就能得到更多数据。 </p>
+<p>如果「向既有对象发出一条请求」就可以取得原本位于参数列上的一份数据，那么 你应该激活重构准则<a href="making-method-calls-simpler/#_14">以函数取代参数</a>。上述的既有对象可能是函数所属class内的一个值域（field），也可能是另一个参数。你还可以运用<a href="making-method-calls-simpler/#_6">保持对象完整</a>将来自同一对象的一堆数据收集起来，并以该对象替换它们。如果某些数据缺乏合理的对象归属，可使用<a href="making-method-calls-simpler/#_4">引入参数对象</a>为它们制造出一个「参数对象」。 </p>
+<p>此间存在一个重要的例外。有时候你明显不希望造成「被调用之对象」与「较大对 象」间的某种依存关系。这时候将数据从对象中拆解出来单独作为参数，也很合情合理。但是请注意其所引发的代价。如果参数列太长或变化太频繁，你就需要重新考虑自己的依存结构（dependency structure）了。</p>
+<p><strong><em>发散式变化（Divergent Change）</em></strong></p>
+<p>我们希望软件能够更容易被修改――毕竟软件再怎么说本来就该是「软」的。一旦需要修改，我们希望能够跳到系统的某一点，只在该处做修改。如果不能做到这点，你就嗅出两种紧密相关的刺鼻味道中的一种了。 </p>
+<p>如果某个class经常因为不同的原因在不同的方向上发生变化，Divergent Change就出现了。当你看着一个class说：『呃，如果新加入一个数据库，我必须修改这三个函数；如果新出现一种金融工具，我必须修改这四个函数』，那么此时也许将这个对象分成两个会更好，这么一来每个对象就可以只因一种变化而需要修改。当然，往往只有在加入新数据库或新金融工具后，你才能发现这一点。针对某一外界 变化的所有相应修改，都只应该发生在单一class中，而这个新class内的所有内容都应该反应该外界变化。为此，你应该找出因着某特定原因而造成的所有变化，然后运用<a href="moving-features-between-objects/#_1">提炼类</a>将它们提炼到另一个class中。 </p>
+<p><strong><em>散弹式修改（Shotgun Surgery）</em></strong></p>
+<p>Shotgun Surgery类似Divergent Change，但恰恰相反。如果每遇到某种变化，你都必须在许多不同的classes内做出许多小修改以响应之，你所面临的坏味道就是Shotgun Surgery。如果需要修改的代码散布四处，你不但很难找到它们，也很容易忘记某个重要的修改。 </p>
+<p>这种情况下你应该使用<a href="moving-features-between-objects/#_3">搬移函数</a>和<a href="moving-features-between-objects/#_2">搬移值域</a>把所有需要修改的代码放进同一个class。如果眼下没有合适的可以安置这些代码，就创造一 个。通常你可以运用<a href="moving-features-between-objects/#_4">将类内联化</a>把一系列相关行为放进同一个class。这可能会造成少量Divergent Change，但你可以轻易处理它。 </p>
+<p>Divergent Change是指「一个class受多种变化的影响」，Shotgun Surgery则是指「一种变化引发多个classes相应修改」。这两种情况下你都会希望整理代码，取得「外界变化」与「待改类」呈现一对一关系的理想境地。</p>
+<p><strong><em>依恋情结（Feature Envy）</em></strong></p>
+<p>对象技术的全部要点在于：这是一种「将数据和加诸其上的操作行为包装在一起」 的技术。有一种经典气味是：函数对某个class的兴趣高过对自己所处之host class的兴趣。这种孺慕之情最通常的焦点便是数据。无数次经验里，我们看到某个函数 为了计算某值，从另一个对象那儿调用几乎半打的取值函数（getting method）。疗法显而易见：把这个函数移至另一个地点。你应该使用<a href="moving-features-between-objects/#_3">搬移函数</a>把它 移到它该去的地方。有时候函数中只有一部分受这种依恋之苦，这时候你应该使用 <a href="composing-methods/#_1">提炼函数</a> 把这一部分提炼到独立函数中，再使用<a href="moving-features-between-objects/#_3">搬移函数</a>带它去它的梦中家园。 </p>
+<p>当然，并非所有情况都这么简单。一个函数往往会用上数个特性，那么它究竟该被置于何处呢？我们的原则是：判断哪个class拥有最多「被此函数使用」的数据，然后就把这个函数和那些数据摆在一起。如果先以<a href="composing-methods/#_1">提炼函数</a> 将这个函数分解为数个较小函数并分别置放于不同地点，上述步骤也就比较容易完成了。 </p>
+<p>有数个复杂精巧的模式(patterns)破坏了这个规则。说起这个话题，「四巨头」[Gang of Four]的Strategy 和Visitor立刻跳入我的脑海，Kent Beck 的 Self Delegation [Beck]也在此列。使用这些模式是为了对抗坏味道Divergent Change。最根本的原则是：将总是一起变化的东西放在一块儿。「数据」和「引用这些数据」的行为总是一起变化的，但也有例外。如果例外出现，我们就搬移那些行为，保持「变化只在一地发生」。Strategy 和Visitor『使你得以轻松修改函数行为，因为它们将少量需被覆写〔overridden）的行为隔离开来――当然也付出了「多一层间接性」的 代价。</p>
+<p><strong><em>数据泥团（Data Clumps）</em></strong></p>
+<p>数据项（data items）就像小孩子：喜欢成群结队地待在一块儿。你常常可以在很多地方看到相同的三或四笔数据项：两个classes内的相同值域（field）、许多函数签名式（signature）中的相同参数。这些「总是绑在一起出现的数据」真应该放进属于它们自己的对象中。首先请找出这些数据的值域形式（field）出现点，运用<a href="moving-features-between-objects/#_1">提炼类</a>将它们提炼到一个独立对象中。然后将注意力转移到函数签名式（signature）上头，运用<a href="making-method-calls-simpler/#_4">引入参数对象</a>或<a href="making-method-calls-simpler/#_6">保持对象完整</a>为它减肥。这么做的直接好处是可以将很多参数列缩短，简化函数调用动作。是的，不必因为Data Clumps只用上新对象的一部分值域而在意，只要你以新对象取代两个（或更多）值域，你就值回票价了。 </p>
+<p>一个好的评断办法是：删掉众多数据中的一笔。其他数据有没有因而失去意义？如果它们不再有意义，这就是个明确信号：你应该为它们产生一个新对象。 </p>
+<p>缩短值域个数和参数个数，当然可以去除一些坏味道，但更重要的是：一旦拥有新对象，你就有机会让程序散发出一种芳香。得到新对象后，你就可以着手寻找Feature Envy，这可以帮你指出「可移至新class」中的种种程序行为。不必太久， 所有classes都将在它们的小小社会中充分发挥自己的生产力。 </p>
+<p><strong><em>基本型别偏执（Primitive Obsession）</em></strong></p>
+<p>大多数编程环境都有两种数据：结构型别（record types）允许你将数据组织成有意义的形式；基本型别（Primitive type）则是构成结构型别的积木块。结构总是会带 来一定的额外开销。它们有点像数据库中的表格，或是那些得不偿失（只为做一两件事而创建，却付出太大额外开销〕的东西。 </p>
+<p>对象的一个极具价值的东西是：它们模糊（甚至打破）了横亘于基本数据和体积较大的classes之间的界限。你可以轻松编写出一些与语言内置（基本〕型别无异的小型classes。例如Java就以基本型别表示数值，而以class表示字符串和日期――这 两个型别在其他许多编程环境中都以基本型别表现。 </p>
+<p>对象技术的新手通常不愿意在小任务上运用小对象――像是结合数值和币别的 money classes 、含一个起始值和一个结束值的range classes、电话号码或邮政编码（ZIP） 等等的特殊strings。你可以运用<a href="organizing-data/#_9">以对象取代数据值</a>将原本单独存在的数据值替换为对象，从而走出传统的洞窟，进入炙手可热的对象世界。如果欲替换之数据值是 type code（型别码），而它并不影响行为，你可以运用<a href="organizing-data/#_13">以类取代型别码</a>将它换掉。如果你有相依于此 type code的条件式，可运用<a href="organizing-data/#_14">以子类取代型别码</a>或<a href="organizing-data/#statestrategy">以State/Strategy取代型别码</a>加以处理。 </p>
+<p>如果你有一组应该总是被放在一起的值域（fields），可运用<a href="moving-features-between-objects/#_1">提炼类</a>。 如果你在参数列中看到基本型数据，不妨试试<a href="making-method-calls-simpler/#_4">引入参数对象</a>。 如果你发现自己正从array中挑选数据，可运用<a href="organizing-data/#_8">以对象取代数组</a>。</p>
+<p><strong><em>Switch惊悚现身（Switch Statements）</em></strong></p>
+<p>面向对象程序的一个最明显特征就是：少用switch (或case）语句。从本质上说， switch语句的问题在于重复（duplication）。你常会发现同样的switch语句散布 于不同地点。如果要为它添加一个新的子句，你必须找到所有switch语句 并修改它们。面向对象中的多态（polymorphism ）概念可为此带来优雅的解决办法。 </p>
+<p>大多数时候，一看到switch语句你就应该考虑以「多态」来替换它。问题是态 该出现在哪儿？switch语句常常根据 type code（型别码）进行选择，你要的是「与 该 type code相关的函数或class」。所以你应该使用<a href="composing-methods/#_1">提炼函数</a> 将switch语句提炼到一个独立函数中，再以<a href="moving-features-between-objects/#_3">搬移函数</a>将它搬移到需要多态性的那个class里头。此时你必须决定是否使用<a href="organizing-data/#_14">以子类取代型别码</a>或<a href="organizing-data/#statestrategy">以State/Strategy取代型别码</a>。一旦这样完成继承结构之后， 你就可以运用<a href="simplifying-conditional-expressions/#_6">以多态取代条件式</a>了。 </p>
+<p>如果你只是在单一函数中有些选择事例，而你并不想改动它们，那么「多态」就有 点杀鸡用牛刀了。这种情况下<a href="making-method-calls-simpler/#_13">以明确函数取代参数</a>是个不错的选择。如果你的选择条件之一是null，可以试试Introduce Null Object。)</p>
+<p><strong><em>平行继承体系（Parallel Inheritance Hierarchies）</em></strong></p>
+<p>Parallel Inheritance Hierarchies其实是shotgun surgery的特殊情况。在这种情况下，每当你为某个class增加一个subclass，必须也为另一个class相应增加一个subclass。如果你发现某个继承体系的名称前缀和另一个继承体系的名称前缀完全相同，便是闻到了这种坏味道。 </p>
+<p>消除这种重复性的一般策略是：让一个继承体系的实体（instance）指涉（参考、引用、refer to）另一个继承体系的实体(instances)。如果再接再厉运用<a href="moving-features-between-objects/#_3">搬移函数</a>和<a href="moving-features-between-objects/#_2">搬移值域</a>，就可以将指涉端（ referring class ）的继承体系消弭于无形。</p>
+<p><strong><em>冗赘类（Lazy Class）</em></strong></p>
+<p>你所创建的每一个class，都得有人去理解它、维护它，这些工作都是要花钱的。如 果一个class的所得不值其身价，它就应该消失。项目中经常会出现这样的情况： 某个class原本对得起自己的身价，但重构使它身形缩水，不再做那么多工作；或开发者事前规划了某些变化，并添加一个class来应付这些变化，但变化实际上没 有发生。不论上述哪一种原因，请让这个class庄严赴义吧。如果某些subclass没有做满足够工作，试试 <a href="dealing-with-generalization/#_1">折叠继承关系</a>。对于几乎没用的组件，你应该以<a href="moving-features-between-objects/#_4">将类内联化</a>对付它们。 </p>
+<p><strong><em>夸夸其谈未来性（Speculative Generality）</em></strong></p>
+<p>这个令我们十分敏感的坏味道，命名者是Brian Foote。当有人说『噢，我想我们总有一天需要做这事』并因而企图以各式各样的挂勾（hooks）和特殊情况来处理一 些非必要的事情，这种坏味道就出现了。那么做的结果往往造成系统更难理解和维护。如果所有装置都会被用到，那就值得那么做；如果用不到，就不值得。用不上的装置只会挡你的路，所以，把它搬开吧。 </p>
+<p>如果你的某个abstract class其实没有太大作用，请运用<a href="dealing-with-generalization/#_1">折叠继承关系</a>。非必要之delegation （委托）可运用<a href="moving-features-between-objects/#_4">将类内联化</a>除掉。如果函数的某些参数未被用上，可对它实施<a href="making-method-calls-simpler/#_7">移除参数</a>。如果函数名称带有多余的抽象意味，应该对它实施<a href="making-method-calls-simpler/#_9">重新命名函数</a>让它现实一些。 </p>
+<p>如果函数或class的惟一用户是test cases （测试用例），这就飘出了坏味道Speculative Generality。如果你发现这样的函数或class，请把它们连同其test cases都删掉。但如果它们的用途是帮助test cases检测正当功能，当然必须刀下留人。 </p>
+<p><strong><em>令人迷惑的暂时值域（Temporary Field）</em></strong></p>
+<p>有时你会看到这样的对象：其内某个instance变量仅为某种特定情势而设。这样的代码让人不易理解，因为你通常认为对象在所有时候都需要它的所有变量。在变量未被使用的情况下猜测当初其设置目的，会让你发疯。 </p>
+<p>请使用<a href="moving-features-between-objects/#_1">提炼类</a>给这个可怜的孤儿创造一个家，然后把所有和这个变 量相关的代码都放进这个新家。也许你还可以使用 Introduce Null Object 在「变量不合法』的情况下创建一个Null对象，从而避免写出『条件式代码」。 </p>
+<p>如果class中有一个复杂算法，需要好几个变量，往往就可能导致坏味道Temporary Field的出现。由于实现者不希望传递一长串参数（想想为什么），所以他把这些 参数都放进值域（field）中。但是这些值域只在使用该算法时才有效，其他情况下只会让人迷惑。这时候你可以利用<a href="moving-features-between-objects/#_1">提炼类</a>把这些变量和其相关函数提炼到一个独立class中。提炼后的新对象将是一个method object[Beck]（译注：其存在只是为了提供调用函数的途径，class本身并无抽象意味）。</p>
+<p><strong><em>过度耦合的消息链（Message Chains）</em></strong></p>
+<p>如果你看到用户向一个对象索求（request）另一个对象，然后再向后者索求另一个对象，然后再索求另一个对象……这就是Message Chains。实际代码中你看到的可 能是一长串getThis()或一长串临时变量。采取这种方式，意味客户将与查找过程中的航行结构（structure of the navigation）紧密耦合。一旦对象间的关系发生任何变化，客户端就不得不做出相应修改。 </p>
+<p>这时候你应该使用<a href="moving-features-between-objects/#_5">隐藏委托关系</a>。你可以在Message Chains的不同位置进行这种重构手法。理论上你可以重构Message Chains上的任何一个对象，但这么做往往会把所有中介对象（intermediate object ）都变成Middle Man。通常更好的选择是：先观察Message Chains最终得到的对象是用来干什么的，看看能否以 <a href="composing-methods/#_1">提炼函数</a> 把使用该对象的代码提炼到一个独立函数中，再运用<a href="moving-features-between-objects/#_3">搬移函数</a>把这个函数推入Message Chains。如果这条链上的某个对象有多位客户打算航行此航线的剩余部分，就加一个函数来做这件事。 </p>
+<p>有些人把任何函数链（method chain。译注：就是Message Chains；面向对象领域中所谓「发送消息」就是「调用函数」）都视为坏东西，我们不这样想。呵呵，我们的冷静镇定是出了名的，起码在这件事情上是这样。</p>
+<p><strong><em>中间转手人（Middle Man）</em></strong></p>
+<p>对象的基本特征之一就是封装（encapsulation）――对外部世界隐藏其内部细节。封装往往伴随delegation （委托）。比如说你问主管是否有时间参加一个会议，他就把这个消息委托给他的记事簿，然后才能回答你。很好，你没必要知道这位主管到底使用传统记事簿或电子记事簿抑或秘书来记录自己的约会。 </p>
+<p>但是人们可能过度运用delegation。你也许会看到某个class接口有一半的函数都委托给其他class，这样就是过度运用。这时你应该使用<a href="moving-features-between-objects/#_6">移除中间人</a>，直接和实责对象打交道。如果这样「不干实事」的函数只有少数几个，可以运用<a href="composing-methods/#_2">将函数内联化</a>把它们" Inlining"，放进调用端。如果这些Middle Man还有其他行 为，你可以运用 <a href="dealing-with-generalization/#_11">以继承取代委托</a> 把它变成实责对象的subclass，这样你既可以扩展原对象的行为，又不必负担那么多的委托动作。 </p>
+<p><strong><em>Inappropriate Intimacy（狎昵关系）</em></strong></p>
+<p>有时你会看到两个classes过于亲密，花费太多时间去探究彼此的private成分。如果这发生在两个「人」之间，我们不必做卫道之士；但对于classes，我们希望它们严守清规。 </p>
+<p>就像古代恋人一样，过份狎昵的classes必须拆散。你可以采用<a href="moving-features-between-objects/#_3">搬移函数</a>和<a href="moving-features-between-objects/#_2">搬移值域</a>帮它们划清界线，从而减少狎昵行径。你也可以看看是否运用<a href="organizing-data/#_1">将双向关联改为单向</a>让其中一个class对另一个斩断情丝。如果两个实在是情投意合，可以运用<a href="moving-features-between-objects/#_1">提炼类</a>把两者共同点提炼到一个安全地点，让它们坦荡地使用这个新class。或者也可以尝试运用<a href="moving-features-between-objects/#_5">隐藏委托关系</a>让另一个class来为它们传递相思情。 </p>
+<p>继承（inheritance）往往造成过度亲密，因为subclass对superclass的了解总是超过superclass的主观愿望。如果你觉得该让这个孩子独自生活了，请运用<a href="dealing-with-generalization/#_11">以继承取代委托</a> 让它离开继承体系。 </p>
+<p><strong><em>Alternative Classes with Different Interfaces（异曲同工的类）</em></strong></p>
+<p>如果两个函数做同一件事，却有着不同的签名式（signatures），请运用<a href="making-method-calls-simpler/#_9">重新命名函数</a>根据它们的用途重新命名。但这往往不够，请反复运用<a href="moving-features-between-objects/#_3">搬移函数</a>将某些行为移入classes，直到两者的协议（protocols ）一致为止。如果你必须重复而赘余地移入代码才能完成这些，或许可运用<a href="dealing-with-generalization/#_4">提炼超类</a>为自己赎 点罪。 </p>
+<p><strong><em>不完美的程序库类（Incomplete Library Class）</em></strong></p>
+<p>复用（reuse）常被视为对象的终极目的。我们认为这实在是过度估计了（我们只是使用而己）。但是无可否认，许多编程技术都建立在library classes （程序库类）的基础上，没人敢说是不是我们都把排序算法忘得一干二净了。 </p>
+<p>library classes构筑者没有未卜先知的能力，我们不能因此责怪他们。毕竟我们自己也几乎总是在系统快要构筑完成的时候才能弄清楚它的设计，所以library 构筑者的任务真的很艰巨。麻烦的是library的形式（form）往往不够好，往往不可能让我们修改其中的classes使它完成我们希望完成的工作。这是否意味那些经过实践检验的战术如<a href="moving-features-between-objects/#_3">搬移函数</a>等等，如今都派不上用场了？ </p>
+<p>幸好我们有两个专门应付这种情况的工具。如果你只想修改library classes内的一两 个函数，可以运用<a href="moving-features-between-objects/#_7">引入外加函数</a>；如果想要添加一大堆额外行为，就得运用<a href="moving-features-between-objects/#_8">引入本地扩展</a>。 </p>
+<p><strong><em>纯稚的数据类（Data Class）</em></strong></p>
+<p>所谓Data Class是指：它们拥有一些值域（fields），以及用于访问（读写〕这些值域的函数，除此之外一无长物。这样的classes只是一种「不会说话的数据容器」，它们几乎一定被其他classes过份细琐地操控着。这些classes早期可能拥有public值域，果真如此你应该在别人注意到它们之前，立刻运用<a href="organizing-data/#_7">封装值域</a>将它们封装起来。如果这些classes内含容器类的值域（collection fields），你应该 检査它们是不是得到了恰当的封装；如果没有，就运用<a href="organizing-data/#_6">封装群集</a>把它们封装起来。对于那些不该被其他classes修改的值域，请运用<a href="making-method-calls-simpler/#_8">移出设置函数</a>。</p>
+<p>然后，找出这些「取值/设值」函数（getting and setting methods）被其他classes运用的地点。尝试以<a href="moving-features-between-objects/#_3">搬移函数</a>把那些调用行为搬移到Data Class来。如果无法搬移整个函数，就运用 <a href="composing-methods/#_1">提炼函数</a> 产生一个可被搬移的函数。不久之后你就可以运用<a href="making-method-calls-simpler/#_3">隐藏某个函数</a>把这些「取值/设值」函数隐藏起来了。</p>
+<p>Data Class就像小孩子。作为一个起点很好，但若要让它们像「成年（成熟）」的对象那样参与整个系统的工作，它们就必须承担一定责任。</p>
+<p><strong><em>被拒绝的遗赠（Refused Bequest）</em></strong></p>
+<p>Subclasses 应该继承superclasses的函数和数据。但如果它们不想或不需要继承，又该怎么办呢？它们得到所有礼物，却只从中挑选几样来玩！</p>
+<p>按传统说法，这就意味继承体系设计错误。你需要为这个subclass 新建一个兄弟（sibling class），再运用<a href="dealing-with-generalization/#_10">函数下移</a>和<a href="dealing-with-generalization/#_9">值域下移</a>把所有用不到的函数下推给那兄弟。这样一来superclass就只持有所有subclasses共享的东西。常常你会听到这样的建议：所有superclasses都应该是抽象的（abstract）。</p>
+<p>既然使用「传统说法」这个略带贬义的词，你就可以猜到，我们不建议你这么做，起码不建议你每次都这么做。我们经常利用subclassing手法来复用一些行为，并发现这可以很好地应用于日常工作。这也是一种坏味道，我们不否认，但气味通常并不强烈。所以我们说：如果Refused Bequest引起困惑和问题，请遵循传统忠告。但不必认为你每次都得那么做。十有八九这种坏味道很淡，不值得理睬。</p>
+<p>如果subclass复用了superclass的行为（实现），却又不愿意支持superclass的接口，Refused Bequest的坏味道就会变得浓烈。拒绝继承superclass的实现，这一点我们不介意；但如果拒绝继承superclass的接口，我们不以为然。不过即使你不愿意继承接口，也不要胡乱修改继承体系，你应该运用<a href="dealing-with-generalization/#_12">以委托取代继承</a> 来达到目的。</p>
+<p><strong><em>过多的注释（Comments）</em></strong></p>
+<p>别担心，我们并不是说你不该写注释。从嗅觉上说，Comments不是一种坏味道；事实上它们还是一种香味呢。我们之所以要在这里提到Comments，因为人们常把它当作除臭剂来使用。常常会有这样的情况：你看到一段代码有着长长的注释，然后发现，这些注释之所以存在乃是因为代码很糟糕。这种情况的发生次数之多，实 在令人吃惊。</p>
+<p>Comments可以带我们找到本章先前提到的各种坏味道。找到坏味道后，我们首先应该以各种重构手法把坏味道去除。完成之后我们常常会发现：注释已经变得多余了，因为代码已经清楚说明了一切。</p>
+<p>如果你需要注释来解释一块代码做了什么，试试 <a href="composing-methods/#_1">提炼函数</a>；如果method已经提炼出来，但还是需要注释来解释其行为，试试<a href="making-method-calls-simpler/#_9">重新命名函数</a>；如果你需要注释说明某些系统的需求规格，试试<a href="simplifying-conditional-expressions/#_4">引入断言</a>。</p>
+<p>TIP：当你感觉需要撰写注释，请先尝试重构，试着让所有注释都变得多余。</p>
+<p>如果你不知道该做什么，这才是注释的良好运用时机。除了用来记述将来的打算之外，注释还可以用来标记你并无十足把握的区域。你可以在注释里写下自己「为什 么做某某事」。这类信息可以帮助将来的修改者，尤其是那些健忘的家伙。</p>
+<h2 id="_2">重新组织你的函数</h2>
+<hr />
+<p>我的重构手法中，很大一部分是对函数进行整理，使之更恰当地包装代码。几乎所有时刻，问题都源于Long Method（过长函数）。这很讨厌，因为它们往往包含太多信息，这些信息又被函数错综复杂的逻辑掩盖，不易鉴别。对付过长函数，一项重要的重构手法就是<a href="composing-methods/#_1">提炼函数</a>，它把一段代码从原先函数中提取出 来，放进一个单独函数中。<a href="composing-methods/#_2">将函数内联化</a>正好相反：将一个函数调用动作替 换为该函数本体。如果在进行多次提炼之后，意识到提炼所得的某些函数并没有做任何实质事情，或如果需要回溯恢复原先函数，我就需要<a href="composing-methods/#_2">将函数内联化</a>。</p>
+<p>[Extract Method]最大的困难就是处理局部变量，而临时变量则是其中一个主要的困难源头。处理一个函数时，我喜欢运用<a href="composing-methods#_4">以查询取代临时变量</a> 去掉所有可去掉的临时变量。如果很多地方使用了某个临时变量，我就会先运用<a href="composing-methods/#_6">剖解临时变量</a>将它变得比较容易替换。</p>
+<p>但有时候临时变量实在太混乱，难以替换。这时候我就需要使用<a href="composing-methods#_9">以函数对象取代函数</a>。它让我可以分解哪怕最混乱的函数，代价则是引入一个新class。</p>
+<p>参数带来的问题比临时变量稍微少一些，前提是你不在函数内赋值给它们。如果你已经这样做了，就得使用<a href="composing-methods/#_7">移除对参数的赋值</a>。</p>
+<p>函数分解完毕后，我就可以知道如何让它工作得更好。也许我还会发现算法可以改进，从而使代码更清晰。这时我就使用<a href="composing-methods#_10">替换你的算法</a>引入更清晰的算法。</p>
+<h2 id="_3">在对象之间搬移特性</h2>
+<hr />
+<p>在对象的设计过程中，「决定把责任放在哪儿」即使不是最重要的事，也是最重要的事之一。我使用对象技术已经十多年了，但还是不能一开始就保证做对。这曾经让我很烦恼，但现在我知道，在这种情况下，我可以运用重构（refactoring），改变自己原先的设计。</p>
+<p>常常我可以只运用<a href="moving-features-between-objects/#_3">搬移函数</a>和<a href="moving-features-between-objects/#_2">搬移值域</a>简单地移动对象行为，就可以解决这些问题。如果这两个重构手法都需要用到，我会首先使用<a href="moving-features-between-objects/#_2">搬移值域</a>，再使用<a href="moving-features-between-objects/#_3">搬移函数</a>。</p>
+<p>class往往会因为承担过多责任而变得臃肿不堪。这种情况下，我会使用<a href="moving-features-between-objects/#_1">提炼类</a>将一部分责任分离出去。如果一个class变得太「不负责任」，我就会使用<a href="moving-features-between-objects/#_4">将类内联化</a>将它融入另一个class。如果一个class使用了另一个class，运用<a href="moving-features-between-objects/#_5">隐藏委托关系</a>将这种关系隐藏起来通常是有帮助的。有时候隐藏delegate class会导致拥有者的接口经常变化，此时需要使用<a href="moving-features-between-objects/#_6">移除中间人</a>。</p>
+<p>本章的最后两项重构——<a href="moving-features-between-objects/#_7">引入外加函数</a>和<a href="moving-features-between-objects/#_8">引入本地扩展</a>——比较特殊。只有当我不能访问某个class的源码，却又想把其他责任移进这个不可修改的class时，我才会使用这两个重构手法。如果我想加入的只是一或两个函数，我会使用<a href="moving-features-between-objects/#_7">引入外加函数</a>；如果不止一两个函数，我就使用<a href="moving-features-between-objects/#_8">引入本地扩展</a>。</p>
+<h2 id="_4">组织你的数据</h2>
+<hr />
+<p>本章之中，我将讨论数个「能让你更轻松运用数据」的重构手法。很多人或许会认为Self<a href="organizing-data/#_7">封装值域</a>有点多余，但是关于「对象应该直接访问其中的数据，抑或应该通过访问函数（accessor）来访问」这一问题，争论的声音从来不曾停止。有时候你确实需要访问函数，此时你就可以通过<a href="organizing-data/#_7">封装值域</a>得到它们。通常我会选择「直接访问」方式，因为我发现，只要我想做，任何时候进行这项重构都是很简单的。</p>
+<p>面向对象语言有一个很有用的特征：除了允许使用传统语言提供的简单数据型别，它们还允许你定义新型别。不过人们往往需要一段时间才能习惯这种编程方式。一开始你常会使用一个简单数值来表示某个概念；随着对系统的深入了解，你可能会明白，以对象表示这个概念，可能更合适。<a href="organizing-data/#_9">以对象取代数据值</a>让你可以将「哑」数据（dumb data）变成会说话的对象（articulate objects）。如果你发现程序中有太多地方需要这一类对象，你也可以使用<a href="organizing-data/#_4">将实值对象改为引用对象</a>将它们变成reference object。</p>
+<p>如果你看到一个array的行为方式很像一个数据结构，你可以使用<a href="organizing-data/#_8">以对象取代数组</a>把array变成对象，从而使这个数据结构更清晰地显露出来。但这只是第一步，当你使用<a href="moving-features-between-objects/#_3">搬移函数</a>为这个新对象加入相应行为时，真正的好处才得以体现。</p>
+<p>魔法数（magic numbers），也就是带有特殊含义的数字，从来都是个问题。我还清楚记得，一开始学习编程的时候，老师就告诉我不要使用魔法数。但它们还是不时出现。因此，只要弄清楚魔法数的用途，我就运用<a href="organizing-data/#_10">以符号常量/字面常量取代魔法数</a>将它们除掉，以绝后患。</p>
+<p>对象之间的关联（links）可以单向，也可以双向。单向关联比较简单，但有时为了支持一项新功能，你需要以<a href="organizing-data/#_3">将单向关联改为双向</a>将它变成双向关联。<a href="organizing-data/#_1">将双向关联改为单向</a>则恰恰相反：如果你发现不再需要双向关联，可以使用这项重构将它变成单向关联。</p>
+<p>我常常遇到这样的情况：GUI classes竟然去处理不该它们处理的业务逻辑（business logic）。为了把这些处理业务逻辑的行为移到合适的domain class去，你需要在domain class中保存这些逻辑的相关数据，并运用<a href="organizing-data/#_5">复制被监视数据</a>提供对GUI的支持。一般来说，我不喜欢重复的数据，但这是一个例外，因为这里的重复数据通常是不可避免的。</p>
+<p>面向对象编程（OOP）的关键原则之一就是封装。如果一个class暴露了任何public数据，你就应该使用<a href="organizing-data/#_7">封装值域</a>将它高雅而正派地包装起来。如果被暴露的数据是个群集（collection），你就应该使用<a href="organizing-data/#_6">封装群集</a>因为群集有其特殊协议。如果一整笔记录（record）都被裸露在外，你就应该使用<a href="organizing-data/#_11">以数据类取代记录</a>。</p>
+<p>需要特别对待的一种数据是type code〔型别码）：这是一种特殊数值，用来指出 「与实体所属之型别相关的某些东西」。Type code通常以枚举（enumeration）形式出现，并且通常以static final整数实现之。如果这些type code用来表现某种信息，并且不会改变所属class的行为，你可以运用<a href="organizing-data/#_13">以类取代型别码</a>将它们替换掉，这项重构会为你提供更好的型别检查，以及一个更好的平台，使你可以在未来更方便地将相关行为添加进去。另一方面，如果class的行为受到type code的影响，你就应该尽可能使用<a href="organizing-data/#_14">以子类取代型别码</a>。如果做不到，就只好使用更复杂（同时也更灵活）的<a href="organizing-data/#statestrategy">以State/Strategy取代型别码</a>。</p>
+<h2 id="_5">简化条件表达式</h2>
+<hr />
+<p>条件逻辑（conditional logic）有可能十分复杂，因此本章提供一些重构手法，专门用来简化它们。其中一项核心重构就是<a href="simplifying-conditional-expressions/#_3">分解条件式</a>，可将一个复杂的条件逻辑分成若干小块。这项重构很重要，因为它使得「转辙逻辑」（switching logic ）和「操作细节」（details）分离。</p>
+<p>本章的其余重构手法可用以处理另一些重要问题：如果你发现代码中的多处测试有相同结果，应该实施<a href="simplifying-conditional-expressions/#_1">合并条件式</a>；如果条件代码中有任何重复，可以运用<a href="simplifying-conditional-expressions/#_2">合并重复的条件片段</a>将重复成分去掉。</p>
+<p>如果程序开发者坚持「单一出口（one exit point ）」原则，那么为让条件式也遵循这 一原则，他往往会在其中加入控制标记（control flags ）。我并不特别在意「一个函数一个出口」原则，所以我使用<a href="simplifying-conditional-expressions/#_7">以卫语句取代嵌套条件式</a>标示出那些特殊情况，并使用<a href="simplifying-conditional-expressions/#_5">移出控制标记</a>去除那些讨厌的控制标记。</p>
+<p>较之于过程化（procedural ）程序而言，面向对象（object oriented）程序的条件式通常比较少，这是因为很多条件行为都被多态机制（polymorphism）处理掉了。多态之所以更好，是因为调用者无需了解条件行为的细节，因此条件的扩展更为容易。所以面向对象程序中很少出现switch 语句；一旦出现，就应该考虑运用<a href="simplifying-conditional-expressions/#_6">以多态取代条件式</a>将它替换为多态。</p>
+<p>多态还有一种十分有用但鲜为人知的用途：通过<a href="simplifying-conditional-expressions/#null">引入Null对象</a>去除对于null value的检验。</p>
+<h2 id="_6">简化函数调用</h2>
+<hr />
+<p>在对象技术中，最重要的概念莫过于「接口」（interface）。容易被理解和被使用的接口，是开发良好面向对象软件的关键。本章将介绍「使接口变得更简洁易用」 的重构手法。</p>
+<p>最简单也最重要的一件事就是修改函数名称。「名称」是程序写作者与阅读者交流的关键工具。只要你能理解一段程序的功能，就应该大胆地使用<a href="making-method-calls-simpler/#_9">重新命名函数</a>将你所知道的东西传达给其他人。另外，你也可以（并且应该）在适当时机修改变量名称和class 名称。不过，总体来说，「修改名称」只是相对比较简单 的文本替换功夫，所以我没有为它们提供单独的重构项目。</p>
+<p>函数参数在「接口」之中扮演十分重要的角色。<a href="making-method-calls-simpler/#_1">添加参数</a>和<a href="making-method-calls-simpler/#_7">移除参数</a>都是很常见的重构手法。初始接触面向对象技术的程序员往往使用很长的参数列（parameter lists），这在其他开发环境中是很典型的方式。但是， 使用对象技术，你可以保持参数列的简短，以下有一些相关的重构可以帮助你缩短参数列。如果来自同一对象的数个值被当作参数传递，你可以运用<a href="making-method-calls-simpler/#_6">保持对象完整</a>将它们替换为单一对象，从而缩短参数列。如果此前并不存在这样一个对象，你可以运用<a href="making-method-calls-simpler/#_4">引入参数对象</a>将它创建出来。如果函数参数来自该函数可取用的一个对象，则可以使用<a href="making-method-calls-simpler/#_14">以函数取代参数</a>避免传递参数。如果某些参数被用来在条件式中做选择依据，你可以实施<a href="making-method-calls-simpler/#_13">以明确函数取代参数</a>。另外，你还可以使用<a href="making-method-calls-simpler/#_5">令函数携带参数</a>为数个相似函数添加参数，将它们合并到一起。</p>
+<p>关于缩减参数列的重构手法，Doug Lea 对我提出了一个警告：并发编程（con-current programming）往往需要使用较长的参数列，因为这样你可以保证传递给函数的参数都是不可被修改的，就像内置型对象和value object 一定地不可变。通常，你可以使用不可变对象（immutable object）取代这样的长参数列，但另一方面你也必须对此类重构保持谨慎。</p>
+<p>多年来我一直坚守一个很有价值的习惯：明确地将「修改对象状态」的函数（修改函数，modifiers）和「查询对象状态」的函数（查询函数，queries）分开设计。不知道多少次，我因为将这两种函数混在一起而麻烦缠身；不知道多少次，我看到别 人也因为同样的原因而遇到同样的麻烦。因此，如果我看到这两种函数混在一起， 我就使用<a href="making-method-calls-simpler/#_15">将查询函数和修改函数分离</a>将它们分开。</p>
+<p>良好的接口只向用户展现必须展现的东西。如果一个接口暴露了过多细节，你可以将不必要暴露的东西隐藏起来，从而改进接口的质量。毫无疑问，所有数据都应该隐藏起来（希望你不需要我来告诉你这一点），同时，所有可以隐藏的函数都应该被隐藏起来。进行重构时，你往往需要暂时暴露某些东西，最后再以<a href="making-method-calls-simpler/#_3">隐藏某个函数</a>和<a href="making-method-calls-simpler/#_8">移出设置函数</a>将它们隐藏起来。</p>
+<p>构造函数（constructors）是Java 和C++ 中特别麻烦的一个东西，因为它强迫你必须知道「待建对象」属于哪一个class ，而你往往并不需要知道这一点。你可以使用<a href="making-method-calls-simpler/#_10">以工厂函数取代构造函数</a>避免了解这「被迫了解的一点」。</p>
+<p>转型（casting）是Java 程序员心中另一处永远的痛。你应该尽量使用<a href="making-method-calls-simpler/#_2">封装向下转型动作</a>将「向下转型动作」封装隐藏起来，避免让class 用户做那种动作。</p>
+<p>和许多现代编程语言一样，Java 也有异常处理（exception-handing）机制，这使得错误处理（error handling）相对容易一些。不习惯使用异常的程序员，往往会以错误代码（error code）表示程序遇到的麻烦。你可以使用<a href="making-method-calls-simpler/#_11">以异常取代错误码</a>来运用这些崭新的异常特性。但有时候异常也并不是最合适的选择，你应该实施<a href="making-method-calls-simpler/#_12">以测试取代异常</a>先测试一番。</p>
+<h2 id="_7">处理概括关系</h2>
+<hr />
+<p>有一批重构手法专门用来处理「概括关系」（generalization ；译注：这里指的是class 继承」这档事），其中主要是将函数（methods）上下移动于继承体系之中。 <a href="dealing-with-generalization/#_7">值域上移</a>和<a href="dealing-with-generalization/#_8">函数上移</a>都用于将class 特性向继承体系的上端移动，<a href="dealing-with-generalization/#_10">函数下移</a>和<a href="dealing-with-generalization/#_9">值域下移</a>则将class 特性向继承体系的下端移动。构造函数比较难以向上拉动，因此专门有一个<a href="dealing-with-generalization/#_6">构造函数本体上移</a>处理它。我们不会将构造函数往下推，因为<a href="making-method-calls-simpler/#_10">以工厂函数取代构造函数</a>通常更管用。</p>
+<p>如果有若干函数大体上相同，只在细节上有所差异，可以使用<a href="dealing-with-generalization/#_5">塑造模板函数</a> 将它们的共同点和不同点分开。</p>
+<p>除了在继承体系中移动class 特性之外，你还可以建立新class ，改变整个继承体系。<a href="dealing-with-generalization/#_3">提炼子类</a>、<a href="dealing-with-generalization/#_4">提炼超类</a>和<a href="dealing-with-generalization/#_2">提炼接口</a>都是这样的重构手法，它们在继承体系的不同位置构造出新元素。如果你想在型别系统（type system）中标示（mark）一小部分函数，<a href="dealing-with-generalization/#_2">提炼接口</a> 特别有用。如果你发现继承体系中的某些classes 没有存在必要，可以使用<a href="dealing-with-generalization/#_1">折叠继承关系</a>将它们移除。</p>
+<p>有时候你会发现继承并非最佳选择，你真正需要的其实是委托（delegation），那么，<a href="dealing-with-generalization/#_12">以委托取代继承</a>可以帮助你把继承改为委托。有时候你又会想要做反向修改，此时就可使用<a href="dealing-with-generalization/#_11">以继承取代委托</a>。</p>
+<h2 id="_8">大型重构</h2>
+<hr />
+<p>前面的章节已经向读者展示了各个单项重构步骤。目前还缺乏的是对整个「游戏」 的完整概念。你之所以进行重构，必定是为了达到某个目的，而不仅仅是为了看起来有所动作（起码大多数时候你的重构是为了达到某个目的）。那么，整个「游戏」 看起来又是怎样的呢？</p>
+<p><strong><em>这场游戏的本质</em></strong></p>
+<p>以下面介绍的重构手法中，你肯定会注意到一件事：重构步骤的描述，不再如前面 那么仔细。这是因为在大型重构中，情况有很多变化，我们无法告诉你准确的重构步骤；如果没有看到实际情况，任谁都无法确切知道该怎么做。当你为某个函数添加参数时，作法可以很仔细而清楚，因为重构范围（作用域）很清楚。但是当你分 解一个继承体系时，由于每个继承体系都是不同的，所以我们无法告诉你确切的重构步骤。</p>
+<p>另外，对于这些大型重构，还有一件事需要注意：它们会耗费相当长的时间。第6 章至第11章所介绍的重构手法，都可以在数分钟（至多一个小时）内完成，但是我们曾经进行过的一些大型重构，却需要数月甚至数年的时间。如果你需要给一个运行中的系统添加功能，你不可能说服经理把系统停止运行两个月让你进行重构； 你只能一点一点地做你的工作，今天一点点，明天一点点。</p>
+<p>在这个过程中，你应该根据需要安排自己的工作，只在需要添加新功能或修补错误 时才进行重构。你不必一开始就完成整个系统的重构；重构程度只要能满足其他任务的需要就行了。反正明天你还可以回来重构。</p>
+<p>本章范例也反映出这样的哲学。如果要向你展示本书中所有的重构，轻易就能耗去上百页篇幅。我们很清楚这一点，因为Martin 的确尝试过。所以，我们把范例压缩至「数张概略图」的尺度。</p>
+<p>由于大型重构可能需要花费相当长的时间，因此它们并不像其他章节介绍的重构那样，能够立刻让人满意。你必须有那么一点小小的信仰：你每天都在使你自己的程序世界更安全。</p>
+<p>进行大规模重构时，有必要为整个开发团队建立共识；这是小型重构所不需要的。大型重构为许许多多的修改指定了方向。整个团队都必须意识到：有一个大型重构正在进行，每个人都应该相应地安排自己的行动。说到这里，我想给大家讲个故事。 两个家伙的车子在山顶附近抛锚了，于是他俩走下车，一人走到车的一头，开始推车。经过毫无成果的半小时之后，车头那家伙开口说道：『我从来不知道把车推下山这么难！』另一个家伙答道：『嘿，你说「推下山」是什么意思？难道我们不是想把车推上山吗？』我猜你一定不想让这个故事在你的开发团队中重演，对吧！</p>
+<p><strong><em>大型重构的重要性</em></strong></p>
+<p>我们已经看到，使那些小型重构突显价值的质量（可预测的结果、可观察的过程、 立竿见影的满足等等〕，在大型重构中往往并不存在。既然如此，为什么大型重构还那么重要，以至于我们想要把它们放进本书？那是因为如果没有它们，我们就可能面临这样的风险：投入了大把时间学习重构，在实际工作中却无法获得实在的利益。这对我们来说是非常糟糕的，我们不能容忍这种事情发生。</p>
+<p>更重要的是，你之所以需要重构，决不会是因为它很好玩，而是因为你希望它能对你的程序有所帮助，让你能够做一些重构之前无法做的事情。</p>
+<p>正如水草会堵塞河道一样，在一知半解的情况下做出的设计决策，一旦堆积起来，也会使你的程序陷于瘫痪。通过重构，你可以保证随时在程序中反映出自己对于「应该如何设计程序」的完整理解。正如水草会迅速蔓延一样，对系统理解不够完整的设计决策，也会很快地将它们的影响蔓延到整个程序中。要根除这种错误，一 个、两个、甚至十个单独的行为都是不够的，只有持续而无处不在的重构才有可能竟其功。</p>
+<p><strong><em>四个大型重构</em></strong></p>
+<p>本章之中，我们将介绍四个大型重构实例。这些仅仅是例子，我们并没有打算覆盖所有领域。迄今为止，绝大多数关于重构的研究和实践都集中于比较小的重构手法上，以这种方式谈论大型重构，是一种非常新鲜的作法，这主要来自于：Kent 的经验。在大规模重构方面，Kent 的经验比其他所有人都要丰富。</p>
+<p><a href="big-refactorings/#_1">梳理并分解继承体系</a> 用于处理混乱的继承体系——这种继承体系往往以一种令人迷惑的方式组合了数个不同方面的变化（variations）。<a href="big-refactorings/#_2">将过程化设计转化为对象设计</a>可以帮助你解决一个「古典」问题：如何处理程序性代码（procedural code ）？许多使用面向对象语言的程序员，其实并没有真正理解面向对象技术，因此你常会需要使用这项重构。如果你看到以传统的双层结构（two-tier， 用户界面和数据库）方式编写的代码，你能需要使用<a href="big-refactorings/#_3">将领域和表述/显示分离</a> 将业务逻辑（business logic）与用户界面（user interface ）隔离开来。经验丰富的面向对象开发人员发现：对于一个长时间、大负荷运转的系统来说，这样的分离是至关重要的。<a href="big-refactorings/#_4">提炼继承体系</a> 则可以将过于复杂的class 转变为一群subclass ，从而简化系统。</p>
+</div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Copyright © 2014, <a href="http://wangchen.info">Wang Chen</a>.</p>
+            <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+
+        
+
+        <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+        <script src="./js/bootstrap-3.0.3.min.js"></script>
+        <script src="./js/prettify-1.0.min.js"></script>
+        <script src="./js/base.js"></script>
+    </body>
 </html>
