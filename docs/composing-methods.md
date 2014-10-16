@@ -4,6 +4,7 @@
 你有一段代码可以被组织在一起并独立出来。
 
 **将这段代码放进一个独立函数中，并让函数名称解释该函数的用途。**
+
 ```java
 void printOwing(double amount) {
     printBanner();
@@ -13,7 +14,7 @@ void printOwing(double amount) {
 }
 ```
 
-![](/images/arrow.gif)
+![](../images/arrow.gif)
 
 ```java
 void printOwing(double amount) {
@@ -281,7 +282,7 @@ boolean moreThanFiveLateDeliveries() {
   return _numberOfLateDeliveries > 5;
 }
 ```
-![](/images/arrow.gif)
+![](../images/arrow.gif)
 ```java
 int getRating() {
   return (_numberOfLateDeliveries > 5) ? 2 : 1;
@@ -321,7 +322,7 @@ int getRating() {
   double basePrice = anOrder.basePrice();
   return (basePrice > 1000)
 ```
-![](/images/arrow.gif)
+![](../images/arrow.gif)
 
 ```java
   return (anOrder.basePrice() > 1000)
@@ -360,7 +361,7 @@ else
     return basePrice * 0.98;
 ```
 
-![](/images/arrow.gif)
+![](../images/arrow.gif)
 
 ```java
 if (basePrice() > 1000)
@@ -521,7 +522,7 @@ if ( (platform.toUpperCase().indexOf("MAC") > -1) && (browser.toUpperCase().inde
 }
 ```
 
-![](/images/arrow.gif)
+![](../images/arrow.gif)
 
 ```java
 final boolean isMacOs     = platform.toUpperCase().indexOf("MAC") > -1;
@@ -682,7 +683,7 @@ temp = _height * _width;
 System.out.println (temp);
 ```
 
-![](/images/arrow.gif)
+![](../images/arrow.gif)
 
 ```java
 final double perimeter = 2 * (_height + _width);
@@ -796,7 +797,7 @@ double getDistanceTravelled (int time) {
 int discount (int inputVal, int quantity, int yearToDate) {
     if (inputVal > 50) inputVal -= 2;
 ```
-![](/images/arrow.gif)
+![](../images/arrow.gif)
 
 ```java
 int discount (int inputVal, int quantity, int yearToDate) {
@@ -960,7 +961,7 @@ Java1.1及其后版本，允许你将参数标示为final，从而避免函数�
         return basePrice * 0.98;
 ```
 
-![](/images/arrow.gif)
+![](../images/arrow.gif)
 
 ```java
     if (basePrice() > 1000)
@@ -1136,8 +1137,8 @@ double price() {
 }
 ```
 
-![](/images/arrow.gif)
-![](/images/06fig01.gif)
+![](../images/arrow.gif)
+![](../images/06fig01.gif)
 
 **动机（Motivation）**
  
@@ -1274,7 +1275,7 @@ String foundPerson(String[] people){
 }
 ```
 
-![](/images/arrow.gif)
+![](../images/arrow.gif)
 
 ```java
 String foundPerson(String[] people){

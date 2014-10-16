@@ -5,7 +5,7 @@
 
 ***建立两个继承体系，并通过委托关系（delegation）让其中一个可以调用另一个。***
 
-![](/images/12fig01.gif)
+![](../images/12fig01.gif)
 
 **动机（Motivation）**
 
@@ -32,7 +32,7 @@
 
 让我们来看一个混乱的继承体系（如图12.1）。
 
-![](/images/12fig02.png)
+![](../images/12fig02.png)
 
 图12.1  一个混乱的继承体系
 
@@ -53,13 +53,13 @@ Tabular
 
 然后，我们应该使用[提炼类](moving-features-between-objects.md#_1) 提炼出一个单独的PresentationStyle class 用以表示「显示风格」（如图12.2）。
 
-![](/images/12fig03.gif)
+![](../images/12fig03.gif)
 
 图12.2  添加PresentationStyle ，用以表示「显示风格」
 
 接下来我们需要针对原继承体系中的每个subclass ，建立PresentationStyle 的一个个subclasses （如图 12.3），并将Deal class之中用来保存PresentationStyle 实体的那个instance 变量初始化为适当的subclass 实体：
 
-![](/images/12fig04.gif)
+![](../images/12fig04.gif)
 
 图12.3  为PresentationStyle 添加subclasses
 
@@ -75,7 +75,7 @@ ActiveDeal constructor
 现在，我们要使用 [搬移函数](moving-features-between-objects.md#_3) 和 [搬移值域](moving-features-between-objects.md#_2)，将Deal subclass 中[与显示逻辑相关」的函数和变量搬移到PresentationStyle 相应的subclasses 去。我们想不出什么好办法来模拟这个过程，只好请你自己想像。总之，这个步骤完成后，TabularActiveDeal 和 TabularPassiveDeal不再有任何代码，因此我们将它们移除（如图12.4）。
 
 
-![](/images/12fig05.gif)
+![](../images/12fig05.gif)
 
 图12.4  与表格相关的 Deal subclass 都移除了
 
@@ -85,7 +85,7 @@ ActiveDeal constructor
 下一步，我们将摆脱「显示风格」中的主动（active）与被动（passive）区别，如图 12.5。
 
 
-![](/images/12fig06.gif)
+![](../images/12fig06.gif)
 
 图12.5  继承体系被分割了
 
@@ -93,7 +93,7 @@ ActiveDeal constructor
 就连「单一显示」和「表格显示」之间的区别，都可以运用若干变量值来捕捉，根本不需要为它们建立subclasses （如图12.6〕。
 
 
-![](/images/12fig07.gif)
+![](../images/12fig07.gif)
 
 图12.6「显示风格」（presentation style）之间的差异可以使用一些变量来表现
 
@@ -108,7 +108,7 @@ ActiveDeal constructor
 <i><sup>9</sup>译注：这里所谓的记录（record），是指像C struct 那样的结构。</i>
 
 
-![](/images/12fig08.gif)
+![](../images/12fig08.gif)
 
 
 **动机（Motivation）**
@@ -143,7 +143,7 @@ ActiveDeal constructor
 
 **将domain logic（领域逻辑）分离出来，为它们建立独立的domain class。**
 
-![](/images/12fig09.gif)
+![](../images/12fig09.gif)
 
 
 **动机（Motivation）**
@@ -172,11 +172,11 @@ Java 是一个真正意义上的面向对象环境，因此你可以创建内含
 
 下面是一个商品订购程序。其GUI 如图12.7所示，其presentation class 与图12.8 所示的关系式数据库（relational database）互动。
 
-![](/images/12fig10.gif)
+![](../images/12fig10.gif)
 
 图12.7  启动程序的用户界面
 
-![](/images/12fig11.gif)
+![](../images/12fig11.gif)
 
 图12.8  订单程序所用的数据库
 
@@ -188,7 +188,7 @@ Java 是一个真正意义上的面向对象环境，因此你可以创建内含
 首先建立一个Order class 表示「定单」。然后把Order 和OrderWindow 联系起来， 如图12.9。由于窗口中有一个用以显示定单的表格（grid），所以我们还得建立一个OrderLine，用以表示表格中的每一行（rows）。
 
 
-![](/images/12fig12.gif)
+![](../images/12fig12.gif)
 
 图12.9  OrderWindow class 和Order class
 
@@ -206,7 +206,7 @@ Java 是一个真正意义上的面向对象环境，因此你可以创建内含
 现在，我们拥有的三个classes，如图12.10所示，它们离「组织良好」还有很大的距离。不过这个模型的确已经很好地分离了presentation logic 和domain logic （business logic）。本项重构的进行过程中，你必须时刻留心你的风险来自何方。 如果「presentation logic 和domain logic 混淆」是最大风险，那么就先把它们完全分开，然后才做其他工作；如果其他方面的事情（例如产品定价策略〉更重要，那么就先把那一部分的logic 从窗口提炼出来，并围绕着这个高风险部分进行重构，为它建立合适的结构。反正domain logic 早晚都必须从窗口移出，如果你在处理高风险部分的重构时会遗留某些logic 于窗口之中，没关系，就放手去做吧。
 
 
-![](/images/12fig13.gif)
+![](../images/12fig13.gif)
 
 图12.10  将数据安置（分散）于domain classes 中
 
@@ -218,7 +218,7 @@ Java 是一个真正意义上的面向对象环境，因此你可以创建内含
 
 **建立继承体系，以一个subclass 表示一种特殊情况。**
 
-![](/images/12fig14.gif)
+![](../images/12fig14.gif)
 
 **动机（Motivation）**
 
@@ -263,7 +263,7 @@ Java 是一个真正意义上的面向对象环境，因此你可以创建内含
 我们以一个电费计算程序为例。这个程序有两个classes ：表示「消费者」的Customer 和表示「计费方案」的BillingScheme，如图12.11。
 
 
-![](/images/12fig15.gif)
+![](../images/12fig15.gif)
 
 图12.11  Customer 和BillingScheme
 
@@ -277,7 +277,7 @@ BillingScheme 使用大量条件逻辑来计算不同情况（变异）下的费
 然后，我们需要观察BillingScheme 的其他函数，寻找那些随着「用户是否为残障人士」而变化的行为。createBill() 就是这样一个函数，因此我们将它拷贝到subclass （图 12,12）。
 
 
-![](/images/12fig16.gif)
+![](../images/12fig16.gif)
 图12.12  为「残障人士」添加一个subclass
 
 现在，我们需要检查subclass 中的createBill() 函数。由于现在我们可以肯定该 消费者是残障人士，因此可以简化这个函数。所以下列代码：

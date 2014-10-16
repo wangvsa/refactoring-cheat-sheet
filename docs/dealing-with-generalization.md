@@ -5,7 +5,7 @@ superclass 和subclass 之间无太大区别。
 
 **将它们合为一体。**
 
-![](/images/11fig10.gif)
+![](../images/11fig10.gif)
 
 
 **动机（Motivation）**
@@ -29,7 +29,7 @@ superclass 和subclass 之间无太大区别。
 
 **将相同的子集提炼到一个独立接口中。**
 
-![](/images/11fig09.gif)
+![](../images/11fig09.gif)
 
 
 **动机（Motivation）**
@@ -103,7 +103,7 @@ double charge(Billable emp, int days) {
 class 中的某些特性（features）只被某些（而非全部）实体（instances）用到。
 
 **新建一个subclass ，将上面所说的那一部分特性移到subclass 中。**
-![](/images/11fig07.gif)
+![](../images/11fig07.gif)
 
 
 **动机（Motivation）**
@@ -315,7 +315,7 @@ class LaborItem...
 
 **为这两个classes 建立一个superclass ，将相同特性移至superclass 。**
 
-![](/images/11fig08.gif)
+![](../images/11fig08.gif)
 
 
 **动机（Motivation）**
@@ -495,7 +495,7 @@ class Department...
 
 **将各个措施分别放进独立函数中，并保持它们都有相同的签名式（signature），于是原函数也就变得相同了。然后将原函数上移至superclass 。**
 
-![](/images/11fig11.gif)
+![](../images/11fig11.gif)
 
 
 **动机（Motivation）**
@@ -564,7 +564,7 @@ public String htmlStatement() {
 
 使用 [塑造模板函数](dealing-with-generalization.md#_5) 之前，我需要对上述两个函数做一些整理，使它们成为「某个共同superclass 」下的subclass 函数。为了这一目的，我使用函数对象（method object）[Beck] 针对「报表打印工作」创建一个「独立的策略继承体系」（separate strategy hierarchy ），如图11.1。
 
-![](/images/11fig12.gif)
+![](../images/11fig12.gif)
 图7.1  简单的委托关系（delegation）
 
 ```java
@@ -746,7 +746,7 @@ class Statement...
 然后我把TextStatement.value() 函数拿掉，编译并测试。完成之后再把HtmlStatement.value() 也删掉，再次编译并测试。最后结果如图11.2。
 
 完成本重构后，处理其他种类的报表就容易多了：你只需为Statement 再建一个subclass ，并在其中覆写（overrides）三个抽象函数即可。
-![](/images/11fig13.gif)
+![](../images/11fig13.gif)
 图11.2  Templae Method（模板函数）塑造完毕后的classes 
 
 ## 构造函数本体上移
@@ -765,7 +765,7 @@ class Manager extends Employee...
     }
 ```
 
-![](/images/arrow.gif)
+![](../images/arrow.gif)
 
 ```java
 public Manager (String name, String id, int grade) {
@@ -876,7 +876,7 @@ class Manager...
 
 **将此一值域移至superclass。**
 
-![](/images/11fig01.gif)
+![](../images/11fig01.gif)
 
 
 **动机（Motivation）**
@@ -905,7 +905,7 @@ class Manager...
 
 **将该函数移至superclass。**
 
-![](/images/11fig02.gif)
+![](../images/11fig02.gif)
 
 
 **动机（Motivation）**
@@ -943,7 +943,7 @@ class Manager...
 
 我以Customer「表示「顾客」，它有两个subclass  ：表示「普通顾客」的RegularCustomer 和表示「贵宾」PreferredCustomer。
 
-![](/images/11fig03.gif)
+![](../images/11fig03.gif)
 
 
 两个subclass 都有一个createBill() 函数，并且代码完全一样：
@@ -963,14 +963,14 @@ class Customer...
 
 
 然后，我就可以将createBill()  函数从其中一个subclass 拷贝到superclass。拷贝完之后应该编译，然后移除那个subclass 的createBill() 函数，然后编译并测试。 随后再移除另一个subclass 的createBill() 函数，再次编译并测试：
-![](/images/11fig04.gif)
+![](../images/11fig04.gif)
 ## 值域下移
 ---
 
 superclass 中的某个值域只被部分（而非全部）subclasses 用到。
 
 **将这个值域移到需要它的那些subclasses 去。**
-![](/images/11fig06.gif)
+![](../images/11fig06.gif)
 
 
 **动机（Motivation）**
@@ -995,7 +995,7 @@ superclass 中的某个函数只与部分（而非全部）subclasses 有关。
 
 **将这个函数移到相关的那些subclasses 去。**
   
-![](/images/11fig05.gif)
+![](../images/11fig05.gif)
 
 
 **动机（Motivation）**
@@ -1021,7 +1021,7 @@ superclass 中的某个函数只与部分（而非全部）subclasses 有关。
 
 我以Customer「表示「顾客」，它有两个subclass  ：表示「普通顾客」的RegularCustomer 和表示「贵宾」PreferredCustomer。
 
-![](/images/11fig03.gif)
+![](../images/11fig03.gif)
 
 两个subclass 都有一个createBill() 函数，并且代码完全一样：
 ```java
@@ -1041,7 +1041,7 @@ class Customer...
 
 然后，我就可以将createBill()  函数从其中一个subclass 拷贝到superclass。拷贝完之后应该编译，然后移除那个subclass 的createBill() 函数，然后编译并测试。 随后再移除另一个subclass 的createBill() 函数，再次编译并测试：
 
-![](/images/11fig04.gif)
+![](../images/11fig04.gif)
 
 ## 以继承取代委托
 ---
@@ -1050,7 +1050,7 @@ class Customer...
 
 **让「请托（delegating）class」继承「受托 class （delegate）」。**
 
-![](/images/11fig15.gif)
+![](../images/11fig15.gif)
 
 
 **动机（Motivation）**
@@ -1139,7 +1139,7 @@ public String toString () {
 
 **在subclass 中新建一个值域用以保存superclass ；调整subclass 函数，令它改而委托superclass ；然后去掉两者之间的继承关系。**
 
-![](/images/11fig14.gif)
+![](../images/11fig14.gif)
 
 
 **动机（Motivation）**

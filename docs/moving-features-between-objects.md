@@ -5,7 +5,7 @@
 
 **建立一个新class，将相关的值域和函数从旧class搬移到新class。**
 
-![](/images/07fig03.gif)
+![](../images/07fig03.gif)
 
 **动机（Motivation）**
  
@@ -168,7 +168,7 @@ class TelephoneNumber...
 
 **在target class 建立一个new field，修改source field的所有用户，令它们改用此new field。**
 
-![](/images/07fig02.gif)
+![](../images/07fig02.gif)
 
 **动机（Motivation）**
  
@@ -294,7 +294,7 @@ private double getInterestRate () {
 
 在该函数最常引用（指涉）的class中建立一个有着类似行为的新函数。将旧函数变成一个单纯的委托函数（delegating method），或是将旧函数完全移除。
  
-![](/images/07fig01.gif) 
+![](../images/07fig01.gif) 
 
 **动机（Motivation）**
  
@@ -430,7 +430,7 @@ class AccountType...
  
 **将class的所有特性搬移到另一个class中，然后移除原class。** 
  
-![](/images/07fig04.gif)
+![](../images/07fig04.gif)
 
 
 **动机（Motivation）**
@@ -533,7 +533,7 @@ martin.setAreaCode ("781");
  
 **在server端（某个class〕建立客户所需的所有函数，用以隐藏委托关系（delegation）。**
   
-![](/images/07fig05.gif) 
+![](../images/07fig05.gif) 
 
  
 **动机（Motivation）**
@@ -545,7 +545,7 @@ martin.setAreaCode ("781");
 如果某个客户调用了「建立于server object (服务对象）的某个值域基础之上」的函数，那么客户就必须知晓这一委托对象（delegate object。译注：即server object的那个特殊值域）。万一委托关系发生变化，客户也得相应变化。你可以在server 端放置一个简单的委托函数（delegating method），将委托关系隐藏起来，从而去除这种依存性（图7.1）。这么一来即便将来发生委托关系上的变化，变化将被限制在server中，不会波及客户。
 
 
-![](/images/07fig06.gif) 
+![](../images/07fig06.gif) 
 图7.1  简单的委托关系（delegation）
   
  
@@ -623,7 +623,7 @@ manager = john.getManager();
 某个class做了过多的简单委托动作（simple delegation）。 
  
 **让客户直接调用delegate（受托类）。**
-![](/images/07fig07.gif)
+![](../images/07fig07.gif)
  
 
 **动机（Motivation）**
@@ -695,7 +695,7 @@ class Person...
 Date newStart = new Date (previousEnd.getYear(), previousEnd.getMonth(), previousEnd.getDate() + 1);
 ```
                     
-![](/images/arrow.gif)
+![](../images/arrow.gif)
 
 ```java
 Date newStart = nextDay(previousEnd);
@@ -756,7 +756,7 @@ private static Date nextDay(Date arg) {
 
 **建立一个新class，使它包含这些额外函数。让这个扩展品成为source class的subclass （子类〕或wrapper（外覆类）。**
 
-![](/images/07fig08.gif)
+![](../images/07fig08.gif)
 
 
 **动机（Motivation）**

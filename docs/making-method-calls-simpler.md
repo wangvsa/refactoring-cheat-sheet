@@ -4,7 +4,7 @@
 某个函数需要从调用端得到更多信息。
 **为此函数添加一个对象参数，让该对象带进函数所需信息。**
 
-![](/images/10fig02.gif)
+![](../images/10fig02.gif)
 
 **动机（Motivation）**
 
@@ -46,7 +46,7 @@ Object lastReading() {
 }
 ```
 
-![](/images/arrow.gif)
+![](../images/arrow.gif)
 
 ```java
 Reading lastReading() {
@@ -113,7 +113,7 @@ Reading lastReading() {
 有一个函数，从来没有被其他任何class 用到。
 **将这个函数修改为private 。**
 
-![](/images/10fig08.gif)
+![](../images/10fig08.gif)
 
 **动机（Motivation）**
 
@@ -257,7 +257,7 @@ class Person {
 某些参数总是很自然地同时出现。
 **以一个对象取代这些参数。**
 
-![](/images/10fig06.gif)
+![](../images/10fig06.gif)
 
 **动机（Motivation）**
 
@@ -450,7 +450,7 @@ class DateRange...
 若干函数做了类似的工作，但在函数本体中却包含了不同的值。
 **建立单一函数，以参数表达那些不同的值。**
 
-![](/images/10fig05.gif)
+![](../images/10fig05.gif)
 
 **动机（Motivation）**
 
@@ -543,7 +543,7 @@ int high = daysTempRange().getHigh();
 withinPlan = plan.withinRange(low, high);
 ```
 
-![](/images/arrow.gif)
+![](../images/arrow.gif)
 ```java
 withinPlan = plan.withinRange(daysTempRange());
 ```
@@ -673,7 +673,7 @@ class TempRange...
 函数本体（method body）不再需要某个参数。
 **将该参数去除。**
 
-![](/images/10fig03.gif)
+![](../images/10fig03.gif)
 
 **动机（Motivation）**
 
@@ -709,7 +709,7 @@ class TempRange...
 你的class 中的某个值域，应该在对象初创时被设值，然后就不再改变。
 **去掉该值域的所有设值函数（setter）。**
 
-![](/images/10fig07.gif)
+![](../images/10fig07.gif)
 
 **动机（Motivation）**
 
@@ -853,7 +853,7 @@ class Person {
 函数的名称未能揭示函数的用途。
 **修改函数名称。**
 
-![](/images/10fig01.gif)
+![](../images/10fig01.gif)
 
 **动机（Motivation）**
 
@@ -919,7 +919,7 @@ Employee (int type) {
 }
 ```
 
-![](/images/arrow.gif)
+![](../images/arrow.gif)
 
 ```java
 static Employee create(int type) {
@@ -1101,7 +1101,7 @@ int withdraw(int amount) {
 }
 ```
 
-![](/images/arrow.gif)
+![](../images/arrow.gif)
 
 ```java
 void withdraw(int amount) throws BalanceException {
@@ -1320,7 +1320,7 @@ double getValueForPeriod (int periodNumber) {
 }
 ```
 
-![](/images/arrow.gif)
+![](../images/arrow.gif)
 
 ```java
 double getValueForPeriod (int periodNumber) {
@@ -1476,7 +1476,7 @@ void setValue (String name, int value) {
 }
 ```
 
-![](/images/arrow.gif)
+![](../images/arrow.gif)
 
 ```java
 void setHeight(int arg) {
@@ -1606,7 +1606,7 @@ discountLevel = getDiscountLevel();
 double finalPrice = discountedPrice (basePrice, discountLevel);
 ```
 
-![](/images/arrow.gif)
+![](../images/arrow.gif)
 ```java
 int basePrice = _quantity * _itemPrice;
 double finalPrice = discountedPrice (basePrice);
@@ -1733,7 +1733,7 @@ private double getPrice () {
 某个函数既返回对象状态值，又修改对象状态（state）。
 **建立两个不同的函数，其中一个负责査询，另一个负责修改。**
 
-![](/images/10fig04.gif)
+![](../images/10fig04.gif)
 
 **动机（Motivation）**
 

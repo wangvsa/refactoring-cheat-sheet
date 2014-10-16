@@ -12,7 +12,7 @@ double disabilityAmount() {
     // compute the disability amount
 ```
 
-![](/images/arrow.gif)
+![](../images/arrow.gif)
 
 ```java
 double disabilityAmount() {
@@ -131,7 +131,7 @@ else {
 }
 ```
 
-![](/images/arrow.gif)
+![](../images/arrow.gif)
 
 ```java
 if (isSpecialDeal())
@@ -201,7 +201,7 @@ else {
 }
 ```
 
-![](/images/arrow.gif)
+![](../images/arrow.gif)
 
 ```java
 if (isSpecialDeal())
@@ -266,7 +266,7 @@ double getExpenseLimit() {
 }
 ```
 
-![](/images/arrow.gif)
+![](../images/arrow.gif)
 
 ```java
 double getExpenseLimit() {
@@ -378,9 +378,9 @@ if (customer == null) plan = BillingPlan.basic();
 else plan = customer.getPlan();
 ```
 
-![](/images/arrow.gif)
+![](../images/arrow.gif)
 
-![](/images/09fig01b.gif)
+![](../images/09fig01b.gif)
 
 **动机（Motivation）**
 
@@ -907,9 +907,9 @@ double getSpeed() {
 }
 ```
 
-![](/images/arrow.gif)
+![](../images/arrow.gif)
 
-![](/images/09fig01a.gif)
+![](../images/09fig01a.gif)
 
 **动机（Motivation）**
 
@@ -943,7 +943,7 @@ double getSpeed() {
 请允许我继续使用「员工与薪资」这个简单而又乏味的例子。我的classes是从[以State/Strategy取代型别码](organizing-data.md#statestrategy) 那个例子中拿来的，因此示意图就如图9.1所示（如果想知道这个图是怎么得到的，请看第8章范例）。
 
 
-![](/images/09fig01.gif)
+![](../images/09fig01.gif)
 
 图9.1  继承机构
 
@@ -1087,7 +1087,7 @@ double getPayAmount() {
 }
 ```
 
-![](/images/arrow.gif)
+![](../images/arrow.gif)
 
 ```java
 double getPayAmount() {

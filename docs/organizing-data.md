@@ -5,7 +5,7 @@
 
 去除不必要的关联（association）。
 
-![](/images/08fig07.gif)
+![](../images/08fig07.gif)
 
 **动机（Motivation）**
 
@@ -128,7 +128,7 @@ Customer getCustomer() {
 
 
 将它变成一个value object（实值对象）。
-![](/images/08fig03.gif)
+![](../images/08fig03.gif)
 
 **动机（Motivation）**
 
@@ -217,7 +217,7 @@ new Currency("USD").equals(new Currency("USD")) // now returns true
 两个classes都需要使用对方特性，但其间只有一条单向连接（one-way link）。
 
 添加一个反向指针，并使修改函数（modifiers）能够同时更新两条连接。（译注：这里的指针等同于句柄（handle），修改函数（modifier）指的是改变双方关系者）
-![](/images/08fig06.gif)
+![](../images/08fig06.gif)
  
 **动机（Motivation）**
 
@@ -326,7 +326,7 @@ class Customer...
 
 将这个value object （实值对象）变成一个reference object (引用对象）。
 
-![](/images/08fig02.gif"/>
+![](../images/08fig02.gif"/>
 
 **动机（Motivation）**
 
@@ -470,7 +470,7 @@ class Customer...
 你有一些domain class置身于GUI控件中，而domain method需要访问之。
  
 将该笔数据拷贝到一个domain object中。建立一个Observer模式，用以对domain object和GUI object内的重复数据进行同步控制（sync.）。
-![](/images/08fig04.gif)
+![](../images/08fig04.gif)
 
 **动机（Motivation）**
 
@@ -503,7 +503,7 @@ class Customer...
 **范例（Example）**
 
 我们的范例从图8.1所示窗口开始。其行为非常简单：当用户修改文本框中的数值，另两个文本框就会自动更新。如果你修改Start或End，length就会自动成为两者计算所得的长度；如果你修改length，End就会随之改变。
-![](/images/08fig05.gif)
+![](../images/08fig05.gif)
 图8.1  一个简单的GUI窗口
 
 
@@ -733,7 +733,7 @@ class IntervalWindow...
 有个函数（method）返回一个群集（collection）。
 
 让这个函数返回该群集的一个只读映件（read-only view），并在这个class中提供「添加/移除」（add/remove）群集元素的函数。
-![](/images/08fig08.gif"/>
+![](../images/08fig08.gif"/>
 
 **动机（Motivation）**
 
@@ -1122,7 +1122,7 @@ class Person...
 public String _name
 ```
 
-![](/images/arrow.gif)
+![](../images/arrow.gif)
 
 ```java
 private String _name;
@@ -1160,7 +1160,7 @@ row [0] = "Liverpool";
 row [1] = "15";
 ```
 
-![](/images/arrow.gif)
+![](../images/arrow.gif)
 
 ```java
 Performance row = new Performance();
@@ -1301,7 +1301,7 @@ class Performance...
 
 将这笔数据项变成一个对象。
 
-![](/images/08fig01.gif"/>
+![](../images/08fig01.gif"/>
 
 **动机（Motivation）**
 
@@ -1414,7 +1414,7 @@ double potentialEnergy(double mass, double height) {
 }
 ```
 
-![](/images/arrow.gif)
+![](../images/arrow.gif)
 
 ```java
 double potentialEnergy(double mass, double height) {
@@ -1467,7 +1467,7 @@ Record structures （记录型结构）是许多编程环境的共同性质。�
 你的各个subclasses 的惟一差别只在「返回常量数据」的函数身上。
 
 *修改这些函数，使它们返回superclass 中的某个（新增）值域，然后销毁subclasses 。*
-![](/images/08fig12.gif)
+![](../images/08fig12.gif)
 
 **动机（Motivation）**
  
@@ -1613,7 +1613,7 @@ class 之中有一个数值型别码（ numeric type code ），但它并不影�
 
 *以一个新的class 替换该数值型别码（type code）。*
  
-![](/images/08fig09.gif"/>
+![](../images/08fig09.gif"/>
  
 **动机（Motivation）**
 
@@ -1824,7 +1824,7 @@ class BloodGroup...
 你有一个type code ，它会影响class 的行为，但你无法使用subclassing。
 
 *以state object （专门用来描述状态的对象）取代type code 。*
-![](/images/08fig11.gif)
+![](../images/08fig11.gif)
 
 **动机（Motivation）**
 
@@ -2020,7 +2020,7 @@ class Employee...
 你有一个不可变的（immutable）type code ，它会影响class 的行为。
 
 *以一个subclass 取代这个type code。*
-![](/images/08fig10.gif)
+![](../images/08fig10.gif)
 
 **动机（Motivation）**
 
@@ -2136,7 +2136,7 @@ boolean includes (int arg) {
 }
 ```
 
-![](/images/arrow.gif)
+![](../images/arrow.gif)
 
 ```java
 private int _low, _high;
