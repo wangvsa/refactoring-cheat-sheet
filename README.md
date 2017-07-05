@@ -3,7 +3,7 @@ refactoring-cheat-sheet
 
 重构速查表，基于《重构--改善既有代码的设计》
 
-http://wangchen.info/refactoring-cheat-sheet/
+http://wangvsa.github.io/refactoring-cheat-sheet/
 
 #### 关于
 ---
